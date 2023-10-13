@@ -8,8 +8,9 @@ public class PlayerAttack : MonoBehaviour
     PlayerManager playerManager;
     // public float beamSpeed = 10f; // ビームの速度
     //private float interactionRange = 0.0f; // PlayerとEnemyの間の許容距離
+    public UI_LightGage uiLightGage;
+    private float fillAmount;
    
-
     private void Start()
     {
         playerManager = GetComponent<PlayerManager>();
@@ -17,21 +18,23 @@ public class PlayerAttack : MonoBehaviour
 
     private void Update()
     {
+        
+        fillAmount = uiLightGage.FillAmount;
         // キーが押されている間
-        if (Input.GetKey(playerManager.attackKey))
+        if (Input.GetKey(playerManager.attackKey) && fillAmount > 0.8f)
         {
             // interactionRangeを増加させる
             playerManager.interactionRange += playerManager.increasedSpeed * Time.deltaTime;
             // interactionRangeが最大許容距離を超えないように制限
             playerManager.interactionRange = Mathf.Min(playerManager.interactionRange, playerManager.maxInteractionRange);
-
+            
         }
         else
         {
             InteractWithEnemy();
             // キーが離されたらinteractionRangeを元に戻す
             playerManager.interactionRange = 0.0f; // 初期値に戻す、必要に応じて変更
-
+            
         }
 
         // スペースキーが押されたらビームを発射

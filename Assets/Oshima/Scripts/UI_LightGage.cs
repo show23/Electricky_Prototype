@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class UI_LightGage : MonoBehaviour
 {
+    PlayerManager playerManager;
     [SerializeField]
     Image image1;
     Image image2;
@@ -14,9 +15,11 @@ public class UI_LightGage : MonoBehaviour
     private bool gaugeVisible = false;
     private float distanceMoved;
     public float fillSpeed = 1f;
+    
     // Start is called before the first frame update
     void Start()
     {
+        playerManager = GetComponent<PlayerManager>();
         image2 = GetComponent<Image>();
         image2.fillAmount = 0f; // ゲージをゼロからスタート
         image2.fillOrigin = (int)Image.OriginHorizontal.Left; // ゲージの増加を右回りに
@@ -35,16 +38,24 @@ public class UI_LightGage : MonoBehaviour
         {
             distanceMoved += 1;
         }
+
         
 
         // プレイヤーの距離に応じてimage2.fillAmountを増加
-        float maxDistance = 100.0f; // 例として最大距離を100とします
+        float maxDistance = 1.0f; // 例として最大距離を100とします
         float fillAmount = distanceMoved / maxDistance;
 
         // ゲージが増加する速度を調整する係数を設定
-        
-        image2.fillAmount = fillAmount * fillSpeed;
 
+
+        if (!Input.GetKey(KeyCode.P))
+        {
+            image2.fillAmount = fillAmount * fillSpeed;
+        }
+        else
+        {
+            image2.fillAmount -= fillSpeed;
+        }
         // ゲージが一定以上増加したら色を表示
         if (image2.fillAmount > 0.01f && !gaugeVisible)
         {
@@ -52,5 +63,10 @@ public class UI_LightGage : MonoBehaviour
             image2.enabled = true;
             image1.enabled = true;
         }
+    }
+    public float FillAmount
+    {
+        get { return image2.fillAmount; }
+        set { image2.fillAmount = value; }
     }
 }

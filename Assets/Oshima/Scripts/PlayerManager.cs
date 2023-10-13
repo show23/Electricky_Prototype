@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerManager : MonoBehaviour
 {
     
@@ -48,7 +48,7 @@ public class PlayerManager : MonoBehaviour
     public float interactionRange = 0.0f; // PlayerとEnemyの間の許容距離
 
 
-
+   
     private void OnDrawGizmos()
     {
         // ギズモの色を設定（例: グリーン）
