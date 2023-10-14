@@ -12,7 +12,19 @@ public class PlayerManager : MonoBehaviour
     [CustomLabel("走るスピード")]
     public float dashSpeed = 50f;
 
+    [CustomLabel("通常攻撃に必要なコスト(最大100)")]
+    public float AAgauge = 10;
+
+    [Header("▽UIゲージ")]
+    [CustomLabel("移動によって溜まる量")]
+    public float fillSpeed = 1f;
+
+
+
     [Header("▽引き寄せ攻撃")]
+    [CustomLabel("引き寄せスキルに必要なコスト(最大100)")]
+    public float currentHp = 80;
+
     [CustomLabel("引き寄せ攻撃ボタン")]
     public KeyCode attackKey = KeyCode.E; // 引き寄せるキー
     [CustomLabel("円が広がるスピード")]
@@ -43,7 +55,7 @@ public class PlayerManager : MonoBehaviour
     public Transform player; // プレイヤーのTransformを格納するための変数
     public LineRenderer lineRenderer;
 
-    public GameObject beamPrefab; // ビームのプレハブ
+   
     public Transform firePoint;   // ビームの発射位置
     public float interactionRange = 0.0f; // PlayerとEnemyの間の許容距離
 
