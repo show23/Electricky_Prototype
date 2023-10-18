@@ -32,9 +32,9 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         // カーブ方向をランダムに選択
-        curveDirectionUp = Random.Range(0.0f, 2.0f);
-        curveDirectionRight = Random.Range(-2.0f, 2.0f);
-        curveDirectionLeft = Random.Range(-2.0f, 2.0f);
+        curveDirectionUp = Random.Range(0.0f, 3.0f);
+        curveDirectionRight = Random.Range(-3.0f, 3.0f);
+        curveDirectionLeft = Random.Range(-3.0f, 3.0f);
     }
 
     void Update()
