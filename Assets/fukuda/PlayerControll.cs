@@ -42,7 +42,6 @@ public class PlayerControll : MonoBehaviour
     private bool OldCrouchInput;
 
     //プレイヤーのステータス
-
     [Tooltip("歩行速度")] 
     public float MaxWalkSpeed;
     [Tooltip("加速度(歩行)")]
@@ -90,7 +89,6 @@ public class PlayerControll : MonoBehaviour
 
 
     //壁判定の距離
-
     public bool isWallHit = false;
     [Tooltip("0:noWall 1:RightWall 2:LeftWall")]
     public int wallStatus = 0;
