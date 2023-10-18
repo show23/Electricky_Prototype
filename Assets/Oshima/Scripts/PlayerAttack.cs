@@ -4,38 +4,48 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-
+    DebugButtonController debugButtonController;
     PlayerManager playerManager;
+
     // public float beamSpeed = 10f; // ビームの速度
     //private float interactionRange = 0.0f; // PlayerとEnemyの間の許容距離
-   
 
+    public GameObject beamPrefab; // ビームのプレハブ
+
+    [System.Obsolete]
     private void Start()
     {
+        debugButtonController = FindObjectOfType<DebugButtonController>();
+        
         playerManager = GetComponent<PlayerManager>();
     }
 
     private void Update()
     {
+        
+
         // キーが押されている間
-        if (Input.GetKey(playerManager.attackKey))
+        if (Input.GetKey(playerManager.attackKey) && debugButtonController.CurrentHp >= playerManager.currentHp)
         {
             // interactionRangeを増加させる
             playerManager.interactionRange += playerManager.increasedSpeed * Time.deltaTime;
             // interactionRangeが最大許容距離を超えないように制限
             playerManager.interactionRange = Mathf.Min(playerManager.interactionRange, playerManager.maxInteractionRange);
-
+            
         }
         else
         {
             InteractWithEnemy();
             // キーが離されたらinteractionRangeを元に戻す
             playerManager.interactionRange = 0.0f; // 初期値に戻す、必要に応じて変更
-
+            
         }
-
+        if(Input.GetKeyUp(playerManager.attackKey) && debugButtonController.CurrentHp >= playerManager.currentHp)
+        {
+            debugButtonController.DamageSkillHikiyosePush();
+        }
         // スペースキーが押されたらビームを発射
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && debugButtonController.CurrentHp >= playerManager.AAgauge)
         {
             // 一番近くのカメラ内の敵を探す
             GameObject nearestEnemy = FindNearestEnemyInCamera();
@@ -43,6 +53,7 @@ public class PlayerAttack : MonoBehaviour
             // ターゲットが設定されている場合
             if (nearestEnemy != null)
             {
+                debugButtonController.DamageSkillAAPush();
                 // ビームを発射
                 ShootBeam(nearestEnemy);
             }
@@ -65,6 +76,7 @@ public class PlayerAttack : MonoBehaviour
             // 許容距離内にいるかどうかを確認
             if (distance <= playerManager.interactionRange)
             {
+                
                 // Enemyを破壊
                 Destroy(enemy);
             }
@@ -100,7 +112,7 @@ public class PlayerAttack : MonoBehaviour
     void ShootBeam(GameObject target)
     {
         // ビームをプレファブからインスタンス化
-        GameObject beamInstance = Instantiate(playerManager.beamPrefab, playerManager.firePoint.position, playerManager.firePoint.rotation);
+        GameObject beamInstance = Instantiate(beamPrefab, playerManager.firePoint.position, playerManager.firePoint.rotation);
 
         // ビームのスクリプトを取得
         Bullet beamScript = beamInstance.GetComponent<Bullet>();

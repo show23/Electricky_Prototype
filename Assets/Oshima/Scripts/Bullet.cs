@@ -9,19 +9,20 @@ public class Bullet : MonoBehaviour
     public float beamSpeed = 100f; // ビームの速度
     public float curveStrength = 1f; // カーブの強度
 
-    private int curveDirection = 0; // カーブ方向を制御する変数 (0: 上, 1: 左, 2: 右, 3: 上向きカーブ)
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    private float curveDirectionUp = 0; // カーブ方向を制御する変数 (0: 上, 1: 左, 2: 右, 3: 上向きカーブ)
+    private float curveDirectionRight = 0;
+    private float curveDirectionLeft = 0;
+    //private void Awake()
+    //{
+    //    if (instance == null)
+    //    {
+    //        instance = this;
+    //    }
+    //    else
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
     // 敵の追跡対象を設定
     public void SetTarget(Transform newTarget)
     {
@@ -31,7 +32,9 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         // カーブ方向をランダムに選択
-        curveDirection = Random.Range(0, 6);
+        curveDirectionUp = Random.Range(0.0f, 2.0f);
+        curveDirectionRight = Random.Range(-2.0f, 2.0f);
+        curveDirectionLeft = Random.Range(-2.0f, 2.0f);
     }
 
     void Update()
@@ -44,32 +47,8 @@ public class Bullet : MonoBehaviour
 
             // カーブを適用
             Vector3 curve = Vector3.zero;
-
-            // カーブ方向に応じてカーブを適用
-            switch (curveDirection)
-            {
-                case 0: // 上向きカーブ
-                    curve = Vector3.up * curveStrength;
-                    break;
-                case 1: // 左向きカーブ
-                    curve = -Vector3.Cross(Vector3.up, direction) * curveStrength;
-                    break;
-                case 2: // 右向きカーブ
-                    curve = Vector3.Cross(Vector3.up, direction) * curveStrength;
-                    break;
-                case 3: // 上向きカーブ
-                    curve = Vector3.up * curveStrength;
-                    break;
-                case 4:
-                    curve = Vector3.up * curveStrength + Vector3.Cross(direction, Vector3.up) * curveStrength;
-                    break;
-                case 5:
-                    curve = Vector3.up * curveStrength - Vector3.Cross(direction, Vector3.up) * curveStrength;
-                    break;
-
-                default:
-                    break;
-            }
+            curve = new Vector3(curveDirectionLeft, curveDirectionUp, curveDirectionRight) * curveStrength;
+           
 
             GetComponent<Rigidbody>().velocity = (direction + curve) * beamSpeed;
         }
