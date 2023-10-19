@@ -59,8 +59,6 @@ public class PlayerControll : MonoBehaviour
     [Tooltip("‚µ‚á‚ª‚İ‚Ì‘¬“x")]
     public float MaxCrouchSpeed;
 
-    [Space(10)]
-
 
     [Tooltip("•Ç‘–‚è‚ğ‹­§I—¹‚·‚é‘¬“x")]
     public float WallRunStopSpeedValue;
