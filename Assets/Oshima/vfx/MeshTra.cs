@@ -7,6 +7,11 @@ public class MeshTra : MonoBehaviour
     public float activeTime = 2.0f;
     [Header("Mesh Ralated")]
     public float meshRefreshRate = 0.1f;
+    public float meshDestroyDelay = 3f;
+    public Transform positionToSpawn;
+
+    [Header("Shader Ralated")]
+    public Material mat;
     private bool isTrailActive;
     private SkinnedMeshRenderer[] skinnedMeshRenderers;
     // Update is called once per frame
@@ -18,7 +23,7 @@ public class MeshTra : MonoBehaviour
             isTrailActive = true;
             StartCoroutine(ActiveteTrail(activeTime));
         }
-        Debug.Log("Test" + isTrailActive);       
+             
     }
     IEnumerator ActiveteTrail(float timeActive)
     {
@@ -32,8 +37,16 @@ public class MeshTra : MonoBehaviour
             for(int i = 0; i < skinnedMeshRenderers.Length; i++)
             {
                 GameObject gObj = new GameObject();
-                gObj.AddComponent<MeshRenderer>();
-                gObj.AddComponent<MeshFilter>();
+                gObj.transform.SetPositionAndRotation(positionToSpawn.position, positionToSpawn.rotation);
+               MeshRenderer mr= gObj.AddComponent<MeshRenderer>();
+               MeshFilter mf =  gObj.AddComponent<MeshFilter>();
+
+                Mesh mesh = new Mesh();
+                skinnedMeshRenderers[i].BakeMesh(mesh);
+                mf.mesh = mesh;
+                mr.material = mat;
+
+                Destroy(gObj, meshDestroyDelay);
             }
             yield return new WaitForSeconds(meshRefreshRate);
         }
