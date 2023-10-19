@@ -42,7 +42,16 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Trigger",
+                    "name": "Run",
+                    "type": "Button",
+                    "id": "1416bb7d-71f4-46f2-afbf-329737aeacec",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Attack_1",
                     "type": "Button",
                     "id": "1a56f02e-d467-4f00-9e8d-ccfc288280e2",
                     "expectedControlType": "Button",
@@ -51,9 +60,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Run",
+                    "name": "Attack_2",
                     "type": "Button",
-                    "id": "1416bb7d-71f4-46f2-afbf-329737aeacec",
+                    "id": "b3fa6172-f177-408c-88b4-c6da8a2f69c9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Attack_3",
+                    "type": "Button",
+                    "id": "6b87296c-0ea9-47f7-8140-763904d02bb8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -173,28 +191,6 @@
                 },
                 {
                     "name": "",
-                    "id": "9e8a4e20-fbb0-475b-ba61-c2b5fce1a4ff",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Trigger",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "84e87cf6-a629-46b1-a8d8-d3aea0235fc1",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Trigger",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "da814f74-d6b3-44e7-866e-cbb020d3d262",
                     "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
@@ -258,6 +254,50 @@
                     "action": "CameraXY",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "a476a7f9-fb93-4e33-9f82-3597e1cbc0dd",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack_2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "716474da-6d5b-4efe-bdec-9789c5728507",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack_3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9e8a4e20-fbb0-475b-ba61-c2b5fce1a4ff",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack_1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "84e87cf6-a629-46b1-a8d8-d3aea0235fc1",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack_1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

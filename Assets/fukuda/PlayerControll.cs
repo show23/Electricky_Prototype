@@ -22,10 +22,12 @@ public class PlayerControll : MonoBehaviour
 
     //InputAction
     private PlayerInput playerInput;
-    private InputAction move,jump,crouch,trigger,run,cam;
+    private InputAction move,jump,crouch,attack_1, attack_2, attack_3, run,cam;
 
     private bool jumpInputTrigger = false;
-    private bool triggerInputTrigger = false;
+    private bool attack_1_InputTrigger = false;
+    private bool attack_2_InputTrigger = false;
+    private bool attack_3_InputTrigger = false;
     private bool slideInputTrigger = false;
 
 
@@ -34,11 +36,15 @@ public class PlayerControll : MonoBehaviour
     private bool RunInput; 
 
     private bool JumpInput;
-    private bool TriggerInput;
+    private bool Attack_1_Input;
+    private bool Attack_2_Input;
+    private bool Attack_3_Input;
     private bool CrouchInput;
     
     private bool OldJumpInput;
-    private bool OldTriggerInput;
+    private bool OldAttack_1_Input;
+    private bool OldAttack_2_Input;
+    private bool OldAttack_3_Input;
     private bool OldCrouchInput;
 
     //プレイヤーのステータス
@@ -136,11 +142,13 @@ public class PlayerControll : MonoBehaviour
         move = playerInput.actions["Move"];
         jump = playerInput.actions["Jump"];
         crouch = playerInput.actions["Crouch"];
-        trigger = playerInput.actions["Trigger"];
+        attack_1 = playerInput.actions["Attack_1"];
+        attack_2 = playerInput.actions["Attack_2"];
+        attack_3 = playerInput.actions["Attack_3"];
         run = playerInput.actions["Run"];
         cam = playerInput.actions["CameraXY"];
         jumpInputTrigger = false; 
-        triggerInputTrigger = false;
+        attack_1_InputTrigger = false;
         slideInputTrigger = false;
 
         // マウスカーソルを非表示にし、位置を固定
@@ -153,7 +161,7 @@ public class PlayerControll : MonoBehaviour
     //処理が完成していないものには頭に#をつける
     void Update()
     {
-        Debug.Log(triggerInputTrigger);
+        Debug.Log(attack_1_InputTrigger);
         //-------------------------------------------------------------------------------
         //#壁の配置を確認し、カメラの位置を調整、壁判定を取る
         //-------------------------------------------------------------------------------
@@ -196,7 +204,9 @@ public class PlayerControll : MonoBehaviour
             MoveInput = move.ReadValue<Vector2>();
             CameraInput = cam.ReadValue<Vector2>();
             JumpInput = jump.ReadValue<float>() > 0;
-            TriggerInput = trigger.ReadValue<float>() > 0;
+            Attack_1_Input = attack_1.ReadValue<float>() > 0;
+            Attack_2_Input = attack_2.ReadValue<float>() > 0;
+            Attack_3_Input = attack_3.ReadValue<float>() > 0;
             CrouchInput = crouch.ReadValue<float>() > 0;
 
             if (isGround)
@@ -209,7 +219,7 @@ public class PlayerControll : MonoBehaviour
             }
 
             jumpInputTrigger = false;
-            triggerInputTrigger = false;
+            attack_1_InputTrigger = false;
             slideInputTrigger = false;
 
             if (JumpInput)
@@ -221,11 +231,25 @@ public class PlayerControll : MonoBehaviour
                 }
             }
 
-            if (TriggerInput)
+            if (Attack_1_Input)
             {
-                if (!OldTriggerInput)
+                if (!OldAttack_1_Input)
                 {
-                    triggerInputTrigger = true;
+                    attack_1_InputTrigger = true;
+                }
+            }
+            if (Attack_2_Input)
+            {
+                if (!OldAttack_2_Input)
+                {
+                    attack_2_InputTrigger = true;
+                }
+            }
+            if (Attack_3_Input)
+            {
+                if (!OldAttack_3_Input)
+                {
+                    attack_3_InputTrigger = true;
                 }
             }
 
@@ -268,7 +292,7 @@ public class PlayerControll : MonoBehaviour
 
 
             OldJumpInput = JumpInput;
-            OldTriggerInput = TriggerInput;
+            OldAttack_1_Input = Attack_1_Input;
             OldCrouchInput = CrouchInput;
 
         }
@@ -476,6 +500,16 @@ public class PlayerControll : MonoBehaviour
 
 
 
+        if (attack_1_InputTrigger)
+        {
+            //playerAttack.isAttack = true;
+        }
+        if (Attack_1_Input)
+        {
+            Attack();
+        }
+
+
 
 
 
@@ -494,16 +528,6 @@ public class PlayerControll : MonoBehaviour
 
 
 
-
-        if(triggerInputTrigger)
-        {
-            
-        }
-        if(TriggerInput)
-        {
-            Attack();
-        }
-        
 
     }
     private void Attack()
