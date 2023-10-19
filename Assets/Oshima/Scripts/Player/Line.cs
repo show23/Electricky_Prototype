@@ -13,7 +13,8 @@ public class Line : MonoBehaviour
     private float originalSpeed; // オリジナルの速度を保存する変数
     private bool isDrawingLine = false;
     private float buttonPressTime = 0f; // ボタンが押された時間
-   
+    public bool isAttack3 = false;
+    private bool oldIsAttack = false;
     private Transform lastTouchedEnemy; // 最後に触れた敵のTransformを記録する変数
 
   
@@ -30,10 +31,11 @@ public class Line : MonoBehaviour
        
 
         // 左クリックが押されたかをチェック
-        if (Input.GetMouseButtonDown(0))
+        if (isAttack3 == true)
         {
             if (!isDrawingLine)
             {
+                Debug.Log("koaksokadoks");
                 //時間
                 buttonPressTime = Time.time;
             }
@@ -42,7 +44,7 @@ public class Line : MonoBehaviour
         }
 
         // 左クリックが離された場合、線を非表示にし、リストをクリア
-        if (Input.GetMouseButtonUp(0) || (isDrawingLine && Time.time - buttonPressTime >= playerManager.buttonPressDuration))
+        if (isAttack3 == false && oldIsAttack == true || (isDrawingLine && Time.time - buttonPressTime >= playerManager.buttonPressDuration))
         {
             isDrawingLine = false; // 線を描画中でない状態にする
             playerManager.lineRenderer.positionCount = 0; // 線を非表示にする
@@ -112,6 +114,8 @@ public class Line : MonoBehaviour
                 }
             }
         }
+        oldIsAttack = isAttack3;
+        isAttack3 = false;
     }
     //void Update()
     //{

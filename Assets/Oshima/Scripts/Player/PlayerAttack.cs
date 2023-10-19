@@ -7,6 +7,8 @@ public class PlayerAttack : MonoBehaviour
     DebugButtonController debugButtonController;
     PlayerManager playerManager;
     public bool isAttack = false;
+    public bool isAttack2 = false;
+    private bool oldIsAttack = false;
     // public float beamSpeed = 10f; // ビームの速度
     //private float interactionRange = 0.0f; // PlayerとEnemyの間の許容距離
 
@@ -25,7 +27,7 @@ public class PlayerAttack : MonoBehaviour
         
 
         // キーが押されている間
-        if (Input.GetKey(playerManager.attackKey) && debugButtonController.CurrentHp >= playerManager.currentHp)
+        if (isAttack2 == true && debugButtonController.CurrentHp >= playerManager.currentHp)
         {
             // interactionRangeを増加させる
             playerManager.interactionRange += playerManager.increasedSpeed * Time.deltaTime;
@@ -33,15 +35,14 @@ public class PlayerAttack : MonoBehaviour
             playerManager.interactionRange = Mathf.Min(playerManager.interactionRange, playerManager.maxInteractionRange);
             
         }
-        else
+       
+
+
+        if(isAttack2 == false && oldIsAttack == true && debugButtonController.CurrentHp >= playerManager.currentHp)
         {
             InteractWithEnemy();
             // キーが離されたらinteractionRangeを元に戻す
             playerManager.interactionRange = 0.0f; // 初期値に戻す、必要に応じて変更
-            
-        }
-        if(Input.GetKeyUp(playerManager.attackKey) && debugButtonController.CurrentHp >= playerManager.currentHp)
-        {
             debugButtonController.DamageSkillHikiyosePush();
         }
         // スペースキーが押されたらビームを発射
@@ -59,6 +60,9 @@ public class PlayerAttack : MonoBehaviour
             }
         }
         isAttack = false;
+
+        oldIsAttack = isAttack2;
+        isAttack2 = false;
     }
 
     void InteractWithEnemy()

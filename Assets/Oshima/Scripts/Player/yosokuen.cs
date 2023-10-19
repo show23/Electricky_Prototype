@@ -16,7 +16,8 @@ public class yosokuen : MonoBehaviour
     // オブジェクトの初期サイズと新しいサイズを設定
     private Vector3 initialSize;
     //public Vector3 newSize = new Vector3(2.0f, 2.0f, 2.0f); // 例として2倍の大きさに変更
-   
+    public GameObject en;
+    private PlayerAttack playerAttack;
 
     // サイズ変更の速度
     //public float sizeChangeSpeed = 1.0f;
@@ -27,8 +28,8 @@ public class yosokuen : MonoBehaviour
     {
         playerManager = GetComponent<PlayerManager>();
         // ターゲットオブジェクトを名前で検索し、そのTransformを取得
-        targetTransform = GameObject.Find("トーラス").transform;
-
+        targetTransform = en.transform;
+        playerAttack = GetComponent<PlayerAttack>();
         // ターゲットオブジェクトの初期サイズを保存
         initialSize = new Vector3(0.0f, 0.0f, 0.0f);
     }
@@ -39,7 +40,7 @@ public class yosokuen : MonoBehaviour
         //otamesi = PlayerAttractor.instance.attractionKey;
         attack = playerManager.attackKey;
         range = playerManager.interactionRange * 0.08f;
-        if(Input.GetKey(attack))
+        if(playerAttack.isAttack2 == true)
         {
             isResizing = true;
         }

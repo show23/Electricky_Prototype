@@ -127,6 +127,7 @@ public class PlayerControll : MonoBehaviour
 
 
     private PlayerAttack playerAttack;
+    private Line line;
 
     void Start()
     { 
@@ -135,7 +136,7 @@ public class PlayerControll : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         s_Collider = GetComponent<CapsuleCollider>();
         playerAttack = GetComponent<PlayerAttack>();
-
+        line = GetComponent<Line>();
         NormalCenter = s_Collider.center;
         NormalHeight = s_Collider.height;
 
@@ -161,7 +162,7 @@ public class PlayerControll : MonoBehaviour
     //処理が完成していないものには頭に#をつける
     void Update()
     {
-        Debug.Log(attack_1_InputTrigger);
+        Debug.Log(attack_2_InputTrigger);
         //-------------------------------------------------------------------------------
         //#壁の配置を確認し、カメラの位置を調整、壁判定を取る
         //-------------------------------------------------------------------------------
@@ -220,6 +221,8 @@ public class PlayerControll : MonoBehaviour
 
             jumpInputTrigger = false;
             attack_1_InputTrigger = false;
+            attack_2_InputTrigger = false;
+            attack_3_InputTrigger = false;
             slideInputTrigger = false;
 
             if (JumpInput)
@@ -293,6 +296,8 @@ public class PlayerControll : MonoBehaviour
 
             OldJumpInput = JumpInput;
             OldAttack_1_Input = Attack_1_Input;
+            OldAttack_2_Input = Attack_2_Input;
+            OldAttack_3_Input = Attack_3_Input;
             OldCrouchInput = CrouchInput;
 
         }
@@ -502,15 +507,21 @@ public class PlayerControll : MonoBehaviour
 
         if (attack_1_InputTrigger)
         {
-            //playerAttack.isAttack = true;
+            Attack();
         }
         if (Attack_1_Input)
         {
-            Attack();
+            
         }
-
-
-
+        if(Attack_2_Input)
+        {
+            HikiyoseAttack();
+        }
+       
+        if(Attack_3_Input)
+        {
+            LineAttack();
+        }
 
 
 
@@ -535,7 +546,16 @@ public class PlayerControll : MonoBehaviour
         playerAttack.isAttack = true;
     }
 
-
+    private void HikiyoseAttack()
+    {
+      
+        playerAttack.isAttack2 = true;
+    }
+    private void LineAttack()
+    {
+       
+        line.isAttack3 = true;
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Wall")
