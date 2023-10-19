@@ -223,6 +223,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1453267323}
+    - targetCorrespondingSourceObject: {fileID: 3618295156281184760, guid: d5baeac8f183e024f8d8fcae10859251,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1453267335}
   m_SourcePrefab: {fileID: 100100000, guid: d5baeac8f183e024f8d8fcae10859251, type: 3}
 --- !u!1001 &120426835
 PrefabInstance:
@@ -1119,6 +1123,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gaugeController: {fileID: 1268648276}
+--- !u!114 &1453267335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 937314163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6ee5227c2d78494fb8c7092bf3a8ec1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeTime: 5
+  meshRefreshRate: 1
 --- !u!1 &1457586884
 GameObject:
   m_ObjectHideFlags: 0
