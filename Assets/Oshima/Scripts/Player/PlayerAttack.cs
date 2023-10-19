@@ -6,7 +6,7 @@ public class PlayerAttack : MonoBehaviour
 {
     DebugButtonController debugButtonController;
     PlayerManager playerManager;
-
+    public bool isAttack = false;
     // public float beamSpeed = 10f; // ビームの速度
     //private float interactionRange = 0.0f; // PlayerとEnemyの間の許容距離
 
@@ -45,7 +45,7 @@ public class PlayerAttack : MonoBehaviour
             debugButtonController.DamageSkillHikiyosePush();
         }
         // スペースキーが押されたらビームを発射
-        if (Input.GetKeyDown(KeyCode.Space) && debugButtonController.CurrentHp >= playerManager.AAgauge)
+        if (isAttack == true && debugButtonController.CurrentHp >= playerManager.AAgauge)
         {
             // 一番近くのカメラ内の敵を探す
             GameObject nearestEnemy = FindNearestEnemyInCamera();
@@ -58,6 +58,7 @@ public class PlayerAttack : MonoBehaviour
                 ShootBeam(nearestEnemy);
             }
         }
+        isAttack = false;
     }
 
     void InteractWithEnemy()

@@ -31,7 +31,7 @@ public class PlayerControll : MonoBehaviour
 
     private Vector2 MoveInput;
     private Vector2 CameraInput;
-    private bool RunInput;
+    private bool RunInput; 
 
     private bool JumpInput;
     private bool TriggerInput;
@@ -120,7 +120,7 @@ public class PlayerControll : MonoBehaviour
     public float CrouchHeight;
 
 
-
+    private PlayerAttack playerAttack;
 
     void Start()
     { 
@@ -128,6 +128,7 @@ public class PlayerControll : MonoBehaviour
         s_Animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         s_Collider = GetComponent<CapsuleCollider>();
+        playerAttack = GetComponent<PlayerAttack>();
 
         NormalCenter = s_Collider.center;
         NormalHeight = s_Collider.height;
@@ -152,6 +153,7 @@ public class PlayerControll : MonoBehaviour
     //処理が完成していないものには頭に#をつける
     void Update()
     {
+        Debug.Log(triggerInputTrigger);
         //-------------------------------------------------------------------------------
         //#壁の配置を確認し、カメラの位置を調整、壁判定を取る
         //-------------------------------------------------------------------------------
@@ -482,12 +484,20 @@ public class PlayerControll : MonoBehaviour
         //-------------------------------------------------------------------------------
 
 
+        if(triggerInputTrigger)
+        {
+            
+        }
+        if(TriggerInput)
+        {
+            Attack();
+        }
+        
 
-
-
-
-
-
+    }
+    private void Attack()
+    {
+        playerAttack.isAttack = true;
     }
 
 
@@ -597,6 +607,7 @@ public class PlayerControll : MonoBehaviour
         }
     }
 
+    
 
     private void OnDrawGizmos()
     {
