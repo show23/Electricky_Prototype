@@ -12,11 +12,13 @@ public class MeshTra : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if(Input.GetKeyDown(KeyCode.I) && !isTrailActive)
         {
             isTrailActive = true;
             StartCoroutine(ActiveteTrail(activeTime));
         }
+        Debug.Log("Test" + isTrailActive);       
     }
     IEnumerator ActiveteTrail(float timeActive)
     {
