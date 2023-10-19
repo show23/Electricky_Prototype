@@ -3410,6 +3410,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeTime: 2
   meshRefreshRate: 0.1
+  meshDestroyDelay: 3
+  positionToSpawn: {fileID: 0}
+  mat: {fileID: 0}
 --- !u!1 &1569325885
 GameObject:
   m_ObjectHideFlags: 0
