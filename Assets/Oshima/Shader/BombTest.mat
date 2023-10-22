@@ -67,7 +67,7 @@ Material:
     - _MaterialID: 1
     - _MaterialTypeMask: 2
     - _NoiseScalse: 187.06
-    - _Opacity: 2.21
+    - _Opacity: 0.67
     - _OpaqueCullMode: 2
     - _RayTracing: 0
     - _ReceivesSSR: 1
@@ -103,10 +103,10 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
-    - _Base: {r: 0, g: 0.6069405, b: 1, a: 0.23921569}
+    - _Base: {r: 0, g: 0.6069405, b: 1, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissiveColor: {r: 0, g: 103.95298, b: 147.03337, a: 1}
+    - _EmissiveColor: {r: 0, g: 13.764331, b: 19.46857, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &9018535812535189836
 MonoBehaviour:
