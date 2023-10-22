@@ -57,8 +57,14 @@ VisualEffect:
       - m_Value: 100
         m_Name: TrailsSpawnRate
         m_Overridden: 1
-      - m_Value: 1
+      - m_Value: 2
         m_Name: TrailsLifeTime
+        m_Overridden: 1
+      - m_Value: 0.15
+        m_Name: Size
+        m_Overridden: 1
+      - m_Value: 50000
+        m_Name: SpawnRate
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
@@ -69,7 +75,7 @@ VisualEffect:
       - m_Value: {x: 56.887733, y: 67.86627, z: 0, w: 0}
         m_Name: Color 1
         m_Overridden: 1
-      - m_Value: {x: 1, y: 0, z: 0.13618708, w: 0}
+      - m_Value: {x: 1, y: 0.47743025, z: 0, w: 0}
         m_Name: Color
         m_Overridden: 1
     m_Uint:
@@ -188,5 +194,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 224d778a28dc4ab46b7d81e84af422d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beamSpeed: 100
-  curveStrength: 0.3
+  beamSpeed: 50
+  curveStrength: 0.12

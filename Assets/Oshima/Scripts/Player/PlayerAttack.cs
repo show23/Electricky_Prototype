@@ -126,7 +126,7 @@ public class PlayerAttack : MonoBehaviour
         beamScript.SetTarget(target.transform);
 
         // 一定時間後にビームを破壊する（例：5秒後）
-        Destroy(beamInstance, 5f);
+        Destroy(beamInstance, 3f);
     }
 
   
