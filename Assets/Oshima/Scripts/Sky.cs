@@ -160,15 +160,15 @@ public class Sky : MonoBehaviour
         }
         if (directionalLight.intensity < 80000)
         {
-            decreaseRate = 1500;
+            decreaseRate = 1000;
         }
         if (directionalLight.intensity < 50000)
         {
-            decreaseRate = 1000;
+            decreaseRate = 500;
         }
         if (directionalLight.intensity < 10000)
         {
-            decreaseRate = 500;
+            decreaseRate = 300;
         }
         if (directionalLight.intensity <1000 )
         {
@@ -184,7 +184,7 @@ public class Sky : MonoBehaviour
         }
         if (directionalLight.intensity <10 )
         {
-            decreaseRate = 1;
+            decreaseRate = 0.5f;
         }
     }
 
