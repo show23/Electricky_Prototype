@@ -22,7 +22,7 @@ public class DebugButtonController : MonoBehaviour
     {
         playerSpeed = new Vector2(s_rigidbody.velocity.x, s_rigidbody.velocity.z).magnitude;
 
-        Debug.Log(playerSpeed);
+        
 
         HealButtonPush();
     }
