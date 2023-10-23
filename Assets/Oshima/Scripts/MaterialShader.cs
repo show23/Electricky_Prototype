@@ -12,7 +12,7 @@ public class MaterialShader : MonoBehaviour
     public float switchEndRainTime = 10.0f;
     public float switchSpeed = 0.1f;
     private float lerpValue = 0.0f;
-    private bool increasing = false;
+    public bool increasing = false;
     private float startTimer = 0.0f;
     private float endTimer = 0.0f;
 
@@ -28,26 +28,25 @@ public class MaterialShader : MonoBehaviour
             material.SetFloat(floatPropertyName, value);
         }
     }
+   
     private void Start()
     {
 
-       
     }
     // ゲーム内時間に応じてfloatプロパティを切り替える
     void Update()
     {
-        
-        Debug.Log(lerpValue);
-        startTimer += Time.deltaTime;
-        if (startTimer >= switchStartRainTime)
-        {
-            increasing = true;
-        }
-     
+        Rain();
+    }
+
+    public void Rain()
+    {
+       
+
         if (increasing)
         {
             lerpValue += switchSpeed * 0.1f;
-            
+
             if (!hasSpawned)
             {
                 // プレハブからインスタンスを生成
@@ -56,20 +55,13 @@ public class MaterialShader : MonoBehaviour
             }
             if (lerpValue >= 1.0f)
             {
-                
                 lerpValue = 1.0f;
                 endTimer += Time.deltaTime;
             }
         }
         SetFloatProperty(lerpValue);
 
-        if (endTimer >= switchEndRainTime)
-        {
-            increasing = false;
-            startTimer = 0.0f;
-            
-        }
-        if (!increasing && endTimer >= switchEndRainTime)
+        if (!increasing)
         {
             if (hasSpawned)
             {
@@ -84,4 +76,5 @@ public class MaterialShader : MonoBehaviour
             }
         }
     }
+
 }

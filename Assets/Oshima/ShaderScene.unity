@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 5420.688, g: 5949.36, b: 7151.4385, a: 1}
+  m_IndirectSpecularColor: {r: 4766.188, g: 5360.977, b: 6588.8916, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2280,6 +2280,7 @@ MonoBehaviour:
   switchStartRainTime: 5
   switchEndRainTime: 5
   switchSpeed: 0.01
+  increasing: 0
 --- !u!1 &552657525
 GameObject:
   m_ObjectHideFlags: 0
@@ -3012,13 +3013,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 894364043}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.110313065, y: -0.8860842, z: 0.27310303, w: 0.35791135}
+  m_LocalRotation: {x: 0.5641748, y: 0, z: 0, w: 0.82565546}
   m_LocalPosition: {x: 5.9515495, y: 73, z: 13.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1152118219}
-  m_LocalEulerAnglesHint: {x: 34.26, y: -136.01, z: 0}
+  m_LocalEulerAnglesHint: {x: 68.69, y: 0, z: 0}
 --- !u!114 &894364045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3488,6 +3489,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1152118219}
+  - component: {fileID: 1152118220}
   m_Layer: 0
   m_Name: NoonAuto
   m_TagString: Untagged
@@ -3512,6 +3514,30 @@ Transform:
   - {fileID: 2009735347}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1152118220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1152118218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85631666fcdf8db4bbdacd880aa93d60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  materialShader: {fileID: 551529011}
+  directionalLight: {fileID: 894364046}
+  decreaseRate: 2000
+  minDecreaseRate: 100
+  globalVolume: {fileID: 2009735348}
+  initialIntensity: 100000
+  initialDesiredLuxValue: 20000
+  targetIntensity: 1000
+  targetLuxValue: 200
+  rateChangeSpeed: 0
+  eveningIntensity: 0
+  eveningLuxValue: 0
 --- !u!1 &1227976006
 GameObject:
   m_ObjectHideFlags: 0
