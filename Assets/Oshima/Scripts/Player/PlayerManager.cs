@@ -25,8 +25,7 @@ public class PlayerManager : MonoBehaviour
     [CustomLabel("引き寄せスキルに必要なコスト(最大100)")]
     public float currentHp = 80;
 
-    [CustomLabel("引き寄せ攻撃ボタン")]
-    public KeyCode attackKey = KeyCode.E; // 引き寄せるキー
+    
     [CustomLabel("円が広がるスピード")]
     public float increasedSpeed = 10.0f; // キーが押されている間に拡大する範囲
     [CustomLabel("最大の円の大きさ")]

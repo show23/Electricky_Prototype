@@ -39,15 +39,9 @@ public class Sky : MonoBehaviour
 
     void Update()
     {
-        //timeOfDay += Time.deltaTime * orbitSpeed;
-        
-        //if (timeOfDay > 24)
-        //{
-        //    timeOfDay = 0;
-        //}
-        //var value = Mathf.PingPong(Time.time, timeOfDay);
-        UpdateDayTime();
-        
+        CloudyWeather();
+
+
     }
 
     private void UpdateDayTime()

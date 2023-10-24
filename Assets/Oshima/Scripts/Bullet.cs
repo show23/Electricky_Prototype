@@ -35,6 +35,7 @@ public class Bullet : MonoBehaviour
         curveDirectionUp = Random.Range(0.0f, 3.0f);
         curveDirectionRight = Random.Range(-3.0f, 3.0f);
         curveDirectionLeft = Random.Range(-3.0f, 3.0f);
+
     }
 
     void Update()
