@@ -160,9 +160,8 @@ public class PlayerControll : MonoBehaviour
 
     //とりあえずで処理フローを書いていく
     //処理が完成していないものには頭に#をつける
-    void Update()
+    private void FixedUpdate()
     {
-        Debug.Log(attack_2_InputTrigger);
         //-------------------------------------------------------------------------------
         //#壁の配置を確認し、カメラの位置を調整、壁判定を取る
         //-------------------------------------------------------------------------------
@@ -188,7 +187,7 @@ public class PlayerControll : MonoBehaviour
             {
                 isGround = true;
                 SecondJumped = false;
-                isWallHit = false;
+                WallRunEnd();
             }
             else
             {
@@ -293,13 +292,11 @@ public class PlayerControll : MonoBehaviour
                 MoveInput = vec;
             }
 
-
             OldJumpInput = JumpInput;
             OldAttack_1_Input = Attack_1_Input;
             OldAttack_2_Input = Attack_2_Input;
             OldAttack_3_Input = Attack_3_Input;
             OldCrouchInput = CrouchInput;
-
         }
 
         //-------------------------------------------------------------------------------
@@ -307,9 +304,7 @@ public class PlayerControll : MonoBehaviour
         //-------------------------------------------------------------------------------
 
         Vector3 MoveOriginVector = Vector3.Scale(PlayerCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
-
         transform.rotation = Quaternion.LookRotation(transform.forward + transform.right * CameraInput.x * PlayerRotationSpeed);
-
 
         if (isWallHit)
         {
@@ -317,65 +312,57 @@ public class PlayerControll : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(MoveOriginVector);
         }
 
-
-
-
         //------------------------------------------------------------
         //しゃがみ&スライディング
         //------------------------------------------------------------
 
-
-        
-        //スライディング
-        if (!isSliding && slideInputTrigger)
         {
-            SlidingTimer = 0;
-            isSliding = true;
-            Vector3 vec = s_Rigidbody.velocity;
-            vec.y = 0;
-            s_Rigidbody.AddForce(vec.normalized * SlidingSpeed, ForceMode.Impulse);
-        }
-
-        if (isSliding)
-        {
-            SlidingTimer += Time.deltaTime;
-
-            if (SlidingTimer > keepSlideTime)
+            if (!isSliding && slideInputTrigger)
             {
-                isSliding = false;
+                SlidingTimer = 0;
+                isSliding = true;
+                Vector3 vec = s_Rigidbody.velocity;
+                vec.y = 0;
+                s_Rigidbody.AddForce(vec.normalized * SlidingSpeed, ForceMode.Impulse);
+            }
+
+            if (isSliding)
+            {
+                SlidingTimer += Time.deltaTime;
+
+                if (SlidingTimer > keepSlideTime)
+                {
+                    isSliding = false;
+                }
+            }
+
+            isClouch = false;
+            Capsule_forDebug.transform.localPosition = new Vector3(0, 0.9f, 0);
+            Capsule_forDebug.transform.localScale = new Vector3(0.3f, 0.9f, 0.3f);
+
+            if (CrouchInput || isSliding)
+            {
+                isClouch = true;
+                Capsule_forDebug.transform.localPosition = new Vector3(0, 0.45f, 0);
+                Capsule_forDebug.transform.localScale = new Vector3(0.3f, 0.45f, 0.3f);
+            }
+
+            if (isClouch)
+            {
+                s_Collider.center = CrouchCenter;
+                s_Collider.height = CrouchHeight;
+            }
+            else
+            {
+                s_Collider.center = NormalCenter;
+                s_Collider.height = NormalHeight;
             }
         }
-
-
-        isClouch = false;
-        Capsule_forDebug.transform.localPosition = new Vector3(0, 0.9f, 0);
-        Capsule_forDebug.transform.localScale = new Vector3(0.3f, 0.9f, 0.3f);
-
-        if (CrouchInput || isSliding)
-        {
-            isClouch = true;
-            Capsule_forDebug.transform.localPosition = new Vector3(0, 0.45f, 0);
-            Capsule_forDebug.transform.localScale = new Vector3(0.3f, 0.45f, 0.3f);
-        }
-
-        if (isClouch)
-        {
-            s_Collider.center = CrouchCenter;
-            s_Collider.height = CrouchHeight;
-        }
-        else
-        {
-            s_Collider.center = NormalCenter;
-            s_Collider.height = NormalHeight;
-        }
-
-
-
-
 
         //-------------------------------------------------------------------------------
         //プレイヤーの動きをRigidBodyに入力
         //-------------------------------------------------------------------------------
+
         {
             Vector3 moveForward = MoveOriginVector * MoveInput.y;
 
@@ -444,7 +431,6 @@ public class PlayerControll : MonoBehaviour
             }
         }
 
-
         //------------------------------------------------------------
         //ジャンプ
         //------------------------------------------------------------
@@ -457,7 +443,6 @@ public class PlayerControll : MonoBehaviour
                 isGround = false;
                 s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower * PlayerSecondJumpMultiplyValue, ForceMode.Impulse);
             }
-
 
             if (jumpInputTrigger && isGround)
             {
@@ -476,7 +461,6 @@ public class PlayerControll : MonoBehaviour
                 moveVel.y = 0;
                 moveVel = moveVel.normalized;
                 
-                
                 s_Rigidbody.velocity = new Vector3(0, 0, 0);
                 s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower + moveVel * MaxRunSpeed, ForceMode.Impulse);
             }
@@ -493,17 +477,14 @@ public class PlayerControll : MonoBehaviour
         {
             if (playerSpeed < WallRunStopSpeedValue)
             {
-                isWallHit = false;
-                Debug.Log("WallRun : Stopped.tooslow(" + playerSpeed + ")");
+                WallRunEnd();
+                //Debug.Log("WallRun : Stopped.tooslow(" + playerSpeed + ")");
             }
         }
 
         //-------------------------------------------------------------------------------
         //#プレイヤーの攻撃処理
         //-------------------------------------------------------------------------------
-
-
-
 
         if (attack_1_InputTrigger)
         {
@@ -523,15 +504,6 @@ public class PlayerControll : MonoBehaviour
             LineAttack();
         }
 
-
-
-
-
-
-
-
-
-
         //-------------------------------------------------------------------------------
         //#アニメーションをアニメーターに登録
         //-------------------------------------------------------------------------------
@@ -548,15 +520,15 @@ public class PlayerControll : MonoBehaviour
 
     private void HikiyoseAttack()
     {
-      
         playerAttack.isAttack2 = true;
     }
+
     private void LineAttack()
     {
-       
         line.isAttack3 = true;
     }
-    private void OnCollisionEnter(Collision collision)
+
+    private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.tag == "Wall")
         {
@@ -568,6 +540,9 @@ public class PlayerControll : MonoBehaviour
                     SecondJumped = false;
                     if (isWallHit)
                     {
+                        if (WallObj == collision.gameObject)
+                            return;
+
                         WallSet(collision);
                         //速度の引継ぎ
 
@@ -575,7 +550,7 @@ public class PlayerControll : MonoBehaviour
                         Vector3 moveVel = WallRunVector.normalized * spd;
                         s_Rigidbody.velocity = moveVel;
 
-                        Debug.Log("WallRun : Changed.otherWallDitect");
+                        //Debug.Log("WallRun : Changed.otherWallDitect");
                     }
                     else
                     {
@@ -587,12 +562,24 @@ public class PlayerControll : MonoBehaviour
                         Vector3 moveVel = WallRunVector.normalized * MaxRunSpeed;
                         s_Rigidbody.velocity = moveVel;
 
-                        Debug.Log("WallRun : Start (" + moveVel.magnitude + ")");
+                        //Debug.Log("WallRun : Start (" + moveVel.magnitude + ")");
                     }
                 }
             }
         }
     }
+
+
+    void WallCheck()
+    {
+
+
+
+
+
+    }
+
+
 
 
     void WallSet(Collision obj)
@@ -623,19 +610,19 @@ public class PlayerControll : MonoBehaviour
 
         // 角度が正なら壁はプレイヤーの右側にある
         // 角度が負なら壁はプレイヤーの左側にある
+        // モーションに入力するために分けている
         if (angle > 0)
         {
             wallStatus = 1;
-            Debug.Log("WallRun : Right Wall Ditect");
+            //Debug.Log("WallRun : Right Wall Ditect");
         }
         else
         {
             wallStatus = 2;
-            Debug.Log("WallRun : Left Wall Ditect");
+            //Debug.Log("WallRun : Left Wall Ditect");
         }
 
         WallAngle = obj.transform.eulerAngles.y;
-
         WallRunVector = Quaternion.Euler(0, WallAngle, 0) * Vector3.right;
 
         if (Vector3.Dot(WallRunVector, transform.forward) < 0)
@@ -644,9 +631,9 @@ public class PlayerControll : MonoBehaviour
         }
 
         // ベクトルを正規化（単位ベクトルにする）
-        WallRunVector.Normalize();
+        WallRunVector = WallRunVector.normalized;
         WallObj = obj.gameObject;
-
+        //Debug.Log(obj.gameObject.name);
     }
 
     private void OnCollisionExit(Collision collision)
@@ -655,14 +642,20 @@ public class PlayerControll : MonoBehaviour
         {
             if (collision.gameObject.tag == "Wall" && collision.gameObject == WallObj)
             {
-                isWallHit = false;
-                wallStatus = 0;
-                Debug.Log("WallRun : Stopped.noWallHit");
+                //Debug.Log("WallRun : Stopped.noWallHit");
+                WallRunEnd();
             }
         }
     }
 
     
+    private void WallRunEnd()
+    {
+        WallObj = null;
+        isWallHit = false;
+        wallStatus = 0;
+    }
+
 
     private void OnDrawGizmos()
     {
