@@ -45,7 +45,7 @@ public class MaterialShader : MonoBehaviour
 
         if (increasing)
         {
-            lerpValue += switchSpeed * 0.1f;
+            lerpValue += switchSpeed * 0.2f;
 
             if (!hasSpawned)
             {
@@ -68,7 +68,7 @@ public class MaterialShader : MonoBehaviour
                 Destroy(spawnedRain);
                 hasSpawned = false;
             }
-            lerpValue -= switchSpeed * 0.1f;
+            lerpValue -= switchSpeed * 0.4f;
             if (lerpValue <= 0.0f)
             {
                 lerpValue = 0.0f;

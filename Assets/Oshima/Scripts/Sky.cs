@@ -10,20 +10,21 @@ public class Sky : MonoBehaviour
     public float decreaseRate = 1.0f;
     public float minDecreaseRate = 0.1f;
     public Volume globalVolume;
-    public float initialIntensity = 100000.0f;
-    public float initialDesiredLuxValue = 20000.0f;
-    public float targetIntensity = 1500.0f;
-    public float targetLuxValue = 300.0f;
+   
     public float rateChangeSpeed = 0.01f;
 
 
     //“V‹C‚Ì•Ï‰»
+    public float initialIntensity = 100000.0f;
+    public float initialDesiredLuxValue = 20000.0f;
+    public float targetIntensity = 0.0f;
+    public float targetLuxValue = 0.0f;
+    [Range(24, 0)]
+    public float timeOfDay;
+    public float orbitSpeed = 1.0f;
 
 
-    public float eveningIntensity = 1.5f;
-    public float eveningLuxValue = 0.8f;
-
-
+    private bool isNight;
 
 
     void Start()
@@ -38,10 +39,38 @@ public class Sky : MonoBehaviour
 
     void Update()
     {
-        NoonEvening();
-
-        Debug.Log(decreaseRate);
+        //timeOfDay += Time.deltaTime * orbitSpeed;
+        
+        //if (timeOfDay > 24)
+        //{
+        //    timeOfDay = 0;
+        //}
+        //var value = Mathf.PingPong(Time.time, timeOfDay);
+        UpdateDayTime();
+        
     }
+
+    private void UpdateDayTime()
+    {
+       
+       
+        
+        //timeOfDay += Time.deltaTime * orbitSpeed;
+        var value = Mathf.PingPong(Time.time, timeOfDay);
+        float dayLength = 24.0f;
+
+        float intensityChangeRate = (targetIntensity - initialIntensity) / dayLength;
+        float luxValueChangeRate = (targetLuxValue - initialDesiredLuxValue) / dayLength;
+
+        float currentTimeOfDay = value % dayLength;
+
+        directionalLight.intensity = initialIntensity + (intensityChangeRate * currentTimeOfDay);
+        sky.desiredLuxValue.value = initialDesiredLuxValue + (luxValueChangeRate * currentTimeOfDay);
+        Debug.Log(directionalLight.intensity);
+    }
+
+   
+
 
     // “Ü‚è
     public void CloudyWeather()
@@ -126,66 +155,68 @@ public class Sky : MonoBehaviour
 
     public void NoonEvening()
     {
-        if (directionalLight.intensity != eveningIntensity || sky.desiredLuxValue.value != eveningLuxValue)
-        {
-            if (decreaseRate > minDecreaseRate)
-            {
-                decreaseRate -= (decreaseRate - minDecreaseRate) * rateChangeSpeed * Time.deltaTime;
-            }
-            float intensityDelta = directionalLight.intensity - eveningIntensity;
-            float luxValueDelta = sky.desiredLuxValue.value - eveningLuxValue;
 
-            float step = Time.deltaTime * decreaseRate;
 
-            if (directionalLight.intensity - step * (intensityDelta / luxValueDelta) > eveningIntensity)
-            {
-                directionalLight.intensity -= step * (intensityDelta / luxValueDelta);
-            }
-            else
-            {
-                directionalLight.intensity = eveningIntensity;
-            }
+        //if (directionalLight.intensity != eveningIntensity || sky.desiredLuxValue.value != eveningLuxValue)
+        //{
+        //    if (decreaseRate > minDecreaseRate)
+        //    {
+        //        decreaseRate -= (decreaseRate - minDecreaseRate) * rateChangeSpeed * Time.deltaTime;
+        //    }
+        //    float intensityDelta = directionalLight.intensity - eveningIntensity;
+        //    float luxValueDelta = sky.desiredLuxValue.value - eveningLuxValue;
 
-            if (sky.desiredLuxValue.value - step > eveningLuxValue)
-            {
-                sky.desiredLuxValue.value -= step;
-            }
-            else
-            {
-                sky.desiredLuxValue.value = eveningLuxValue;
-            }
+        //    float step = Time.deltaTime * decreaseRate;
 
-            Debug.Log("Directional Light's Intensity: " + directionalLight.intensity);
-            Debug.Log("HDRISky's DesiredLuxValue: " + sky.desiredLuxValue.value);
-        }
-        if (directionalLight.intensity < 80000)
-        {
-            decreaseRate = 1500;
-        }
-        if (directionalLight.intensity < 50000)
-        {
-            decreaseRate = 1000;
-        }
-        if (directionalLight.intensity < 10000)
-        {
-            decreaseRate = 500;
-        }
-        if (directionalLight.intensity <1000 )
-        {
-            decreaseRate = 100;
-        }
-        if (directionalLight.intensity < 500)
-        {
-            decreaseRate = 50;
-        }
-        if (directionalLight.intensity < 100)
-        {
-            decreaseRate = 10;
-        }
-        if (directionalLight.intensity <10 )
-        {
-            decreaseRate = 1;
-        }
+        //    if (directionalLight.intensity - step * (intensityDelta / luxValueDelta) > eveningIntensity)
+        //    {
+        //        directionalLight.intensity -= step * (intensityDelta / luxValueDelta);
+        //    }
+        //    else
+        //    {
+        //        directionalLight.intensity = eveningIntensity;
+        //    }
+
+        //    if (sky.desiredLuxValue.value - step > eveningLuxValue)
+        //    {
+        //        sky.desiredLuxValue.value -= step;
+        //    }
+        //    else
+        //    {
+        //        sky.desiredLuxValue.value = eveningLuxValue;
+        //    }
+
+        //    Debug.Log("Directional Light's Intensity: " + directionalLight.intensity);
+        //    Debug.Log("HDRISky's DesiredLuxValue: " + sky.desiredLuxValue.value);
+        //}
+        //if (directionalLight.intensity < 80000)
+        //{
+        //    decreaseRate = 1500;
+        //}
+        //if (directionalLight.intensity < 50000)
+        //{
+        //    decreaseRate = 1000;
+        //}
+        //if (directionalLight.intensity < 10000)
+        //{
+        //    decreaseRate = 500;
+        //}
+        //if (directionalLight.intensity <1000 )
+        //{
+        //    decreaseRate = 100;
+        //}
+        //if (directionalLight.intensity < 500)
+        //{
+        //    decreaseRate = 50;
+        //}
+        //if (directionalLight.intensity < 100)
+        //{
+        //    decreaseRate = 10;
+        //}
+        //if (directionalLight.intensity <10 )
+        //{
+        //    decreaseRate = 1;
+        //}
     }
 
 
