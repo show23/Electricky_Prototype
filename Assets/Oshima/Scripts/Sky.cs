@@ -17,8 +17,8 @@ public class Sky : MonoBehaviour
     //“V‹C‚Ì•Ï‰»
     public float initialIntensity = 100000.0f;
     public float initialDesiredLuxValue = 20000.0f;
-    public float targetIntensity = 0.0f;
-    public float targetLuxValue = 0.0f;
+    public float targetIntensity = 5000.0f;
+    public float targetLuxValue = 500.0f;
     [Range(24, 0)]
     public float timeOfDay;
     public float orbitSpeed = 1.0f;
