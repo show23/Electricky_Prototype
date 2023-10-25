@@ -14,7 +14,10 @@ public class PlayerManager : MonoBehaviour
 
     [CustomLabel("通常攻撃に必要なコスト(最大100)")]
     public float AAgauge = 10;
-
+    [CustomLabel("通常攻撃レンジ")]
+    public float beamRange = 10;
+    [CustomLabel("通常攻撃速度")]
+    public float beamSpeed = 10;
     [Header("▽UIゲージ")]
     [CustomLabel("移動によって溜まる量")]
     public float fillSpeed = 1f;
@@ -80,7 +83,7 @@ public class PlayerManager : MonoBehaviour
         Gizmos.color = Color.yellow;
 
         // ギズモの範囲を表示
-        Gizmos.DrawWireSphere(transform.position, interactionRange);
+        Gizmos.DrawWireSphere(transform.position, beamRange);
 
     }
 }

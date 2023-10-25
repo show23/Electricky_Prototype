@@ -80,7 +80,7 @@ Material:
     - _DstBlend: 0
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
-    - _Flow: 0.1
+    - _Flow: 100
     - _FlowTiling: 28.2
     - _MaterialID: 1
     - _MaterialTypeMask: 2
@@ -120,7 +120,7 @@ Material:
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4
     - _ZWrite: 1
-    - _kirikae: 0
+    - _kirikae: 1
     m_Colors:
     - _BaseColor: {r: 0, g: 2.5568385, b: 16, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}

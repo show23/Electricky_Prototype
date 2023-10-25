@@ -54,4 +54,5 @@ public class Bullet : MonoBehaviour
             GetComponent<Rigidbody>().velocity = (direction + curve) * beamSpeed;
         }
     }
+   
 }

@@ -46,6 +46,11 @@ public class PlayerAttack : MonoBehaviour
                 debugButtonController.DamageSkillAAPush();
                 ShootBeam(nearestEnemy);
             }
+            else
+            {
+                debugButtonController.DamageSkillAAPush();
+                beemStraight();
+            }
         }
 
         isAttack = false;
@@ -95,11 +100,22 @@ public class PlayerAttack : MonoBehaviour
 
     void ShootBeam(GameObject target)
     {
-        GameObject beamInstance = Instantiate(beamPrefab, playerManager.firePoint.position, playerManager.firePoint.rotation);
-        Bullet beamScript = beamInstance.GetComponent<Bullet>();
-        beamScript.SetTarget(target.transform);
-        Destroy(beamInstance, 3f);
+        float distance = Vector3.Distance(transform.position, target.transform.position);
+
+        if (distance <= playerManager.beamRange) // 距離が望ましい範囲内にあるか
+        {
+            GameObject beamInstance = Instantiate(beamPrefab, playerManager.firePoint.position, playerManager.firePoint.rotation);
+            Bullet beamScript = beamInstance.GetComponent<Bullet>();
+            beamScript.SetTarget(target.transform);
+            Destroy(beamInstance, 3f);
+        }
+        else
+        {
+            beemStraight();
+        }
     }
+
+
 
     bool IsObstacleBetweenPlayerAndEnemy(GameObject enemy)
     {
@@ -113,7 +129,7 @@ public class PlayerAttack : MonoBehaviour
 
         Debug.Log("レイの方向: " + rayDirection);
 
-        // Rayの始点から終点までのラインを赤色で描画します
+        // Rayの始点から終点までのラインを赤色で描画
         Debug.DrawLine(rayStart, targetPosition, Color.red, 2f);
 
         RaycastHit hit;
@@ -125,15 +141,22 @@ public class PlayerAttack : MonoBehaviour
 
             if (hit.collider.gameObject != enemy)
             {
-                Debug.Log("障害物が検出されました");
-                return true;
+                beemStraight();
             }
         }
 
         return false;
     }
 
-
+    private void beemStraight()
+    {
+        // 対象が射程外の場合、プレイヤーの向いている方向にまっすぐビームを発射
+        GameObject beamInstance = Instantiate(beamPrefab, playerManager.firePoint.position, Quaternion.LookRotation(transform.forward));
+        Bullet beamScript = beamInstance.GetComponent<Bullet>();
+        beamScript.SetTarget(null); // ターゲットはいらないので null を設定
+        beamInstance.GetComponent<Rigidbody>().velocity = transform.forward * playerManager.beamSpeed; // ビームをプレイヤーの向いている方向に進める
+        Destroy(beamInstance, 3f);
+    }
 
 
 }

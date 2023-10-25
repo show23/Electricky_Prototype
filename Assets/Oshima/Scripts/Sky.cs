@@ -39,9 +39,9 @@ public class Sky : MonoBehaviour
 
     void Update()
     {
-        CloudyWeather();
+        // CloudyWeather();
 
-
+        materialShader.increasing = true;
     }
 
     private void UpdateDayTime()
