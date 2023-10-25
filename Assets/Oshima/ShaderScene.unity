@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 5261.649, g: 5814.0083, b: 7024.048, a: 1}
+  m_IndirectSpecularColor: {r: 5262.821, g: 5815.4106, b: 7026.337, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5309,7 +5309,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -5361,7 +5361,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 998581328}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.25702506, y: -0.1135323, z: 0.9592305, w: 0.03042089}
+  m_LocalRotation: {x: 0.25085545, y: 0.23776576, z: 0.9362052, w: -0.063709155}
   m_LocalPosition: {x: 92.72612, y: 24.472193, z: 87.00908}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7255,7 +7255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4fe09c4a14cf1e4bb46ce72ddc854cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeOfDay: 17.1
+  timeOfDay: 19.9
   orbitSpeed: 0.1
   sun: {fileID: 998581330}
   moon: {fileID: 1945064045}
@@ -8938,7 +8938,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Intensity: 0.15
+  m_Intensity: 1.5
   m_EnableSpotReflector: 1
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
@@ -9060,13 +9060,13 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.15
+  m_Intensity: 1.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -9118,7 +9118,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1945064043}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.030420886, y: -0.9592305, z: -0.11353228, w: 0.25702506}
+  m_LocalRotation: {x: 0.06370916, y: -0.93620515, z: 0.2377658, w: 0.25085545}
   m_LocalPosition: {x: 92.72612, y: 24.472193, z: 87.00908}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
