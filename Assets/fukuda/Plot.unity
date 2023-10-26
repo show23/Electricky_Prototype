@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 4612.7915, g: 2948.1663, b: 2171.0276, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4263,10 +4263,14 @@ MonoBehaviour:
   playerSpeed: 0
   isWallHit: 0
   wallStatus: 0
+  wallLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   isGround: 1
   SecondJumped: 0
   isClouch: 0
   isSliding: 0
+  isWallRun: 0
   CrouchCenter: {x: 0, y: 0.45, z: 0}
   CrouchHeight: 0.9
 --- !u!114 &7856667044145252036
