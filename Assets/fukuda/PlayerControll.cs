@@ -94,28 +94,34 @@ public class PlayerControll : MonoBehaviour
     private float playerSpeed;
 
 
-    //壁判定の距離
+    //壁走り関係の数値設定
     public bool isWallHit = false;
-    [Tooltip("0:noWall 1:RightWall 2:LeftWall")]
-    public int wallStatus = 0;
 
-    //プレイヤーから壁へのベクトル
-    private Vector3 WallVector;
+    public enum wallSide
+    {
+        NoWallDitect,
+        Right,
+        Left
+    }
 
-    //壁走りの時、高さ方向以外はこのベクトルと平行に走れば処理できるようにした
-    private Vector3 WallRunVector;
-
-    //壁の角度(QuadのEularAnglesから取得)
-    private float WallAngle;
-
+    public wallSide wallStatus = wallSide.NoWallDitect;
+    [Tooltip("このレイヤーのオブジェクトにレイが当たった時に壁があると判定する")]
+    public LayerMask wallLayers = 0;
+    private Vector3 WallRunVec;
+    private Vector3 WallNormalVec;
+    private float WallDistance;
+    
 
 
     //接地判定
     public bool isGround = true;
+    public bool FirstJumped = false;
     public bool SecondJumped = false;
 
     public bool isClouch = false;
     public bool isSliding = false;
+
+    public bool isWallRun = false;
 
 
     //スライディング関係の数値設定
@@ -169,17 +175,17 @@ public class PlayerControll : MonoBehaviour
         //-------------------------------------------------------------------------------
         //#壁の配置を確認し、カメラの位置を調整、壁判定を取る
         //-------------------------------------------------------------------------------
-        
-        PlayerCameraOrigin.transform.localPosition = new Vector3(0, 1.375f, 0);
-        if (isWallHit)
+        float heightOffSet = s_Collider.center.y;
+        PlayerCameraOrigin.transform.localPosition = new Vector3(0, heightOffSet, 0);
+        if (isWallRun)
         {
-            if (wallStatus == 1)
+            if (wallStatus == wallSide.Right)
             {
-                PlayerCameraOrigin.transform.localPosition = new Vector3(-1, 1.375f, 0);
+                PlayerCameraOrigin.transform.localPosition = new Vector3(-3, heightOffSet, 0);
             }
-            if (wallStatus == 2)
+            if (wallStatus == wallSide.Left)
             {
-                PlayerCameraOrigin.transform.localPosition = new Vector3( 1, 1.375f, 0);
+                PlayerCameraOrigin.transform.localPosition = new Vector3( 3, heightOffSet, 0);
             }
         }
 
@@ -190,18 +196,19 @@ public class PlayerControll : MonoBehaviour
             if (Physics.Raycast(transform.position + transform.up * 0.1f, Vector3.down, out Hit, raycastDistance))
             {
                 isGround = true;
+                FirstJumped = false;
                 SecondJumped = false;
-                WallRunEnd();
+                //WallRunEnd();
             }
             else
             {
+                FirstJumped = true;
                 isGround = false;
             }
         }
         //-------------------------------------------------------------------------------
         //プレイヤーの入力値の検知
         //-------------------------------------------------------------------------------
-
 
         //入力値の更新
         {
@@ -217,7 +224,7 @@ public class PlayerControll : MonoBehaviour
                 RunInput = run.ReadValue<float>() > 0;
 
 
-            if (isWallHit) { 
+            if (isWallRun) { 
                 RunInput = true;
                 CrouchInput = false;
             }
@@ -290,11 +297,12 @@ public class PlayerControll : MonoBehaviour
 
 
             //走っているときはスティックいっぱいに入力している判定になる
-            if (RunInput)
-            {
-                Vector2 vec = MoveInput.normalized;
-                MoveInput = vec;
-            }
+            //10/26 仕様変更により削除
+            //if (RunInput)
+            //{
+            //    Vector2 vec = MoveInput.normalized;
+            //    MoveInput = vec;
+            //}
 
             OldJumpInput = JumpInput;
             OldAttack_1_Input = Attack_1_Input;
@@ -304,16 +312,52 @@ public class PlayerControll : MonoBehaviour
         }
 
         //-------------------------------------------------------------------------------
+        //壁判定の更新
+        //-------------------------------------------------------------------------------
+
+        WallRunCheck();
+
+
+        //壁走り開始判定
+        if (!isWallRun && isWallHit && !isGround && RunInput)
+            isWallRun = true;
+        
+        if (!isWallHit) 
+            isWallRun = false;
+
+        if (isWallRun)
+        {
+            RunInput = true;
+            FirstJumped = false;
+            SecondJumped = false;
+            s_Rigidbody.useGravity = false;
+
+            transform.position += -WallNormalVec.normalized * WallDistance * 0.5f;
+
+            s_Rigidbody.velocity = WallRunVec * MaxRunSpeed;
+
+            transform.rotation = Quaternion.LookRotation(WallRunVec, Vector3.up);
+            Vector3 v = s_Rigidbody.velocity;
+            v.y = 0;
+            s_Rigidbody.velocity = v;
+        }
+        else
+        {
+            s_Rigidbody.useGravity = true;
+        }
+
+
+
+
+        //-------------------------------------------------------------------------------
         //カメラの角度/壁の角度からプレイヤーの入力値を調整 プレイヤーを回転
         //-------------------------------------------------------------------------------
 
         Vector3 MoveOriginVector = Vector3.Scale(PlayerCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
-        transform.rotation = Quaternion.LookRotation(transform.forward + transform.right * CameraInput.x * PlayerRotationSpeed);
-
-        if (isWallHit)
+        
+        if (!isWallRun)
         {
-            MoveOriginVector = Vector3.Scale(WallRunVector, new Vector3(1, 0, 1)).normalized;
-            transform.rotation = Quaternion.LookRotation(MoveOriginVector);
+            transform.rotation = Quaternion.LookRotation(transform.forward + transform.right * CameraInput.x * PlayerRotationSpeed);
         }
 
         //------------------------------------------------------------
@@ -367,25 +411,35 @@ public class PlayerControll : MonoBehaviour
         //プレイヤーの動きをRigidBodyに入力
         //-------------------------------------------------------------------------------
 
+        
+        float speedHoldRate = VelocityHoldRate;
+        float speedAddRate = 1.0f;
+
+
+        if (!isGround)
         {
-            Vector3 moveForward = MoveOriginVector * MoveInput.y;
+            speedHoldRate = AirVelocityHoldRate;
+            speedAddRate = AirVelocityAccRate;
+        }
 
-            if (!isWallHit)
-                moveForward += PlayerCamera.transform.right * MoveInput.x;
+        //減速処理(ぬるぬる動く性質の温床)
+        {
+            Vector3 selfSpeed = s_Rigidbody.velocity;
+            selfSpeed *= speedHoldRate;
+            selfSpeed.y = s_Rigidbody.velocity.y;
 
-            float speedHoldRate = VelocityHoldRate;
-            float speedAddRate = 1.0f;
+            s_Rigidbody.velocity = selfSpeed;
+        }
+
+        //移動入力処理
+
+        Vector3 moveForward = MoveOriginVector * MoveInput.y;
+        moveForward += PlayerCamera.transform.right * MoveInput.x;
+        moveForward = Vector3.Scale(moveForward, new Vector3(1, 0, 1));
 
 
-            if (!isGround)
-            {
-                speedHoldRate = AirVelocityHoldRate;
-                speedAddRate = AirVelocityAccRate;
-            }
-
-
-
-            moveForward = Vector3.Scale(moveForward, new Vector3(1, 0, 1));
+        if (!isWallRun)
+        {
 
             Vector3 Vel = Vector3.Scale(s_Rigidbody.velocity, new Vector3(1, 0, 1));
 
@@ -415,41 +469,25 @@ public class PlayerControll : MonoBehaviour
             Vector3 MoveVel = moveForward * accValue;
 
             s_Rigidbody.AddForce(MoveVel);
-            s_Rigidbody.useGravity = true;
-
-            if (isWallHit)
-            {
-                Vector3 v = s_Rigidbody.velocity;
-                v.y = 0;
-                s_Rigidbody.velocity = v;
-                s_Rigidbody.useGravity = false;
-            }
-
-            //減速処理(バグの温床)
-            {
-                Vector3 selfSpeed = s_Rigidbody.velocity;
-                selfSpeed *= speedHoldRate;
-                selfSpeed.y = s_Rigidbody.velocity.y;
-
-                s_Rigidbody.velocity = selfSpeed;
-            }
         }
 
         //------------------------------------------------------------
         //ジャンプ
         //------------------------------------------------------------
-        if (!isWallHit)
+        if (!isWallRun)
         {
             //処理フロー上2段ジャンプの方が先の方がいい
-            if (jumpInputTrigger && !isGround && !SecondJumped)
+            if (jumpInputTrigger && FirstJumped && !SecondJumped)
             {
                 SecondJumped = true;
+                FirstJumped = true;
                 isGround = false;
                 s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower * PlayerSecondJumpMultiplyValue, ForceMode.Impulse);
             }
 
-            if (jumpInputTrigger && isGround)
+            if (jumpInputTrigger && !FirstJumped)
             {
+                FirstJumped = true;
                 isGround = false;
                 s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower, ForceMode.Impulse);
             }
@@ -458,15 +496,20 @@ public class PlayerControll : MonoBehaviour
         {
             if (jumpInputTrigger)
             {
+                FirstJumped = true;
                 SecondJumped = false;
-                isWallHit = false;
+                isWallRun = false;
 
-                Vector3 moveVel = new Vector3(MoveInput.x, 0, MoveInput.y) + transform.forward;
-                moveVel.y = 0;
-                moveVel = moveVel.normalized;
+                //Vector3 A = transform.forward;
+                //Vector3 B = new Vector3(MoveInput.x, 0, MoveInput.y);
+
+
+                //Vector3 moveVel = new Vector3(MoveInput.x, 0, MoveInput.y) + transform.forward;
+                //moveVel.y = 0;
+                //moveVel = moveVel.normalized;
                 
                 s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower + moveVel * MaxRunSpeed, ForceMode.Impulse);
+                s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower + moveForward * MaxRunSpeed, ForceMode.Impulse);
             }
         }
 
@@ -477,12 +520,12 @@ public class PlayerControll : MonoBehaviour
 
         playerSpeed = new Vector2(s_Rigidbody.velocity.x, s_Rigidbody.velocity.z).magnitude;
 
-        if (isWallHit)
+        if (isWallRun)
         {
             if (playerSpeed < WallRunStopSpeedValue)
             {
-                WallRunEnd();
                 //Debug.Log("WallRun : Stopped.tooslow(" + playerSpeed + ")");
+                //WallRunEnd();
             }
         }
 
@@ -532,132 +575,82 @@ public class PlayerControll : MonoBehaviour
         line.isAttack3 = true;
     }
 
-    private void OnCollisionStay(Collision collision)
+
+    private void WallRunCheck()
     {
-        if (collision.gameObject.tag == "Wall")
+        float offsetY = s_Rigidbody.position.y;
+        Vector3 origin = transform.position + transform.up * offsetY;
+        float distance = 0.2f + s_Collider.radius;
+
+        Vector3 RightNormal = Vector3.zero;
+        Vector3 LeftNormal = Vector3.zero;
+
+        float RightDist = distance;
+        bool isRightHit = false;
+        RaycastHit Righthit;
+
+        float LeftDist = distance;
+        bool isLeftHit = false;
+        RaycastHit Lefthit;
+
+        //右壁チェック
+        if (Physics.Raycast(origin, transform.right, out Righthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
         {
-            if (!isGround)
+            isRightHit = true;
+            RightNormal = Righthit.normal;
+            RightDist = Righthit.distance;
+        }
+
+        //左壁チェック
+        if (Physics.Raycast(origin, -transform.right, out Lefthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
+        {
+            isLeftHit = true;
+            LeftNormal = Lefthit.normal;
+            LeftDist = Lefthit.distance;
+        }
+
+        if (isRightHit || isLeftHit)
+        {
+            bool RightisNear = false;
+            if (LeftDist > RightDist)
+                RightisNear = true;
+            
+            isWallHit = true;
+
+            if (RightisNear)
             {
-                if (playerSpeed > WallRunStopSpeedValue)
+                WallDistance = RightDist;
+                WallNormalVec = RightNormal;
+                wallStatus = wallSide.Right;
+            }
+            else
+            {
+                WallDistance = LeftDist;
+                WallNormalVec = LeftNormal;
+                wallStatus = wallSide.Left;
+            }
+
+            //ここの数値やベクトルをもとに壁に平行なベクトルを求め
+            //壁走りの方向を決める
+            //https://docs.unity3d.com/ja/2019.4/Manual/ComputingNormalPerpendicularVector.html
+            {
+                Vector3 A = -WallNormalVec.normalized;
+                Vector3 B = Vector3.up.normalized;
+
+                WallRunVec = Vector3.Cross(A,B);
+
+                if (wallStatus == wallSide.Left)
                 {
-                    isGround = false;
-                    SecondJumped = false;
-                    if (isWallHit)
-                    {
-                        if (WallObj == collision.gameObject)
-                            return;
-
-                        WallSet(collision);
-                        //速度の引継ぎ
-
-                        float spd = s_Rigidbody.velocity.magnitude;
-                        Vector3 moveVel = WallRunVector.normalized * spd;
-                        s_Rigidbody.velocity = moveVel;
-
-                        //Debug.Log("WallRun : Changed.otherWallDitect");
-                    }
-                    else
-                    {
-                        WallSet(collision);
-                        isWallHit = true;
-
-                        //壁走りの初速
-                        //壁走り開始時に壁沿いに加速するようにした
-                        Vector3 moveVel = WallRunVector.normalized * MaxRunSpeed;
-                        s_Rigidbody.velocity = moveVel;
-
-                        //Debug.Log("WallRun : Start (" + moveVel.magnitude + ")");
-                    }
+                    WallRunVec = -WallRunVec;
                 }
             }
         }
-    }
-
-
-    void WallCheck()
-    {
-
-
-
-
-
-    }
-
-
-
-
-    void WallSet(Collision obj)
-    {
-        Vector3 WallPoint = obj.GetContact(0).point;
-
-        WallVector = WallPoint - transform.position;
-        // プレイヤーの位置
-        Vector3 playerPosition = transform.position;
-
-        // プレイヤーから壁へのベクトルを計算
-        Vector3 playerToWall = WallPoint - playerPosition;
-        playerToWall.y = 0; // Y軸成分を無視
-
-        // プレイヤーの前方ベクトル
-        Vector3 playerForward = transform.forward;
-        playerForward.y = 0; // Y軸成分を無視
-
-        
-        // プレイヤーの後方にある場合は何もしない
-        if (Vector3.Dot(playerForward, playerToWall) < 0)
-        {
-            return;
-        }
-        
-        // プレイヤーの前方ベクトルとプレイヤーから壁へのベクトルの角度を計算
-        float angle = Vector3.SignedAngle(playerForward, playerToWall, Vector3.up);
-
-        // 角度が正なら壁はプレイヤーの右側にある
-        // 角度が負なら壁はプレイヤーの左側にある
-        // モーションに入力するために分けている
-        if (angle > 0)
-        {
-            wallStatus = 1;
-            //Debug.Log("WallRun : Right Wall Ditect");
-        }
         else
         {
-            wallStatus = 2;
-            //Debug.Log("WallRun : Left Wall Ditect");
+            WallNormalVec = Vector3.zero;
+            isWallHit = false;
+            wallStatus = wallSide.NoWallDitect;
         }
-
-        WallAngle = obj.transform.eulerAngles.y;
-        WallRunVector = Quaternion.Euler(0, WallAngle, 0) * Vector3.right;
-
-        if (Vector3.Dot(WallRunVector, transform.forward) < 0)
-        {
-            WallRunVector = -WallRunVector;
-        }
-
-        // ベクトルを正規化（単位ベクトルにする）
-        WallRunVector = WallRunVector.normalized;
-        WallObj = obj.gameObject;
-        //Debug.Log(obj.gameObject.name);
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (isWallHit)
-        {
-            if (collision.gameObject.tag == "Wall" && collision.gameObject == WallObj)
-            {
-                //Debug.Log("WallRun : Stopped.noWallHit");
-                WallRunEnd();
-            }
-        }
-    }
-
-    
-    private void WallRunEnd()
-    {
-        WallObj = null;
-        isWallHit = false;
-        wallStatus = 0;
     }
 
 
@@ -665,8 +658,13 @@ public class PlayerControll : MonoBehaviour
     {
         Vector3 vec = new Vector3(MoveInput.x, 0, MoveInput.y);
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + (transform.forward + vec).normalized * 2);
 
+        // ベクトルBを回転行列に変換
+        Quaternion rotationQuaternion = Quaternion.Euler(vec);
+        // ベクトルAを回転行列で回転
+        Vector3 rotatedVector = rotationQuaternion * transform.forward;
+
+        Gizmos.DrawLine(transform.position, transform.position + rotatedVector * 2);
 
         if (!s_Rigidbody)
             s_Rigidbody = GetComponent<Rigidbody>();
@@ -680,7 +678,5 @@ public class PlayerControll : MonoBehaviour
         Gizmos.color = Color.green;
         vec = s_Collider.height * transform.up;
         Gizmos.DrawLine(transform.position + vec, transform.position + vec + transform.up * 0.2f);
-
     }
-
 }
