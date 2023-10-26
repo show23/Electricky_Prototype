@@ -23,7 +23,7 @@ public class Sky : MonoBehaviour
     public float timeOfDay;
     public float orbitSpeed = 1.0f;
 
-
+    public bool israin = false;
     private bool isNight;
 
 
@@ -41,7 +41,7 @@ public class Sky : MonoBehaviour
     {
         // CloudyWeather();
 
-        materialShader.increasing = true;
+        materialShader.increasing = israin;
     }
 
     private void UpdateDayTime()
