@@ -27,6 +27,7 @@ public class MeshTra : MonoBehaviour
     }
     IEnumerator ActiveteTrail(float timeActive)
     {
+        
         while(timeActive > 0)
         {
             timeActive -= meshRefreshRate;
@@ -36,6 +37,7 @@ public class MeshTra : MonoBehaviour
 
             for(int i = 0; i < skinnedMeshRenderers.Length; i++)
             {
+                Debug.Log("aaa");
                 GameObject gObj = new GameObject();
                 gObj.transform.SetPositionAndRotation(positionToSpawn.position, positionToSpawn.rotation);
                MeshRenderer mr= gObj.AddComponent<MeshRenderer>();

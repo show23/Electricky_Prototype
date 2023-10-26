@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Puddles:
-        m_Texture: {fileID: 2800000, guid: db20fb2f0a0a1ee4881b1a63bb757149, type: 3}
+        m_Texture: {fileID: 2800000, guid: e02d87e11ddfef34aa91f3be3763c6c2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Ripple:
@@ -80,8 +80,8 @@ Material:
     - _DstBlend: 0
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
-    - _Flow: 100
-    - _FlowTiling: 28.2
+    - _Flow: 1
+    - _FlowTiling: 1
     - _MaterialID: 1
     - _MaterialTypeMask: 2
     - _OpaqueCullMode: 2
@@ -127,7 +127,7 @@ Material:
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _MainTiling: {r: 1500, g: 1500, b: 0, a: 0}
     - _RippleColor: {r: 0, g: 0.53926706, b: 1, a: 0}
-    - _RippleSpeed: {r: 0.05, g: 0, b: 0, a: 0}
+    - _RippleSpeed: {r: 0.01, g: 0, b: 0, a: 0}
     - _RippleTiling: {r: 204, g: 200, b: 0, a: 0}
     - _SmoothTiling: {r: 0.05, g: 0.05, b: 0, a: 0}
   m_BuildTextureStacks: []
