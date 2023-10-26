@@ -328,7 +328,7 @@ public class PlayerControll : MonoBehaviour
             SecondJumped = false;
             s_Rigidbody.useGravity = false;
 
-            transform.position += -WallNormalVec.normalized * WallDistance;
+            transform.position += -WallNormalVec.normalized * WallDistance * 0.5f;
 
             s_Rigidbody.velocity = WallRunVec * MaxRunSpeed;
 
@@ -428,15 +428,14 @@ public class PlayerControll : MonoBehaviour
         }
 
         //à⁄ìÆì¸óÕèàóù
+
+        Vector3 moveForward = MoveOriginVector * MoveInput.y;
+        moveForward += PlayerCamera.transform.right * MoveInput.x;
+        moveForward = Vector3.Scale(moveForward, new Vector3(1, 0, 1));
+
+
         if (!isWallRun)
         {
-            Vector3 moveForward = MoveOriginVector * MoveInput.y;
-
-            if (!isWallRun)
-                moveForward += PlayerCamera.transform.right * MoveInput.x;
-
-
-            moveForward = Vector3.Scale(moveForward, new Vector3(1, 0, 1));
 
             Vector3 Vel = Vector3.Scale(s_Rigidbody.velocity, new Vector3(1, 0, 1));
 
@@ -497,16 +496,16 @@ public class PlayerControll : MonoBehaviour
                 SecondJumped = false;
                 isWallRun = false;
 
-                Vector3 A = transform.forward;
-                Vector3 B = new Vector3(MoveInput.x, 0, MoveInput.y);
+                //Vector3 A = transform.forward;
+                //Vector3 B = new Vector3(MoveInput.x, 0, MoveInput.y);
 
 
-                Vector3 moveVel = new Vector3(MoveInput.x, 0, MoveInput.y) + transform.forward;
-                moveVel.y = 0;
-                moveVel = moveVel.normalized;
+                //Vector3 moveVel = new Vector3(MoveInput.x, 0, MoveInput.y) + transform.forward;
+                //moveVel.y = 0;
+                //moveVel = moveVel.normalized;
                 
                 s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower + moveVel * MaxRunSpeed, ForceMode.Impulse);
+                s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower + moveForward * MaxRunSpeed, ForceMode.Impulse);
             }
         }
 
