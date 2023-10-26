@@ -14,7 +14,10 @@ public class PlayerManager : MonoBehaviour
 
     [CustomLabel("通常攻撃に必要なコスト(最大100)")]
     public float AAgauge = 10;
-
+    [CustomLabel("通常攻撃レンジ")]
+    public float beamRange = 10;
+    [CustomLabel("通常攻撃速度")]
+    public float beamSpeed = 10;
     [Header("▽UIゲージ")]
     [CustomLabel("移動によって溜まる量")]
     public float fillSpeed = 1f;
@@ -25,8 +28,7 @@ public class PlayerManager : MonoBehaviour
     [CustomLabel("引き寄せスキルに必要なコスト(最大100)")]
     public float currentHp = 80;
 
-    [CustomLabel("引き寄せ攻撃ボタン")]
-    public KeyCode attackKey = KeyCode.E; // 引き寄せるキー
+    
     [CustomLabel("円が広がるスピード")]
     public float increasedSpeed = 10.0f; // キーが押されている間に拡大する範囲
     [CustomLabel("最大の円の大きさ")]
@@ -81,7 +83,7 @@ public class PlayerManager : MonoBehaviour
         Gizmos.color = Color.yellow;
 
         // ギズモの範囲を表示
-        Gizmos.DrawWireSphere(transform.position, interactionRange);
+        Gizmos.DrawWireSphere(transform.position, beamRange);
 
     }
 }

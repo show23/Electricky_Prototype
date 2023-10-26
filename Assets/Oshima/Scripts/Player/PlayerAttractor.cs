@@ -14,45 +14,41 @@ public class PlayerAttractor : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        attack = playerManager.attackKey;
-        if (Input.GetKey(attack))
+        
+        
+
+    }
+    public void ApplyAttractionForce()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, playerManager.attractionRange);
+        foreach (Collider col in colliders)
         {
-            Collider[] colliders = Physics.OverlapSphere(transform.position, playerManager.attractionRange);
-
-            foreach (Collider col in colliders)
+            if (col.CompareTag("Enemy"))
             {
-                if (col.CompareTag("Enemy"))
+                Rigidbody rb = col.GetComponent<Rigidbody>();
+                if (rb != null)
                 {
-                    Rigidbody rb = col.GetComponent<Rigidbody>();
-                    if (rb != null)
+                    Vector3 directionToPlayer = transform.position - col.transform.position;
+                    float distanceToPlayer = directionToPlayer.magnitude;
+
+                    if (distanceToPlayer > playerManager.stopDistance)
                     {
-                        // プレイヤーから敵への方向ベクトルと距離を計算
-                        Vector3 directionToPlayer = transform.position - col.transform.position;
-                        float distanceToPlayer = directionToPlayer.magnitude;
+                        Vector3 attractionDirection = directionToPlayer.normalized;
+                        rb.AddForce(attractionDirection * playerManager.attractionForce, ForceMode.Force);
 
-                        // 引き寄せる力を適用
-                        if (distanceToPlayer > playerManager.stopDistance)
+                        if (rb.velocity.magnitude > playerManager.maxSpeed)
                         {
-                            Vector3 attractionDirection = directionToPlayer.normalized;
-                            rb.AddForce(attractionDirection * playerManager.attractionForce, ForceMode.Force);
-
-                            // 速度を制限して最大速度に収束させる
-                            if (rb.velocity.magnitude > playerManager.maxSpeed)
-                            {
-                                rb.velocity = rb.velocity.normalized * playerManager.maxSpeed;
-                            }
+                            rb.velocity = rb.velocity.normalized * playerManager.maxSpeed;
                         }
-                        else
-                        {
-                            // 停止距離内にいる場合、力をゼロに設定して停止
-                            rb.velocity = Vector3.zero;
-                        }
+                    }
+                    else
+                    {
+                        rb.velocity = Vector3.zero;
                     }
                 }
             }
         }
     }
-
     // ギズモを表示するためのメソッド
-    
+
 }

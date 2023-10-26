@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4446220149197092029}
   - component: {fileID: 4998433287926572038}
   - component: {fileID: 3196454967986485681}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BulleVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,5 +194,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 224d778a28dc4ab46b7d81e84af422d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beamSpeed: 50
+  beamSpeed: 30
   curveStrength: 0.12

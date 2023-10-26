@@ -125,6 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 399fd31999fb3614fb88236bf455328a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isAttack3: 0
 --- !u!114 &5351865004166671754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,6 +293,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d603c450a56db8945a5fd94b4e2c21ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isAttack: 0
+  isAttack2: 0
+  beamPrefab: {fileID: 0}
 --- !u!114 &6189430948049754845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,6 +310,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 30
   dashSpeed: 50
+  AAgauge: 10
+  fillSpeed: 1
+  currentHp: 80
   attackKey: 101
   increasedSpeed: 10
   maxInteractionRange: 10
@@ -319,8 +326,6 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   player: {fileID: 8421078433952634266}
   lineRenderer: {fileID: 3063810311175551516}
-  beamPrefab: {fileID: 6209920713220862906, guid: a6fcbfa6a24ed7f4d9c091f3c77b8292,
-    type: 3}
   firePoint: {fileID: 6064620459806634503}
   interactionRange: 0
 --- !u!1 &5770644894859556756

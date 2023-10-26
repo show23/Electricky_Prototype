@@ -6,83 +6,69 @@ public class PlayerAttack : MonoBehaviour
 {
     DebugButtonController debugButtonController;
     PlayerManager playerManager;
+    PlayerAttractor playerAttractor;
     public bool isAttack = false;
     public bool isAttack2 = false;
     private bool oldIsAttack = false;
-    // public float beamSpeed = 10f; // ビームの速度
-    //private float interactionRange = 0.0f; // PlayerとEnemyの間の許容距離
 
-    public GameObject beamPrefab; // ビームのプレハブ
+    public GameObject beamPrefab;
 
     [System.Obsolete]
     private void Start()
     {
         debugButtonController = FindObjectOfType<DebugButtonController>();
-        
         playerManager = GetComponent<PlayerManager>();
+        playerAttractor = GetComponent<PlayerAttractor>();
     }
 
     private void Update()
     {
-        
-
-        // キーが押されている間
         if (isAttack2 == true && debugButtonController.CurrentHp >= playerManager.currentHp)
         {
-            // interactionRangeを増加させる
+            playerAttractor.ApplyAttractionForce();
             playerManager.interactionRange += playerManager.increasedSpeed * Time.deltaTime;
-            // interactionRangeが最大許容距離を超えないように制限
             playerManager.interactionRange = Mathf.Min(playerManager.interactionRange, playerManager.maxInteractionRange);
-            
         }
-       
 
-
-        if(isAttack2 == false && oldIsAttack == true && debugButtonController.CurrentHp >= playerManager.currentHp)
+        if (isAttack2 == false && oldIsAttack == true && debugButtonController.CurrentHp >= playerManager.currentHp)
         {
             InteractWithEnemy();
-            // キーが離されたらinteractionRangeを元に戻す
-            playerManager.interactionRange = 0.0f; // 初期値に戻す、必要に応じて変更
+            playerManager.interactionRange = 0.0f;
             debugButtonController.DamageSkillHikiyosePush();
         }
-        // スペースキーが押されたらビームを発射
+
         if (isAttack == true && debugButtonController.CurrentHp >= playerManager.AAgauge)
         {
-            // 一番近くのカメラ内の敵を探す
             GameObject nearestEnemy = FindNearestEnemyInCamera();
 
-            // ターゲットが設定されている場合
-            if (nearestEnemy != null)
+            if (nearestEnemy != null && !IsObstacleBetweenPlayerAndEnemy(nearestEnemy))
             {
                 debugButtonController.DamageSkillAAPush();
-                // ビームを発射
                 ShootBeam(nearestEnemy);
             }
+            else
+            {
+                debugButtonController.DamageSkillAAPush();
+                beemStraight();
+            }
         }
-        isAttack = false;
 
+        isAttack = false;
         oldIsAttack = isAttack2;
         isAttack2 = false;
     }
 
     void InteractWithEnemy()
     {
-        // Playerの位置
         Vector3 playerPosition = transform.position;
-
-        // 範囲内の全てのEnemyを検出
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
         foreach (GameObject enemy in enemies)
         {
-            // EnemyとPlayerの距離を計算
             float distance = Vector3.Distance(playerPosition, enemy.transform.position);
 
-            // 許容距離内にいるかどうかを確認
             if (distance <= playerManager.interactionRange)
             {
-                
-                // Enemyを破壊
                 Destroy(enemy);
             }
         }
@@ -90,18 +76,16 @@ public class PlayerAttack : MonoBehaviour
 
     GameObject FindNearestEnemyInCamera()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy"); // 敵のタグを設定しておく
-
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         GameObject nearestEnemy = null;
         float nearestDistance = Mathf.Infinity;
 
-        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(playerManager.mainCamera); // カメラの視錘台（frustum）のプレーンを取得
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(playerManager.mainCamera);
 
         foreach (GameObject enemy in enemies)
         {
             if (GeometryUtility.TestPlanesAABB(planes, enemy.GetComponent<Collider>().bounds))
             {
-                // カメラの視錘台内にいる敵だけを対象にする
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 if (distance < nearestDistance)
                 {
@@ -116,18 +100,63 @@ public class PlayerAttack : MonoBehaviour
 
     void ShootBeam(GameObject target)
     {
-        // ビームをプレファブからインスタンス化
-        GameObject beamInstance = Instantiate(beamPrefab, playerManager.firePoint.position, playerManager.firePoint.rotation);
+        float distance = Vector3.Distance(transform.position, target.transform.position);
 
-        // ビームのスクリプトを取得
+        if (distance <= playerManager.beamRange) // 距離が望ましい範囲内にあるか
+        {
+            GameObject beamInstance = Instantiate(beamPrefab, playerManager.firePoint.position, playerManager.firePoint.rotation);
+            Bullet beamScript = beamInstance.GetComponent<Bullet>();
+            beamScript.SetTarget(target.transform);
+            Destroy(beamInstance, 3f);
+        }
+        else
+        {
+            beemStraight();
+        }
+    }
+
+
+
+    bool IsObstacleBetweenPlayerAndEnemy(GameObject enemy)
+    {
+        Vector3 playerPosition = transform.position;
+        Vector3 targetPosition = enemy.transform.position;
+
+        // Rayの始点を少し上にずらし、少し前方にも移動させる
+        Vector3 rayStart = playerPosition + Vector3.up * 2.1f + transform.forward * 2.1f;
+
+        Vector3 rayDirection = (targetPosition - rayStart).normalized;
+
+        Debug.Log("レイの方向: " + rayDirection);
+
+        // Rayの始点から終点までのラインを赤色で描画
+        Debug.DrawLine(rayStart, targetPosition, Color.red, 2f);
+
+        RaycastHit hit;
+        int layerMask = ~(1 << LayerMask.NameToLayer("Ignore Raycast")); // Ignore Raycastレイヤーを無視する
+
+        if (Physics.Raycast(rayStart, rayDirection, out hit, Vector3.Distance(rayStart, targetPosition), layerMask))
+        {
+            Debug.Log("レイが " + hit.collider.gameObject.name + " に当たりました");
+
+            if (hit.collider.gameObject != enemy)
+            {
+                beemStraight();
+            }
+        }
+
+        return false;
+    }
+
+    private void beemStraight()
+    {
+        // 対象が射程外の場合、プレイヤーの向いている方向にまっすぐビームを発射
+        GameObject beamInstance = Instantiate(beamPrefab, playerManager.firePoint.position, Quaternion.LookRotation(transform.forward));
         Bullet beamScript = beamInstance.GetComponent<Bullet>();
-
-        // ビームのターゲットを設定
-        beamScript.SetTarget(target.transform);
-
-        // 一定時間後にビームを破壊する（例：5秒後）
+        beamScript.SetTarget(null); // ターゲットはいらないので null を設定
+        beamInstance.GetComponent<Rigidbody>().velocity = transform.forward * playerManager.beamSpeed; // ビームをプレイヤーの向いている方向に進める
         Destroy(beamInstance, 3f);
     }
 
-  
+
 }

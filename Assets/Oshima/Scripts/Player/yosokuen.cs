@@ -38,7 +38,7 @@ public class yosokuen : MonoBehaviour
     {
 
         //otamesi = PlayerAttractor.instance.attractionKey;
-        attack = playerManager.attackKey;
+     
         range = playerManager.interactionRange * 0.08f;
         if(playerAttack.isAttack2 == true)
         {
