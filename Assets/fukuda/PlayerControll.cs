@@ -13,39 +13,7 @@ public class PlayerControll : MonoBehaviour
     //forDebug
     public GameObject Capsule_forDebug;
 
-
-    //Self Objects & Scripts
-    private Rigidbody s_Rigidbody;
-    private Animator s_Animator;
-    private CapsuleCollider s_Collider;
-
-
-    //InputAction
-    private PlayerInput playerInput;
-    private InputAction move,jump,crouch,attack_1, attack_2, attack_3, run,cam;
-
-    private bool jumpInputTrigger = false;
-    private bool attack_1_InputTrigger = false;
-    private bool attack_2_InputTrigger = false;
-    private bool attack_3_InputTrigger = false;
-    private bool slideInputTrigger = false;
-
-
-    private Vector2 MoveInput;
-    private Vector2 CameraInput;
-    private bool RunInput; 
-
-    private bool JumpInput;
-    private bool Attack_1_Input;
-    private bool Attack_2_Input;
-    private bool Attack_3_Input;
-    private bool CrouchInput;
-    
-    private bool OldJumpInput;
-    private bool OldAttack_1_Input;
-    private bool OldAttack_2_Input;
-    private bool OldAttack_3_Input;
-    private bool OldCrouchInput;
+    [Space(20)]
 
     //プレイヤーのステータス
     [Tooltip("歩行速度")] 
@@ -56,46 +24,26 @@ public class PlayerControll : MonoBehaviour
     public float MaxRunSpeed;
     [Tooltip("加速度(走る)")]
     public float RunAcc;
-    [Tooltip("しゃがみ時の速度")]
-    public float MaxCrouchSpeed;
-
-
-    [Tooltip("壁走りを強制終了する速度")]
-    public float WallRunStopSpeedValue;
-    private GameObject WallObj;
-
-
-    [Tooltip("速度維持率"), Range(0.97f,1.0f)]
-    public float VelocityHoldRate;
-
-    [Tooltip("空中速度維持率(地上基準)"), Range(0.97f,1.0f)]
-    public float AirVelocityHoldRate;
-    [Tooltip("空中加速率(地上基準)"), Range(0.0f, 1.0f)]
-    public float AirVelocityAccRate;
-
     [Tooltip("プレイヤーの通常ジャンプ力")]
     public float PlayerJumpPower;
     [Tooltip("プレイヤーの2段ジャンプ時パワー(通常ジャンプ力基準)")]
     public float PlayerSecondJumpMultiplyValue;
 
-    [Tooltip("プレイヤーの回転速度")]
-    public float PlayerRotationSpeed;
 
+    [Space(20)]
+    [Tooltip("しゃがみ時の速度")]
+    public float MaxCrouchSpeed;
     [Tooltip("スライディング速度")]
     public float SlidingSpeed;
-
     [Tooltip("スライディング維持時間")]
     public float keepSlideTime;
     private float SlidingTimer;
 
 
-
-    [Tooltip("プレイヤーの現在の速度値(デバッグ用)"),SerializeField]
-    private float playerSpeed;
-
-
+    [Space(20)]
     //壁走り関係の数値設定
-    public bool isWallHit = false;
+
+    private bool isWallHit = false;
 
     public enum wallSide
     {
@@ -107,11 +55,39 @@ public class PlayerControll : MonoBehaviour
     public wallSide wallStatus = wallSide.NoWallDitect;
     [Tooltip("このレイヤーのオブジェクトにレイが当たった時に壁があると判定する")]
     public LayerMask wallLayers = 0;
+    public float wallRunSpeed = 0.0f;
+    public float wallJumpHorizonPower = 0.0f;
+
     private Vector3 WallRunVec;
     private Vector3 WallNormalVec;
     private float WallDistance;
+
+
+    [Space(30)]
+
+    [Tooltip("速度維持率"), Range(0.97f,1.0f)]
+    public float VelocityHoldRate;
+
+    [Tooltip("空中速度維持率(地上基準)"), Range(0.97f,1.0f)]
+    public float AirVelocityHoldRate;
+    [Tooltip("空中加速率(地上基準)"), Range(0.0f, 1.0f)]
+    public float AirVelocityAccRate;
+
     
 
+    [Tooltip("プレイヤーの回転速度")]
+    public float PlayerRotationSpeed;
+
+
+
+
+    [Tooltip("プレイヤーの現在の速度値(デバッグ用)"),SerializeField]
+    private float playerSpeed;
+
+
+
+
+    [Space(20)]
 
     //接地判定
     public bool isGround = true;
@@ -134,6 +110,41 @@ public class PlayerControll : MonoBehaviour
 
     private PlayerAttack playerAttack;
     private Line line;
+
+
+    //Self Objects & Scripts
+    private Rigidbody s_Rigidbody;
+    private Animator s_Animator;
+    private CapsuleCollider s_Collider;
+
+
+    //InputAction
+    private PlayerInput playerInput;
+    private InputAction move, jump, crouch, attack_1, attack_2, attack_3, run, cam;
+
+    private bool jumpInputTrigger = false;
+    private bool attack_1_InputTrigger = false;
+    private bool attack_2_InputTrigger = false;
+    private bool attack_3_InputTrigger = false;
+    private bool slideInputTrigger = false;
+
+
+    private Vector2 MoveInput;
+    private Vector2 CameraInput;
+    private bool RunInput;
+
+    private bool JumpInput;
+    private bool Attack_1_Input;
+    private bool Attack_2_Input;
+    private bool Attack_3_Input;
+    private bool CrouchInput;
+
+    private bool OldJumpInput;
+    private bool OldAttack_1_Input;
+    private bool OldAttack_2_Input;
+    private bool OldAttack_3_Input;
+    private bool OldCrouchInput;
+
 
     void Start()
     { 
@@ -331,7 +342,7 @@ public class PlayerControll : MonoBehaviour
 
             transform.position += -WallNormalVec.normalized * WallDistance * 0.5f;
 
-            s_Rigidbody.velocity = WallRunVec * MaxRunSpeed;
+            s_Rigidbody.velocity = WallRunVec * wallRunSpeed;
 
             transform.rotation = Quaternion.LookRotation(WallRunVec, Vector3.up);
             Vector3 v = s_Rigidbody.velocity;
@@ -497,34 +508,14 @@ public class PlayerControll : MonoBehaviour
                 SecondJumped = false;
                 isWallRun = false;
 
-                //Vector3 A = transform.forward;
-                //Vector3 B = new Vector3(MoveInput.x, 0, MoveInput.y);
-
-
-                //Vector3 moveVel = new Vector3(MoveInput.x, 0, MoveInput.y) + transform.forward;
-                //moveVel.y = 0;
-                //moveVel = moveVel.normalized;
-                
                 s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower + moveForward * MaxRunSpeed, ForceMode.Impulse);
+                s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower + moveForward * wallJumpHorizonPower, ForceMode.Impulse);
             }
         }
 
-
-        //---------------------------------------------------------
-        //壁走りを維持するのかの判定()
-        //---------------------------------------------------------
-
+        //速度計測
         playerSpeed = new Vector2(s_Rigidbody.velocity.x, s_Rigidbody.velocity.z).magnitude;
 
-        if (isWallRun)
-        {
-            if (playerSpeed < WallRunStopSpeedValue)
-            {
-                //Debug.Log("WallRun : Stopped.tooslow(" + playerSpeed + ")");
-                //WallRunEnd();
-            }
-        }
 
         //-------------------------------------------------------------------------------
         //#プレイヤーの攻撃処理
