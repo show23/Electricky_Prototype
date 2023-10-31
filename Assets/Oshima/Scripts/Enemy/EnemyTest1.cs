@@ -68,7 +68,7 @@ public class EnemyTest1 : MonoBehaviour
             }
         }
 
-        // 以下はプレイヤーが見つからなかった場合の処理
+        //プレイヤーが見つからなかった場合の処理
         transform.position = Vector3.MoveTowards(transform.position, patrolPoints[currentPatrolPoint].position, moveSpeed * Time.deltaTime);
         Vector3 targetDirection = (patrolPoints[currentPatrolPoint].position - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(new Vector3(targetDirection.x, 0, targetDirection.z));

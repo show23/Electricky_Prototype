@@ -5269,10 +5269,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 597394576776907599, guid: 1a29f2c48f3134044832aa6b3100f8ec,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2134461923}
-    - targetCorrespondingSourceObject: {fileID: 597394576776907599, guid: 1a29f2c48f3134044832aa6b3100f8ec,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 2134461929}
   m_SourcePrefab: {fileID: 100100000, guid: 1a29f2c48f3134044832aa6b3100f8ec, type: 3}
 --- !u!1 &682827400 stripped
@@ -13542,29 +13538,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 679798417}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2134461923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2134461916}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a284fc504b93a14d8ed02146e9de678, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  patrolPoints:
-  - {fileID: 699119207}
-  - {fileID: 1130642198}
-  player: {fileID: 1983621266}
-  patrolSpeed: 5
-  chaseSpeed: 9
-  chaseDistance: 14
-  stopChaseDistance: 14
-  fieldOfViewAngle: 360
-  minDistanceBetweenEnemies: 5
-  chaseDelay: 3
 --- !u!114 &2134461929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13580,16 +13553,13 @@ MonoBehaviour:
   patrolPoints:
   - {fileID: 699119207}
   - {fileID: 1130642198}
-  moveSpeed: 5
-  detectionRadius: 5
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  stopTime: 2
+  moveSpeed: 15
+  rushRadius: 12.47
+  rushSpeed: 29.42
+  chaseRadius: 34.1
   player: {fileID: 1983621266}
-  chaseSpeed: 5
   fieldOfViewAngle: 60
-  currentState: 1
+  currentState: 0
 --- !u!1001 &2134658013
 PrefabInstance:
   m_ObjectHideFlags: 0
