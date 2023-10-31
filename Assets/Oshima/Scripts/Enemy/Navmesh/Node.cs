@@ -1,22 +1,17 @@
-using UnityEngine;
+//using UnityEngine;
+//using System.Collections.Generic;
 
-public class Node
-{
-    public bool walkable;
-    public Vector3 position;
-    public int gridX;
-    public int gridY;
-    public int gCost;
-    public int hCost;
-    public Node parent;
+//public class Node
+//{
+//    public Vector3 nodePosition;
+//    public List<Node> neighbors;
+//    public int fCost;
+//    public int gCost;
+//    public Node parent;
 
-    public int fCost { get { return gCost + hCost; } }
-
-    public Node(bool _walkable, Vector3 _position, int _gridX, int _gridY)
-    {
-        walkable = _walkable;
-        position = _position;
-        gridX = _gridX;
-        gridY = _gridY;
-    }
-}
+//    public Node(Vector3 pos)
+//    {
+//        nodePosition = pos;
+//        neighbors = new List<Node>();
+//    }
+//}
