@@ -103,12 +103,12 @@ public class EnemyTest1 : MonoBehaviour
             currentState = EnemyState.ChasePlayer;
         }
 
-        // プレイヤーが rushRadius よりも遠い場合に Patrol 状態に遷移
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if (distanceToPlayer > chaseRadius)
-        {
-            currentState = EnemyState.Patrol;
-        }
+        //// プレイヤーが rushRadius よりも遠い場合に Patrol 状態に遷移
+        //float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        //if (distanceToPlayer > chaseRadius)
+        //{
+        //    currentState = EnemyState.Patrol;
+        //}
     }
 
     void ChasePlayerUpdate()
@@ -126,7 +126,7 @@ public class EnemyTest1 : MonoBehaviour
         // プレイヤーに向かって移動
         transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
 
-        if (distanceToPlayer > chaseRadius || angleToPlayer > fieldOfViewAngle * 0.5f)
+        if (distanceToPlayer > chaseRadius)
         {
 
             currentState = EnemyState.Patrol;
@@ -142,7 +142,7 @@ public class EnemyTest1 : MonoBehaviour
         targetPosition = player.position;
         currentState = EnemyState.DetectPlayer;
     }
-   
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.black;
