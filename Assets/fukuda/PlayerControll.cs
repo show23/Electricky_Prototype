@@ -63,12 +63,13 @@ public class PlayerControll : MonoBehaviour
     public wallSide wallStatus = wallSide.NoWallDitect;
     [Tooltip("このレイヤーのオブジェクトにレイが当たった時に壁があると判定する")]
     public LayerMask wallLayers = 0;
+    public float WallDitectDistance = 0.4f;
+
     public float wallRunSpeed = 0.0f;
     public float wallJumpHorizonPower = 0.0f;
-
     [Tooltip("壁ジャンプ後、次の壁を検知するまでのフレーム数")]
     public int WJtoNextWallTime = 0;
-    public int WJtoNextWallTimer = 0;
+    private int WJtoNextWallTimer = 0;
     private Vector3 WallRunVec;
     private Vector3 WallNormalVec;
     private float WallDistance;
@@ -357,7 +358,7 @@ public class PlayerControll : MonoBehaviour
             SecondJumped = false;
             s_Rigidbody.useGravity = false;
 
-            transform.position += -WallNormalVec.normalized * WallDistance * 0.5f;
+            transform.position += -WallNormalVec.normalized * WallDistance * (WallDistance / WallDitectDistance);
             s_Rigidbody.velocity = WallRunVec * wallRunSpeed;
 
             transform.rotation = Quaternion.LookRotation(WallRunVec, Vector3.up);
@@ -497,7 +498,7 @@ public class PlayerControll : MonoBehaviour
 
         //プレイヤーの回転
 
-        transform.rotation = Quaternion.LookRotation(Vector3.Lerp(transform.forward, moveForward, MoveInputRotationSpeed), Vector3.up);
+        transform.rotation = Quaternion.LookRotation(Vector3.Slerp(transform.forward, moveForward, MoveInputRotationSpeed), Vector3.up);
 
         //------------------------------------------------------------
         //ジャンプ
@@ -600,10 +601,7 @@ public class PlayerControll : MonoBehaviour
         float offsetY = s_Rigidbody.position.y;
         Vector3 origin = transform.position + transform.up * offsetY;
         
-        //マジックナンバーに見えるでしょ マジックナンバーですこれ
-        //壁判定を取るための棒の長さがfloat値で置いてあります
-        //あんまいじらんかなとおもってここにおいてある
-        float distance = 0.4f + s_Collider.radius;
+        float distance = WallDitectDistance + s_Collider.radius;
 
         Vector3 RightNormal = Vector3.zero;
         Vector3 LeftNormal = Vector3.zero;
@@ -617,7 +615,7 @@ public class PlayerControll : MonoBehaviour
         RaycastHit Lefthit;
 
         //右壁チェック
-        if (Physics.Raycast(origin, transform.right, out Righthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(origin, Vector3.Lerp(transform.right, transform.forward, 0.4f), out Righthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
         {
             isRightHit = true;
             RightNormal = Righthit.normal;
@@ -625,7 +623,7 @@ public class PlayerControll : MonoBehaviour
         }
 
         //左壁チェック
-        if (Physics.Raycast(origin, -transform.right, out Lefthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(origin, Vector3.Lerp(-transform.right,transform.forward, 0.4f), out Lefthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
         {
             isLeftHit = true;
             LeftNormal = Lefthit.normal;
