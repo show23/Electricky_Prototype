@@ -25,10 +25,13 @@ public class PlayerControll : MonoBehaviour
     [Tooltip("加速度(走る)")]
     public float RunAcc;
     [Tooltip("プレイヤーの通常ジャンプ力")]
-    public float PlayerJumpPower;
+    public float JumpPower;
+    [Tooltip("プレイヤーの水平方向ジャンプ力")]
+    public float JumpHorizonPower = 0.0f;
     [Tooltip("プレイヤーの2段ジャンプ時パワー(通常ジャンプ力基準)")]
-    public float PlayerSecondJumpMultiplyValue;
-
+    public float SecondJumpMultiplyValue = 1.0f;
+    [Tooltip("プレイヤーの2段ジャンプ時水平方向パワー(通常ジャンプ力基準)")]
+    public float SecondJumpHorizonPowerMultiplyValue = 1.0f;
 
     [Space(20)]
     public Vector3 CrouchCenter;
@@ -485,40 +488,45 @@ public class PlayerControll : MonoBehaviour
         //------------------------------------------------------------
         //ジャンプ
         //------------------------------------------------------------
-        if (!isWallRun)
         {
-            //処理フロー上2段ジャンプの方が先の方がいい
-            if (jumpInputTrigger && FirstJumped && !SecondJumped)
-            {
-                SecondJumped = true;
-                FirstJumped = true;
-                isGround = false;
-                s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower * PlayerSecondJumpMultiplyValue, ForceMode.Impulse);
-            }
 
-            if (jumpInputTrigger && !FirstJumped)
+            float InputValue = MoveInput.magnitude;
+
+            if (!isWallRun)
             {
-                FirstJumped = true;
-                isGround = false;
-                s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower, ForceMode.Impulse);
+                //処理フロー上2段ジャンプの方が先の方がいい
+                if (jumpInputTrigger && FirstJumped && !SecondJumped)
+                {
+                    SecondJumped = true;
+                    FirstJumped = true;
+                    isGround = false;
+                    s_Rigidbody.velocity = new Vector3(0, 0, 0);
+                    s_Rigidbody.AddForce(Vector3.up * JumpPower * SecondJumpMultiplyValue + moveForward * InputValue * JumpHorizonPower * SecondJumpHorizonPowerMultiplyValue, ForceMode.Impulse);
+                }
+
+                if (jumpInputTrigger && !FirstJumped)
+                {
+                    FirstJumped = true;
+                    isGround = false;
+                    s_Rigidbody.velocity = new Vector3(0, 0, 0);
+                    s_Rigidbody.AddForce(Vector3.up * JumpPower + moveForward * InputValue * JumpHorizonPower, ForceMode.Impulse);
+                }
+            }
+            else
+            {
+                if (jumpInputTrigger)
+                {
+                    FirstJumped = true;
+                    SecondJumped = false;
+                    isWallRun = false;
+                    WJtoNextWallTimer = 0;
+                    WallRunCheck();
+                    s_Rigidbody.velocity = new Vector3(0, 0, 0);
+                    s_Rigidbody.AddForce(Vector3.up * JumpPower + moveForward * InputValue * wallJumpHorizonPower, ForceMode.Impulse);
+                }
             }
         }
-        else
-        {
-            if (jumpInputTrigger)
-            {
-                float InputValue = MoveInput.magnitude;
-                FirstJumped = true;
-                SecondJumped = false;
-                isWallRun = false;
-                WJtoNextWallTimer = 0;
-                WallRunCheck();
-                s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower + moveForward * InputValue * wallJumpHorizonPower, ForceMode.Impulse);
-            }
-        }
+
 
         //速度計測
         playerSpeed = new Vector2(s_Rigidbody.velocity.x, s_Rigidbody.velocity.z).magnitude;
@@ -577,7 +585,11 @@ public class PlayerControll : MonoBehaviour
     {
         float offsetY = s_Rigidbody.position.y;
         Vector3 origin = transform.position + transform.up * offsetY;
-        float distance = 0.2f + s_Collider.radius;
+        
+        //マジックナンバーに見えるでしょ マジックナンバーですこれ
+        //壁判定を取るための棒の長さがfloat値で置いてあります
+        //あんまいじらんかなとおもってここにおいてある
+        float distance = 0.3f + s_Collider.radius;
 
         Vector3 RightNormal = Vector3.zero;
         Vector3 LeftNormal = Vector3.zero;

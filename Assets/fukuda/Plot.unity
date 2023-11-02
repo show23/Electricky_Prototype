@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 4608.1655, g: 2946.219, b: 2170.555, a: 1}
+  m_IndirectSpecularColor: {r: 4609.514, g: 2947.094, b: 2171.133, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2159,8 +2159,10 @@ MonoBehaviour:
   WalkAcc: 6
   MaxRunSpeed: 36
   RunAcc: 16
-  PlayerJumpPower: 4
-  PlayerSecondJumpMultiplyValue: 1
+  JumpPower: 6
+  JumpHorizonPower: 3
+  SecondJumpMultiplyValue: 1
+  SecondJumpHorizonPowerMultiplyValue: 1
   CrouchCenter: {x: 0, y: 0.45, z: 0}
   CrouchHeight: 0.9
   MaxCrouchSpeed: 8
@@ -2173,6 +2175,7 @@ MonoBehaviour:
   wallRunSpeed: 32
   wallJumpHorizonPower: 10
   WJtoNextWallTime: 10
+  WJtoNextWallTimer: 0
   VelocityHoldRate: 0.985
   AirVelocityHoldRate: 0.985
   AirVelocityAccRate: 0.716
