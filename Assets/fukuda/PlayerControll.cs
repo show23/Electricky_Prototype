@@ -32,7 +32,6 @@ public class PlayerControll : MonoBehaviour
     public float SecondJumpMultiplyValue = 1.0f;
     [Tooltip("プレイヤーの2段ジャンプ時水平方向パワー(通常ジャンプ力基準)")]
     public float SecondJumpHorizonPowerMultiplyValue = 1.0f;
-
     [Tooltip("移動入力によるプレイヤーの回転(Lerp処理)"), Range(0.0f, 1.0f)]
     public float MoveInputRotationSpeed;
 
@@ -63,15 +62,17 @@ public class PlayerControll : MonoBehaviour
     public wallSide wallStatus = wallSide.NoWallDitect;
     [Tooltip("このレイヤーのオブジェクトにレイが当たった時に壁があると判定する")]
     public LayerMask wallLayers = 0;
+    public float WallDitectDistance = 0.4f;
+
     public float wallRunSpeed = 0.0f;
     public float wallJumpHorizonPower = 0.0f;
-
     [Tooltip("壁ジャンプ後、次の壁を検知するまでのフレーム数")]
     public int WJtoNextWallTime = 0;
-    public int WJtoNextWallTimer = 0;
+    private int WJtoNextWallTimer = 0;
     private Vector3 WallRunVec;
     private Vector3 WallNormalVec;
     private float WallDistance;
+    private int WallRunTimer = 0;
 
 
     [Space(30)]
@@ -84,16 +85,11 @@ public class PlayerControll : MonoBehaviour
     [Tooltip("空中加速率(地上基準)"), Range(0.0f, 1.0f)]
     public float AirVelocityAccRate;
 
-    
-
     [Tooltip("プレイヤーの回転速度")]
     public float PlayerRotationSpeed;
 
-
-
-
-    [Tooltip("プレイヤーの現在の速度値(デバッグ用)"),SerializeField]
-    private float playerSpeed;
+    [Tooltip("現在の速度値")]
+    public float playerSpeed;
 
 
 
@@ -191,17 +187,24 @@ public class PlayerControll : MonoBehaviour
         //#壁の配置を確認し、カメラの位置を調整、壁判定を取る
         //-------------------------------------------------------------------------------
         float heightOffSet = s_Collider.center.y;
-        PlayerCameraOrigin.transform.localPosition = new Vector3(0, heightOffSet, 0);
+
         if (isWallRun)
         {
+            Vector3 vec = PlayerCameraOrigin.transform.localPosition;
             if (wallStatus == wallSide.Right)
             {
-                PlayerCameraOrigin.transform.localPosition = new Vector3(-3, heightOffSet, 0);
+                vec = new Vector3(-5, heightOffSet, 0);
             }
             if (wallStatus == wallSide.Left)
             {
-                PlayerCameraOrigin.transform.localPosition = new Vector3( 3, heightOffSet, 0);
+                vec = new Vector3( 5, heightOffSet, 0);
             }
+
+            PlayerCameraOrigin.transform.localPosition = Vector3.Lerp(PlayerCameraOrigin.transform.localPosition, vec, 0.1f);
+        }
+        else
+        {
+            PlayerCameraOrigin.transform.localPosition = new Vector3(0, heightOffSet, 0);
         }
 
         //ついでにisGroundの更新
@@ -255,7 +258,6 @@ public class PlayerControll : MonoBehaviour
                 if (!OldJumpInput)
                 {
                     jumpInputTrigger = true;
-                    CrouchInput = false;
                 }
             }
 
@@ -308,7 +310,7 @@ public class PlayerControll : MonoBehaviour
 
             if (CrouchInput)
             {
-                if (!OldCrouchInput && RunInput)
+                if (!OldCrouchInput && RunInput && isGround)
                 {
                     slideInputTrigger = true;
                 }
@@ -340,13 +342,15 @@ public class PlayerControll : MonoBehaviour
 
         if (WJtoNextWallTimer < WJtoNextWallTime)
             WJtoNextWallTimer++;
-        
+
 
 
         //壁走り開始判定
         if (!isWallRun && isWallHit && !isGround && RunInput && (WJtoNextWallTimer >= WJtoNextWallTime))
+        {
+            WallRunTimer = 0;
             isWallRun = true;
-        
+        }
         if (!isWallHit) 
             isWallRun = false;
 
@@ -356,8 +360,11 @@ public class PlayerControll : MonoBehaviour
             FirstJumped = false;
             SecondJumped = false;
             s_Rigidbody.useGravity = false;
+            WallRunTimer++;
+            Vector3 Vec = transform.position - (WallNormalVec.normalized * WallDistance);
 
-            transform.position += -WallNormalVec.normalized * WallDistance * 0.5f;
+            transform.position = Vector3.Lerp(transform.position, Vec, 0.1f);
+
             s_Rigidbody.velocity = WallRunVec * wallRunSpeed;
 
             transform.rotation = Quaternion.LookRotation(WallRunVec, Vector3.up);
@@ -497,7 +504,7 @@ public class PlayerControll : MonoBehaviour
 
         //プレイヤーの回転
 
-        transform.rotation = Quaternion.LookRotation(Vector3.Lerp(transform.forward, moveForward, MoveInputRotationSpeed), Vector3.up);
+        transform.rotation = Quaternion.LookRotation(Vector3.Slerp(transform.forward, moveForward, MoveInputRotationSpeed), Vector3.up);
 
         //------------------------------------------------------------
         //ジャンプ
@@ -600,10 +607,7 @@ public class PlayerControll : MonoBehaviour
         float offsetY = s_Rigidbody.position.y;
         Vector3 origin = transform.position + transform.up * offsetY;
         
-        //マジックナンバーに見えるでしょ マジックナンバーですこれ
-        //壁判定を取るための棒の長さがfloat値で置いてあります
-        //あんまいじらんかなとおもってここにおいてある
-        float distance = 0.4f + s_Collider.radius;
+        float distance = WallDitectDistance + s_Collider.radius;
 
         Vector3 RightNormal = Vector3.zero;
         Vector3 LeftNormal = Vector3.zero;
@@ -617,7 +621,7 @@ public class PlayerControll : MonoBehaviour
         RaycastHit Lefthit;
 
         //右壁チェック
-        if (Physics.Raycast(origin, transform.right, out Righthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(origin, Vector3.Lerp(transform.right, transform.forward, 0.4f), out Righthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
         {
             isRightHit = true;
             RightNormal = Righthit.normal;
@@ -625,7 +629,7 @@ public class PlayerControll : MonoBehaviour
         }
 
         //左壁チェック
-        if (Physics.Raycast(origin, -transform.right, out Lefthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(origin, Vector3.Lerp(-transform.right,transform.forward, 0.4f), out Lefthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
         {
             isLeftHit = true;
             LeftNormal = Lefthit.normal;
