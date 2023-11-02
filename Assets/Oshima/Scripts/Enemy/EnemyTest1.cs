@@ -103,7 +103,7 @@ public class EnemyTest1 : MonoBehaviour
             currentState = EnemyState.ChasePlayer;
         }
 
-        // プレイヤーが rushRadius よりも遠い場合に Patrol 状態に遷移
+        // プレイヤーが rushRadius よりも遠い場合に Patrol 状態に遷移 uso
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         if (distanceToPlayer > chaseRadius)
         {
