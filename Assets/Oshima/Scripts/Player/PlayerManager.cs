@@ -7,10 +7,7 @@ public class PlayerManager : MonoBehaviour
     
    
     [Header("▽Player")]
-    [CustomLabel("歩くスピード")]
-    public float moveSpeed = 30f;
-    [CustomLabel("走るスピード")]
-    public float dashSpeed = 50f;
+   
 
     [CustomLabel("通常攻撃に必要なコスト(最大100)")]
     public float AAgauge = 10;
