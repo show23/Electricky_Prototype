@@ -33,6 +33,9 @@ public class PlayerControll : MonoBehaviour
     [Tooltip("プレイヤーの2段ジャンプ時水平方向パワー(通常ジャンプ力基準)")]
     public float SecondJumpHorizonPowerMultiplyValue = 1.0f;
 
+    [Tooltip("移動入力によるプレイヤーの回転(Lerp処理)"), Range(0.0f, 1.0f)]
+    public float MoveInputRotationSpeed;
+
     [Space(20)]
     public Vector3 CrouchCenter;
     public float CrouchHeight;
@@ -281,6 +284,13 @@ public class PlayerControll : MonoBehaviour
 
             if (OldCrouchInput)
             {
+                //スライディング中も勝手にしゃがみ入力
+                {
+                    if (isSliding)
+                    {
+                        CrouchInput = true;
+                    }
+                }
                 //頭頂部になにかあるときに自動でしゃがみ入力
                 {
                     Vector3 vec = (CrouchHeight - 0.1f) * transform.up;
@@ -422,7 +432,7 @@ public class PlayerControll : MonoBehaviour
         }
 
         //-------------------------------------------------------------------------------
-        //プレイヤーの動きをRigidBodyに入力
+        //プレイヤーの動きをRigidBodyに入力 移動入力に合わせてプレイヤーの回転
         //-------------------------------------------------------------------------------
 
         
@@ -484,6 +494,10 @@ public class PlayerControll : MonoBehaviour
 
             s_Rigidbody.AddForce(MoveVel);
         }
+
+        //プレイヤーの回転
+
+        transform.rotation = Quaternion.LookRotation(Vector3.Lerp(transform.forward, moveForward, MoveInputRotationSpeed), Vector3.up);
 
         //------------------------------------------------------------
         //ジャンプ
@@ -589,7 +603,7 @@ public class PlayerControll : MonoBehaviour
         //マジックナンバーに見えるでしょ マジックナンバーですこれ
         //壁判定を取るための棒の長さがfloat値で置いてあります
         //あんまいじらんかなとおもってここにおいてある
-        float distance = 0.3f + s_Collider.radius;
+        float distance = 0.4f + s_Collider.radius;
 
         Vector3 RightNormal = Vector3.zero;
         Vector3 LeftNormal = Vector3.zero;
