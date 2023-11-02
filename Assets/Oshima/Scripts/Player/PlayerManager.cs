@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 public class PlayerManager : MonoBehaviour
 {
-    
-   
-    [Header("▽Player")]
-   
 
+
+    [Header("▽Player")]
+    [CustomLabel("移動速度")]
+    public float moveSpeed = 5;
+    [CustomLabel("移動速度")]
+    public float dashSpeed = 5;
     [CustomLabel("通常攻撃に必要なコスト(最大100)")]
     public float AAgauge = 10;
     [CustomLabel("通常攻撃レンジ")]
