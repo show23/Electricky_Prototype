@@ -31,13 +31,15 @@ public class PlayerControll : MonoBehaviour
 
 
     [Space(20)]
+    public Vector3 CrouchCenter;
+    public float CrouchHeight;
     [Tooltip("しゃがみ時の速度")]
     public float MaxCrouchSpeed;
     [Tooltip("スライディング速度")]
     public float SlidingSpeed;
-    [Tooltip("スライディング維持時間")]
-    public float keepSlideTime;
-    private float SlidingTimer;
+    [Tooltip("スライディング維持フレーム数")]
+    public int keepSlideTime;
+    private int SlidingTimer;
 
 
     [Space(20)]
@@ -58,6 +60,9 @@ public class PlayerControll : MonoBehaviour
     public float wallRunSpeed = 0.0f;
     public float wallJumpHorizonPower = 0.0f;
 
+    [Tooltip("壁ジャンプ後、次の壁を検知するまでのフレーム数")]
+    public int WJtoNextWallTime = 0;
+    public int WJtoNextWallTimer = 0;
     private Vector3 WallRunVec;
     private Vector3 WallNormalVec;
     private float WallDistance;
@@ -99,13 +104,9 @@ public class PlayerControll : MonoBehaviour
 
     public bool isWallRun = false;
 
-
     //スライディング関係の数値設定
     private Vector3 NormalCenter;
     private float NormalHeight;
-
-    public Vector3 CrouchCenter;
-    public float CrouchHeight;
 
 
     private PlayerAttack playerAttack;
@@ -275,7 +276,6 @@ public class PlayerControll : MonoBehaviour
             }
 
 
-            bool HeadHit = false;
             if (OldCrouchInput)
             {
                 //頭頂部になにかあるときに自動でしゃがみ入力
@@ -286,7 +286,6 @@ public class PlayerControll : MonoBehaviour
                     if (Physics.Raycast(transform.position + vec, Vector3.up, out Hit, raycastDistance))
                     {
                         CrouchInput = true;
-                        HeadHit = true;
                     }
                 }
             }
@@ -326,8 +325,13 @@ public class PlayerControll : MonoBehaviour
         WallRunCheck();
 
 
+        if (WJtoNextWallTimer < WJtoNextWallTime)
+            WJtoNextWallTimer++;
+        
+
+
         //壁走り開始判定
-        if (!isWallRun && isWallHit && !isGround && RunInput)
+        if (!isWallRun && isWallHit && !isGround && RunInput && (WJtoNextWallTimer >= WJtoNextWallTime))
             isWallRun = true;
         
         if (!isWallHit) 
@@ -341,7 +345,6 @@ public class PlayerControll : MonoBehaviour
             s_Rigidbody.useGravity = false;
 
             transform.position += -WallNormalVec.normalized * WallDistance * 0.5f;
-
             s_Rigidbody.velocity = WallRunVec * wallRunSpeed;
 
             transform.rotation = Quaternion.LookRotation(WallRunVec, Vector3.up);
@@ -384,7 +387,7 @@ public class PlayerControll : MonoBehaviour
 
             if (isSliding)
             {
-                SlidingTimer += Time.deltaTime;
+                SlidingTimer++;
 
                 if (SlidingTimer > keepSlideTime)
                 {
@@ -490,6 +493,7 @@ public class PlayerControll : MonoBehaviour
                 SecondJumped = true;
                 FirstJumped = true;
                 isGround = false;
+                s_Rigidbody.velocity = new Vector3(0, 0, 0);
                 s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower * PlayerSecondJumpMultiplyValue, ForceMode.Impulse);
             }
 
@@ -497,6 +501,7 @@ public class PlayerControll : MonoBehaviour
             {
                 FirstJumped = true;
                 isGround = false;
+                s_Rigidbody.velocity = new Vector3(0, 0, 0);
                 s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower, ForceMode.Impulse);
             }
         }
@@ -504,12 +509,14 @@ public class PlayerControll : MonoBehaviour
         {
             if (jumpInputTrigger)
             {
+                float InputValue = MoveInput.magnitude;
                 FirstJumped = true;
                 SecondJumped = false;
                 isWallRun = false;
-
+                WJtoNextWallTimer = 0;
+                WallRunCheck();
                 s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower + moveForward * wallJumpHorizonPower, ForceMode.Impulse);
+                s_Rigidbody.AddForce(Vector3.up * PlayerJumpPower + moveForward * InputValue * wallJumpHorizonPower, ForceMode.Impulse);
             }
         }
 
@@ -542,6 +549,8 @@ public class PlayerControll : MonoBehaviour
         //-------------------------------------------------------------------------------
         //#アニメーションをアニメーターに登録
         //-------------------------------------------------------------------------------
+
+
 
 
 
@@ -597,6 +606,15 @@ public class PlayerControll : MonoBehaviour
             LeftDist = Lefthit.distance;
         }
 
+
+        if (!isRightHit && !isLeftHit)
+        {
+            WallNormalVec = Vector3.zero;
+            isWallHit = false;
+            wallStatus = wallSide.NoWallDitect;
+            return;
+        }
+
         if (isRightHit || isLeftHit)
         {
             bool RightisNear = false;
@@ -604,7 +622,6 @@ public class PlayerControll : MonoBehaviour
                 RightisNear = true;
             
             isWallHit = true;
-
             if (RightisNear)
             {
                 WallDistance = RightDist;
@@ -633,12 +650,8 @@ public class PlayerControll : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            WallNormalVec = Vector3.zero;
-            isWallHit = false;
-            wallStatus = wallSide.NoWallDitect;
-        }
+
+
     }
 
 
