@@ -1276,7 +1276,6 @@ Transform:
   - {fileID: 1696468597}
   m_Father: {fileID: 402003374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-
 --- !u!1 &739917753
 GameObject:
   m_ObjectHideFlags: 0
@@ -3191,9 +3190,10 @@ MonoBehaviour:
   moveSpeed: 30
   dashSpeed: 50
   AAgauge: 10
+  beamRange: 10
+  beamSpeed: 10
   fillSpeed: 0.1
   currentHp: 80
-  attackKey: 101
   increasedSpeed: 10
   maxInteractionRange: 10
   attractionRange: 10
@@ -3384,25 +3384,35 @@ MonoBehaviour:
   WalkAcc: 20
   MaxRunSpeed: 24
   RunAcc: 12
+  JumpPower: 0
+  JumpHorizonPower: 0
+  SecondJumpMultiplyValue: 1
+  SecondJumpHorizonPowerMultiplyValue: 1
+  MoveInputRotationSpeed: 0
+  CrouchCenter: {x: 0, y: 0.45, z: 0}
+  CrouchHeight: 0.9
   MaxCrouchSpeed: 8
-  WallRunStopSpeedValue: 2
+  SlidingSpeed: 30
+  keepSlideTime: 0
+  wallStatus: 0
+  wallLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  WallDitectDistance: 0.4
+  wallRunSpeed: 0
+  wallJumpHorizonPower: 0
+  WJtoNextWallTime: 0
   VelocityHoldRate: 0.98
   AirVelocityHoldRate: 0.975
   AirVelocityAccRate: 0.716
-  PlayerJumpPower: 4
-  PlayerSecondJumpMultiplyValue: 1
   PlayerRotationSpeed: 0.015
-  SlidingSpeed: 30
-  keepSlideTime: 0.4
   playerSpeed: 0
-  isWallHit: 0
-  wallStatus: 0
   isGround: 1
+  FirstJumped: 0
   SecondJumped: 0
   isClouch: 0
   isSliding: 0
-  CrouchCenter: {x: 0, y: 0.45, z: 0}
-  CrouchHeight: 0.9
+  isWallRun: 0
 --- !u!4 &1566212526
 Transform:
   m_ObjectHideFlags: 0
@@ -9723,7 +9733,6 @@ GameObject:
   - component: {fileID: 2082418254}
   - component: {fileID: 2082418253}
   - component: {fileID: 2082418252}
-  - component: {fileID: 2082418251}
   m_Layer: 8
   m_Name: Capsule
   m_TagString: Untagged
@@ -9731,29 +9740,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &2082418251
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2082418250}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &2082418252
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9813,7 +9799,7 @@ Transform:
   m_GameObject: {fileID: 2082418250}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.64, z: -6.64}
+  m_LocalPosition: {x: 0, y: 0.9, z: 0}
   m_LocalScale: {x: 0.3, y: 0.9, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
