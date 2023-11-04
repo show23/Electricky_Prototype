@@ -171,6 +171,17 @@
                 },
                 {
                     "name": "",
+                    "id": "5150e809-b9d4-4679-9592-c6b95a99a724",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "4713b420-f9bf-40e5-9e1f-a110bf2bb979",
                     "path": "<Keyboard>/leftShift",
                     "interactions": "",
@@ -227,7 +238,7 @@
                 {
                     "name": "",
                     "id": "9e8a4e20-fbb0-475b-ba61-c2b5fce1a4ff",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -272,6 +283,17 @@
                     "name": "",
                     "id": "61bcd3de-616b-4153-9838-c9a138256b78",
                     "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraReset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "454b5a05-5e86-453e-a571-127855719708",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
