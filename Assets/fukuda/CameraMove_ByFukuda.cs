@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMove_ByOshima : MonoBehaviour
+public class CameraMove_ByFukuda : MonoBehaviour
 {
     //　キャラクターのTransform
     [SerializeField]

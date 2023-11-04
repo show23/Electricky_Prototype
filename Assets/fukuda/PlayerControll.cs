@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.InputSystem;
 
 
@@ -11,45 +11,66 @@ public class PlayerControll : MonoBehaviour
     public GameObject PlayerCameraOrigin;
 
     //forDebug
-    public GameObject Capsule_forDebug;
+    //2023/11/04
+    //ã‚¹ãƒ©ã‚¤ãƒ‡ã‚£ãƒ³ã‚°+ã—ã‚ƒãŒã¿è¦ç´ å‰Šé™¤ã®ãŸã‚ä¸è¦
+    //public GameObject Capsule_forDebug;
 
     [Space(20)]
 
-    //ƒvƒŒƒCƒ„[‚ÌƒXƒe[ƒ^ƒX
-    [Tooltip("•às‘¬“x")] 
+    //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
+    [Tooltip("æ­©è¡Œé€Ÿåº¦")] 
     public float MaxWalkSpeed;
-    [Tooltip("‰Á‘¬“x(•às)")]
+    [Tooltip("åŠ é€Ÿåº¦(æ­©è¡Œ)")]
     public float WalkAcc;
-    [Tooltip("‘–‚é‚Ì‘¬“x")]
+    [Tooltip("èµ°ã‚‹æ™‚ã®é€Ÿåº¦")]
     public float MaxRunSpeed;
-    [Tooltip("‰Á‘¬“x(‘–‚é)")]
+    [Tooltip("åŠ é€Ÿåº¦(èµ°ã‚‹)")]
     public float RunAcc;
-    [Tooltip("ƒvƒŒƒCƒ„[‚Ì’ÊíƒWƒƒƒ“ƒv—Í")]
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®é€šå¸¸ã‚¸ãƒ£ãƒ³ãƒ—åŠ›")]
     public float JumpPower;
-    [Tooltip("ƒvƒŒƒCƒ„[‚Ì…•½•ûŒüƒWƒƒƒ“ƒv—Í")]
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ°´å¹³æ–¹å‘ã‚¸ãƒ£ãƒ³ãƒ—åŠ›")]
     public float JumpHorizonPower = 0.0f;
-    [Tooltip("ƒvƒŒƒCƒ„[‚Ì2’iƒWƒƒƒ“ƒvƒpƒ[(’ÊíƒWƒƒƒ“ƒv—ÍŠî€)")]
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®2æ®µã‚¸ãƒ£ãƒ³ãƒ—æ™‚ãƒ‘ãƒ¯ãƒ¼(é€šå¸¸ã‚¸ãƒ£ãƒ³ãƒ—åŠ›åŸºæº–)")]
     public float SecondJumpMultiplyValue = 1.0f;
-    [Tooltip("ƒvƒŒƒCƒ„[‚Ì2’iƒWƒƒƒ“ƒv…•½•ûŒüƒpƒ[(’ÊíƒWƒƒƒ“ƒv—ÍŠî€)")]
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®2æ®µã‚¸ãƒ£ãƒ³ãƒ—æ™‚æ°´å¹³æ–¹å‘ãƒ‘ãƒ¯ãƒ¼(é€šå¸¸ã‚¸ãƒ£ãƒ³ãƒ—åŠ›åŸºæº–)")]
     public float SecondJumpHorizonPowerMultiplyValue = 1.0f;
-    [Tooltip("ˆÚ“®“ü—Í‚É‚æ‚éƒvƒŒƒCƒ„[‚Ì‰ñ“](Lerpˆ—)"), Range(0.0f, 1.0f)]
+    [Tooltip("ç§»å‹•å…¥åŠ›ã«ã‚ˆã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å›è»¢(Lerpå‡¦ç†)"), Range(0.0f, 1.0f)]
     public float MoveInputRotationSpeed;
 
+
+    //2023/11/04
+    //ã‚¹ãƒ©ã‚¤ãƒ‡ã‚£ãƒ³ã‚°+ã—ã‚ƒãŒã¿è¦ç´ å‰Šé™¤ã®ãŸã‚ä¸è¦
+    /*
     [Space(20)]
     public Vector3 CrouchCenter;
     public float CrouchHeight;
-    [Tooltip("‚µ‚á‚ª‚İ‚Ì‘¬“x")]
+    [Tooltip("ã—ã‚ƒãŒã¿æ™‚ã®é€Ÿåº¦")]
     public float MaxCrouchSpeed;
-    [Tooltip("ƒXƒ‰ƒCƒfƒBƒ“ƒO‘¬“x")]
+    [Tooltip("ã‚¹ãƒ©ã‚¤ãƒ‡ã‚£ãƒ³ã‚°é€Ÿåº¦")]
     public float SlidingSpeed;
-    [Tooltip("ƒXƒ‰ƒCƒfƒBƒ“ƒOˆÛƒtƒŒ[ƒ€”")]
+    [Tooltip("ã‚¹ãƒ©ã‚¤ãƒ‡ã‚£ãƒ³ã‚°ç¶­æŒãƒ•ãƒ¬ãƒ¼ãƒ æ•°")]
     public int keepSlideTime;
     private int SlidingTimer;
 
 
-    [Space(20)]
-    //•Ç‘–‚èŠÖŒW‚Ì”’lİ’è
+    //ã‚¹ãƒ©ã‚¤ãƒ‡ã‚£ãƒ³ã‚°é–¢ä¿‚ã®åˆæœŸå€¤è¨­å®š
+    private Vector3 NormalCenter;
+    private float NormalHeight;
+    
+     
+    
+    public bool isClouch = false;
+    public bool isSliding = false;
+    
+    
+    private bool CrouchInput;
+    private bool slideInputTrigger = false;
+    private bool OldCrouchInput;
+    */
 
+    [Space(20)]
+
+    //å£èµ°ã‚Šé–¢ä¿‚ã®æ•°å€¤è¨­å®š
     private bool isWallHit = false;
 
     public enum wallSide
@@ -60,13 +81,13 @@ public class PlayerControll : MonoBehaviour
     }
 
     public wallSide wallStatus = wallSide.NoWallDitect;
-    [Tooltip("‚±‚ÌƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒg‚ÉƒŒƒC‚ª“–‚½‚Á‚½‚É•Ç‚ª‚ ‚é‚Æ”»’è‚·‚é")]
+    [Tooltip("ã“ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ãƒ¬ã‚¤ãŒå½“ãŸã£ãŸæ™‚ã«å£ãŒã‚ã‚‹ã¨åˆ¤å®šã™ã‚‹")]
     public LayerMask wallLayers = 0;
     public float WallDitectDistance = 0.4f;
 
     public float wallRunSpeed = 0.0f;
     public float wallJumpHorizonPower = 0.0f;
-    [Tooltip("•ÇƒWƒƒƒ“ƒvŒãAŸ‚Ì•Ç‚ğŒŸ’m‚·‚é‚Ü‚Å‚ÌƒtƒŒ[ƒ€”")]
+    [Tooltip("å£ã‚¸ãƒ£ãƒ³ãƒ—å¾Œã€æ¬¡ã®å£ã‚’æ¤œçŸ¥ã™ã‚‹ã¾ã§ã®ãƒ•ãƒ¬ãƒ¼ãƒ æ•°")]
     public int WJtoNextWallTime = 0;
     private int WJtoNextWallTimer = 0;
     private Vector3 WallRunVec;
@@ -77,18 +98,18 @@ public class PlayerControll : MonoBehaviour
 
     [Space(30)]
 
-    [Tooltip("‘¬“xˆÛ—¦"), Range(0.97f,1.0f)]
+    [Tooltip("é€Ÿåº¦ç¶­æŒç‡"), Range(0.97f,1.0f)]
     public float VelocityHoldRate;
 
-    [Tooltip("‹ó’†‘¬“xˆÛ—¦(’nãŠî€)"), Range(0.97f,1.0f)]
+    [Tooltip("ç©ºä¸­é€Ÿåº¦ç¶­æŒç‡(åœ°ä¸ŠåŸºæº–)"), Range(0.97f,1.0f)]
     public float AirVelocityHoldRate;
-    [Tooltip("‹ó’†‰Á‘¬—¦(’nãŠî€)"), Range(0.0f, 1.0f)]
+    [Tooltip("ç©ºä¸­åŠ é€Ÿç‡(åœ°ä¸ŠåŸºæº–)"), Range(0.0f, 1.0f)]
     public float AirVelocityAccRate;
 
-    [Tooltip("ƒvƒŒƒCƒ„[‚Ì‰ñ“]‘¬“x")]
+    [Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å›è»¢é€Ÿåº¦")]
     public float PlayerRotationSpeed;
 
-    [Tooltip("Œ»İ‚Ì‘¬“x’l")]
+    [Tooltip("ç¾åœ¨ã®é€Ÿåº¦å€¤")]
     public float playerSpeed;
 
 
@@ -96,19 +117,14 @@ public class PlayerControll : MonoBehaviour
 
     [Space(20)]
 
-    //Ú’n”»’è
+    //æ¥åœ°åˆ¤å®š
     public bool isGround = true;
     public bool FirstJumped = false;
     public bool SecondJumped = false;
 
-    public bool isClouch = false;
-    public bool isSliding = false;
 
     public bool isWallRun = false;
 
-    //ƒXƒ‰ƒCƒfƒBƒ“ƒOŠÖŒW‚Ì”’lİ’è
-    private Vector3 NormalCenter;
-    private float NormalHeight;
 
 
     private PlayerAttack playerAttack;
@@ -123,31 +139,46 @@ public class PlayerControll : MonoBehaviour
 
     //InputAction
     private PlayerInput playerInput;
-    private InputAction move, jump, crouch, attack_1, attack_2, attack_3, run, cam;
+    private InputAction move, jump, attack, run, cam, dodge; //crouch, //attack_1, attack_2, attack_3,
 
     private bool jumpInputTrigger = false;
-    private bool attack_1_InputTrigger = false;
-    private bool attack_2_InputTrigger = false;
-    private bool attack_3_InputTrigger = false;
-    private bool slideInputTrigger = false;
-
+    private bool dodgeInputTrigger = false;
+    
+    
 
     private Vector2 MoveInput;
     private Vector2 CameraInput;
     private bool RunInput;
 
     private bool JumpInput;
+    private bool DodgeInput;
+
+    //2023/11/04
+    //æ”»æ’ƒå…¥åŠ›ãŒ1ã¤ã«ãªã£ãŸç‚º
+    //æ”»æ’ƒå…¥åŠ›ã¯ãƒªãƒ¯ãƒ¼ã‚¯
+
+    /*
+    private bool attack_1_InputTrigger = false;
+    private bool attack_2_InputTrigger = false;
+    private bool attack_3_InputTrigger = false;
     private bool Attack_1_Input;
     private bool Attack_2_Input;
     private bool Attack_3_Input;
-    private bool CrouchInput;
-
-    private bool OldJumpInput;
     private bool OldAttack_1_Input;
     private bool OldAttack_2_Input;
     private bool OldAttack_3_Input;
-    private bool OldCrouchInput;
+    */
 
+
+    private bool attackInputTrigger = false;
+    private bool AttackInput;
+    private bool OldAttackInput;
+
+
+
+    private bool OldJumpInput;
+    private bool OldDodgeInput;
+    
 
     void Start()
     { 
@@ -157,34 +188,42 @@ public class PlayerControll : MonoBehaviour
         s_Collider = GetComponent<CapsuleCollider>();
         playerAttack = GetComponent<PlayerAttack>();
         line = GetComponent<Line>();
+
+        /*
         NormalCenter = s_Collider.center;
         NormalHeight = s_Collider.height;
-
-        move = playerInput.actions["Move"];
-        jump = playerInput.actions["Jump"];
-        crouch = playerInput.actions["Crouch"];
         attack_1 = playerInput.actions["Attack_1"];
         attack_2 = playerInput.actions["Attack_2"];
         attack_3 = playerInput.actions["Attack_3"];
+        crouch = playerInput.actions["Crouch"];
+        slideInputTrigger = false;
+        attack_1_InputTrigger = false;
+        */
+
+        move = playerInput.actions["Move"];
+        jump = playerInput.actions["Jump"];
+        dodge = playerInput.actions["Dodge"];
+        attack = playerInput.actions["Attack"];
+
         run = playerInput.actions["Run"];
         cam = playerInput.actions["CameraXY"];
         jumpInputTrigger = false; 
-        attack_1_InputTrigger = false;
-        slideInputTrigger = false;
+        dodgeInputTrigger = false;
+        attackInputTrigger = false;
 
-        // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ”ñ•\¦‚É‚µAˆÊ’u‚ğŒÅ’è
+        // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’éè¡¨ç¤ºã«ã—ã€ä½ç½®ã‚’å›ºå®š
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
 
-    //‚Æ‚è‚ ‚¦‚¸‚Åˆ—ƒtƒ[‚ğ‘‚¢‚Ä‚¢‚­
-    //ˆ—‚ªŠ®¬‚µ‚Ä‚¢‚È‚¢‚à‚Ì‚É‚Í“ª‚É#‚ğ‚Â‚¯‚é
+    //ã¨ã‚Šã‚ãˆãšã§å‡¦ç†ãƒ•ãƒ­ãƒ¼ã‚’æ›¸ã„ã¦ã„ã
+    //å‡¦ç†ãŒå®Œæˆã—ã¦ã„ãªã„ã‚‚ã®ã«ã¯é ­ã«#ã‚’ã¤ã‘ã‚‹
     private void FixedUpdate()
     {
 
         //-------------------------------------------------------------------------------
-        //#•Ç‚Ì”z’u‚ğŠm”F‚µAƒJƒƒ‰‚ÌˆÊ’u‚ğ’²®A•Ç”»’è‚ğæ‚é
+        //#å£ã®é…ç½®ã‚’ç¢ºèªã—ã€ã‚«ãƒ¡ãƒ©ã®ä½ç½®ã‚’èª¿æ•´ã€å£åˆ¤å®šã‚’å–ã‚‹
         //-------------------------------------------------------------------------------
         float heightOffSet = s_Collider.center.y;
 
@@ -207,7 +246,7 @@ public class PlayerControll : MonoBehaviour
             PlayerCameraOrigin.transform.localPosition = new Vector3(0, heightOffSet, 0);
         }
 
-        //‚Â‚¢‚Å‚ÉisGround‚ÌXV
+        //ã¤ã„ã§ã«isGroundã®æ›´æ–°
         {
             float raycastDistance = 0.2f;
             RaycastHit Hit;
@@ -216,7 +255,6 @@ public class PlayerControll : MonoBehaviour
                 isGround = true;
                 FirstJumped = false;
                 SecondJumped = false;
-                //WallRunEnd();
             }
             else
             {
@@ -225,18 +263,28 @@ public class PlayerControll : MonoBehaviour
             }
         }
         //-------------------------------------------------------------------------------
-        //ƒvƒŒƒCƒ„[‚Ì“ü—Í’l‚ÌŒŸ’m
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å…¥åŠ›å€¤ã®æ¤œçŸ¥
         //-------------------------------------------------------------------------------
 
-        //“ü—Í’l‚ÌXV
+        //å…¥åŠ›å€¤ã®æ›´æ–°
         {
             MoveInput = move.ReadValue<Vector2>();
             CameraInput = cam.ReadValue<Vector2>();
             JumpInput = jump.ReadValue<float>() > 0;
+
+            AttackInput = attack.ReadValue<float>() > 0;
+            /*
             Attack_1_Input = attack_1.ReadValue<float>() > 0;
             Attack_2_Input = attack_2.ReadValue<float>() > 0;
             Attack_3_Input = attack_3.ReadValue<float>() > 0;
             CrouchInput = crouch.ReadValue<float>() > 0;
+            attack_1_InputTrigger = false;
+            attack_2_InputTrigger = false;
+            attack_3_InputTrigger = false;
+            slideInputTrigger = false;
+            */
+
+            DodgeInput = dodge.ReadValue<float>() > 0;
 
             if (isGround)
                 RunInput = run.ReadValue<float>() > 0;
@@ -244,14 +292,11 @@ public class PlayerControll : MonoBehaviour
 
             if (isWallRun) { 
                 RunInput = true;
-                CrouchInput = false;
+                //CrouchInput = false;
             }
 
             jumpInputTrigger = false;
-            attack_1_InputTrigger = false;
-            attack_2_InputTrigger = false;
-            attack_3_InputTrigger = false;
-            slideInputTrigger = false;
+            dodgeInputTrigger = false;
 
             if (JumpInput)
             {
@@ -261,6 +306,15 @@ public class PlayerControll : MonoBehaviour
                 }
             }
 
+            if (AttackInput)
+            {
+                if (!OldAttackInput)
+                {
+                    attackInputTrigger = true;
+                }
+            }
+
+            /*
             if (Attack_1_Input)
             {
                 if (!OldAttack_1_Input)
@@ -283,17 +337,16 @@ public class PlayerControll : MonoBehaviour
                 }
             }
 
-
             if (OldCrouchInput)
             {
-                //ƒXƒ‰ƒCƒfƒBƒ“ƒO’†‚àŸè‚É‚µ‚á‚ª‚İ“ü—Í
+                //ã‚¹ãƒ©ã‚¤ãƒ‡ã‚£ãƒ³ã‚°ä¸­ã‚‚å‹æ‰‹ã«ã—ã‚ƒãŒã¿å…¥åŠ›
                 {
                     if (isSliding)
                     {
                         CrouchInput = true;
                     }
                 }
-                //“ª’¸•”‚É‚È‚É‚©‚ ‚é‚Æ‚«‚É©“®‚Å‚µ‚á‚ª‚İ“ü—Í
+                //é ­é ‚éƒ¨ã«ãªã«ã‹ã‚ã‚‹ã¨ãã«è‡ªå‹•ã§ã—ã‚ƒãŒã¿å…¥åŠ›
                 {
                     Vector3 vec = (CrouchHeight - 0.1f) * transform.up;
                     RaycastHit Hit;
@@ -305,9 +358,6 @@ public class PlayerControll : MonoBehaviour
                 }
             }
 
-
-
-
             if (CrouchInput)
             {
                 if (!OldCrouchInput && RunInput && isGround)
@@ -316,25 +366,40 @@ public class PlayerControll : MonoBehaviour
                 }
                 RunInput = false;
             }
+            */
+
+            if (DodgeInput)
+            {
+                if (!OldDodgeInput)
+                {
+                    dodgeInputTrigger = true;
+                }
+            }
 
 
-            //‘–‚Á‚Ä‚¢‚é‚Æ‚«‚ÍƒXƒeƒBƒbƒN‚¢‚Á‚Ï‚¢‚É“ü—Í‚µ‚Ä‚¢‚é”»’è‚É‚È‚é
-            //10/26 d—l•ÏX‚É‚æ‚èíœ
-            //if (RunInput)
-            //{
-            //    Vector2 vec = MoveInput.normalized;
-            //    MoveInput = vec;
-            //}
+            //èµ°ã£ã¦ã„ã‚‹ã¨ãã¯ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã„ã£ã±ã„ã«å…¥åŠ›ã—ã¦ã„ã‚‹åˆ¤å®šã«ãªã‚‹
+            //10/26 ä»•æ§˜å¤‰æ›´ã«ã‚ˆã‚Šå‰Šé™¤
+            /*
+            if (RunInput)
+            {
+                Vector2 vec = MoveInput.normalized;
+                MoveInput = vec;
+            }
+            */
 
             OldJumpInput = JumpInput;
+            OldAttackInput = AttackInput;
+            /*
             OldAttack_1_Input = Attack_1_Input;
             OldAttack_2_Input = Attack_2_Input;
             OldAttack_3_Input = Attack_3_Input;
             OldCrouchInput = CrouchInput;
+            */
+            OldDodgeInput = DodgeInput;
         }
 
         //-------------------------------------------------------------------------------
-        //•Ç”»’è‚ÌXV
+        //å£åˆ¤å®šã®æ›´æ–°
         //-------------------------------------------------------------------------------
 
         WallRunCheck();
@@ -345,7 +410,7 @@ public class PlayerControll : MonoBehaviour
 
 
 
-        //•Ç‘–‚èŠJn”»’è
+        //å£èµ°ã‚Šé–‹å§‹åˆ¤å®š
         if (!isWallRun && isWallHit && !isGround && RunInput && (WJtoNextWallTimer >= WJtoNextWallTime))
         {
             WallRunTimer = 0;
@@ -381,20 +446,23 @@ public class PlayerControll : MonoBehaviour
 
 
         //-------------------------------------------------------------------------------
-        //ƒJƒƒ‰‚ÌŠp“x/•Ç‚ÌŠp“x‚©‚çƒvƒŒƒCƒ„[‚Ì“ü—Í’l‚ğ’²® ƒvƒŒƒCƒ„[‚ğ‰ñ“]
+        //ã‚«ãƒ¡ãƒ©ã®è§’åº¦/å£ã®è§’åº¦ã‹ã‚‰ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å…¥åŠ›å€¤ã‚’èª¿æ•´ ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’å›è»¢
         //-------------------------------------------------------------------------------
 
         Vector3 MoveOriginVector = Vector3.Scale(PlayerCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
-        
+
+        /*
         if (!isWallRun)
         {
             transform.rotation = Quaternion.LookRotation(transform.forward + transform.right * CameraInput.x * PlayerRotationSpeed);
         }
+        */
 
         //------------------------------------------------------------
-        //‚µ‚á‚ª‚İ&ƒXƒ‰ƒCƒfƒBƒ“ƒO
+        //ã—ã‚ƒãŒã¿&ã‚¹ãƒ©ã‚¤ãƒ‡ã‚£ãƒ³ã‚°
         //------------------------------------------------------------
 
+        /*
         {
             if (!isSliding && slideInputTrigger)
             {
@@ -437,12 +505,13 @@ public class PlayerControll : MonoBehaviour
                 s_Collider.height = NormalHeight;
             }
         }
+        */
 
         //-------------------------------------------------------------------------------
-        //ƒvƒŒƒCƒ„[‚Ì“®‚«‚ğRigidBody‚É“ü—Í ˆÚ“®“ü—Í‚É‡‚í‚¹‚ÄƒvƒŒƒCƒ„[‚Ì‰ñ“]
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‹•ãã‚’RigidBodyã«å…¥åŠ› ç§»å‹•å…¥åŠ›ã«åˆã‚ã›ã¦ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å›è»¢
         //-------------------------------------------------------------------------------
 
-        
+
         float speedHoldRate = VelocityHoldRate;
         float speedAddRate = 1.0f;
 
@@ -453,7 +522,7 @@ public class PlayerControll : MonoBehaviour
             speedAddRate = AirVelocityAccRate;
         }
 
-        //Œ¸‘¬ˆ—(‚Ê‚é‚Ê‚é“®‚­«¿‚Ì‰·°)
+        //æ¸›é€Ÿå‡¦ç†(ã¬ã‚‹ã¬ã‚‹å‹•ãæ€§è³ªã®æ¸©åºŠ)
         {
             Vector3 selfSpeed = s_Rigidbody.velocity;
             selfSpeed *= speedHoldRate;
@@ -462,7 +531,7 @@ public class PlayerControll : MonoBehaviour
             s_Rigidbody.velocity = selfSpeed;
         }
 
-        //ˆÚ“®“ü—Íˆ—
+        //ç§»å‹•å…¥åŠ›å‡¦ç†
 
         Vector3 moveForward = MoveOriginVector * MoveInput.y;
         moveForward += PlayerCamera.transform.right * MoveInput.x;
@@ -481,15 +550,16 @@ public class PlayerControll : MonoBehaviour
                 maxSpeed = MaxRunSpeed;
                 accValue = RunAcc;
             }
+            /*
             if (CrouchInput)
             {
                 maxSpeed = MaxCrouchSpeed;
             }
-
+            */
             accValue *= speedAddRate;
 
-            //‰Á‘¬”’l‚Ì’²®(Å‚‘¬“x‚ğ’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é)
-            //ª‚±‚Ìˆ—‚Ì‚¹‚¢‚Å‚©‚È‚è‚²‚¿‚á‚Â‚¢‚Ä‚µ‚Ü‚Á‚½
+            //åŠ é€Ÿæ•°å€¤ã®èª¿æ•´(æœ€é«˜é€Ÿåº¦ã‚’è¶…ãˆãªã„ã‚ˆã†ã«ã™ã‚‹)
+            //â†‘ã“ã®å‡¦ç†ã®ã›ã„ã§ã‹ãªã‚Šã”ã¡ã‚ƒã¤ã„ã¦ã—ã¾ã£ãŸ
             float MaxaddSpeed = Mathf.Clamp(maxSpeed - Vel.magnitude, 0, maxSpeed);
 
             if (accValue >= MaxaddSpeed)
@@ -502,12 +572,12 @@ public class PlayerControll : MonoBehaviour
             s_Rigidbody.AddForce(MoveVel);
         }
 
-        //ƒvƒŒƒCƒ„[‚Ì‰ñ“]
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å›è»¢
 
         transform.rotation = Quaternion.LookRotation(Vector3.Slerp(transform.forward, moveForward, MoveInputRotationSpeed), Vector3.up);
 
         //------------------------------------------------------------
-        //ƒWƒƒƒ“ƒv
+        //ã‚¸ãƒ£ãƒ³ãƒ—
         //------------------------------------------------------------
         {
 
@@ -515,7 +585,7 @@ public class PlayerControll : MonoBehaviour
 
             if (!isWallRun)
             {
-                //ˆ—ƒtƒ[ã2’iƒWƒƒƒ“ƒv‚Ì•û‚ªæ‚Ì•û‚ª‚¢‚¢
+                //å‡¦ç†ãƒ•ãƒ­ãƒ¼ä¸Š2æ®µã‚¸ãƒ£ãƒ³ãƒ—ã®æ–¹ãŒå…ˆã®æ–¹ãŒã„ã„
                 if (jumpInputTrigger && FirstJumped && !SecondJumped)
                 {
                     SecondJumped = true;
@@ -549,22 +619,25 @@ public class PlayerControll : MonoBehaviour
         }
 
 
-        //‘¬“xŒv‘ª
+        //é€Ÿåº¦è¨ˆæ¸¬
         playerSpeed = new Vector2(s_Rigidbody.velocity.x, s_Rigidbody.velocity.z).magnitude;
 
 
         //-------------------------------------------------------------------------------
-        //#ƒvƒŒƒCƒ„[‚ÌUŒ‚ˆ—
+        //#ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ”»æ’ƒå‡¦ç†
         //-------------------------------------------------------------------------------
 
-        if (attack_1_InputTrigger)
+        if (attackInputTrigger)
         {
             Attack();
         }
-        if (Attack_1_Input)
+        if (AttackInput)
         {
             
         }
+
+
+        /*
         if(Attack_2_Input)
         {
             HikiyoseAttack();
@@ -574,9 +647,9 @@ public class PlayerControll : MonoBehaviour
         {
             LineAttack();
         }
-
+        */
         //-------------------------------------------------------------------------------
-        //#ƒAƒjƒ[ƒVƒ‡ƒ“‚ğƒAƒjƒ[ƒ^[‚É“o˜^
+        //#ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼ã«ç™»éŒ²
         //-------------------------------------------------------------------------------
 
 
@@ -620,7 +693,7 @@ public class PlayerControll : MonoBehaviour
         bool isLeftHit = false;
         RaycastHit Lefthit;
 
-        //‰E•Çƒ`ƒFƒbƒN
+        //å³å£ãƒã‚§ãƒƒã‚¯
         if (Physics.Raycast(origin, Vector3.Lerp(transform.right, transform.forward, 0.4f), out Righthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
         {
             isRightHit = true;
@@ -628,7 +701,7 @@ public class PlayerControll : MonoBehaviour
             RightDist = Righthit.distance;
         }
 
-        //¶•Çƒ`ƒFƒbƒN
+        //å·¦å£ãƒã‚§ãƒƒã‚¯
         if (Physics.Raycast(origin, Vector3.Lerp(-transform.right,transform.forward, 0.4f), out Lefthit, distance, wallLayers, QueryTriggerInteraction.Ignore))
         {
             isLeftHit = true;
@@ -665,8 +738,8 @@ public class PlayerControll : MonoBehaviour
                 wallStatus = wallSide.Left;
             }
 
-            //‚±‚±‚Ì”’l‚âƒxƒNƒgƒ‹‚ğ‚à‚Æ‚É•Ç‚É•½s‚ÈƒxƒNƒgƒ‹‚ğ‹‚ß
-            //•Ç‘–‚è‚Ì•ûŒü‚ğŒˆ‚ß‚é
+            //ã“ã“ã®æ•°å€¤ã‚„ãƒ™ã‚¯ãƒˆãƒ«ã‚’ã‚‚ã¨ã«å£ã«å¹³è¡Œãªãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚
+            //å£èµ°ã‚Šã®æ–¹å‘ã‚’æ±ºã‚ã‚‹
             //https://docs.unity3d.com/ja/2019.4/Manual/ComputingNormalPerpendicularVector.html
             {
                 Vector3 A = -WallNormalVec.normalized;
@@ -690,9 +763,9 @@ public class PlayerControll : MonoBehaviour
         Vector3 vec = new Vector3(MoveInput.x, 0, MoveInput.y);
         Gizmos.color = Color.red;
 
-        // ƒxƒNƒgƒ‹B‚ğ‰ñ“]s—ñ‚É•ÏŠ·
+        // ãƒ™ã‚¯ãƒˆãƒ«Bã‚’å›è»¢è¡Œåˆ—ã«å¤‰æ›
         Quaternion rotationQuaternion = Quaternion.Euler(vec);
-        // ƒxƒNƒgƒ‹A‚ğ‰ñ“]s—ñ‚Å‰ñ“]
+        // ãƒ™ã‚¯ãƒˆãƒ«Aã‚’å›è»¢è¡Œåˆ—ã§å›è»¢
         Vector3 rotatedVector = rotationQuaternion * transform.forward;
 
         Gizmos.DrawLine(transform.position, transform.position + rotatedVector * 2);

@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 4
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 4604.1294, g: 2943.4885, b: 2168.9612, a: 1}
+  m_IndirectSpecularColor: {r: 4614.1313, g: 2948.924, b: 2171.137, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -219,7 +219,7 @@ Transform:
   m_GameObject: {fileID: 195598327}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.9848078, z: 0, w: 0.17364825}
-  m_LocalPosition: {x: -11.87, y: 0.9855447, z: 6.53}
+  m_LocalPosition: {x: -11.64, y: 0.9855447, z: 5.89}
   m_LocalScale: {x: 1, y: 5.982339, z: 16.249998}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1576,7 +1576,7 @@ GameObject:
   - component: {fileID: 2045014367}
   - component: {fileID: 2045014366}
   - component: {fileID: 2045014370}
-  - component: {fileID: 2045014369}
+  - component: {fileID: 2045014371}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1658,25 +1658,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2045014369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2045014365}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e91661781cb27242a16c657c1e8679b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  charaLookAtPosition: {fileID: 2593622830679474147}
-  cameraMoveSpeed: 3
-  cameraRotateSpeed: 90
-  basePos: {x: 0, y: 0.5, z: 3.5}
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 1
 --- !u!114 &2045014370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1809,6 +1790,25 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
+--- !u!114 &2045014371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045014365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac059fce0eccec14da0126c137103064, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charaLookAtPosition: {fileID: 0}
+  cameraMoveSpeed: 3
+  cameraRotateSpeed: 90
+  basePos: {x: 0, y: 0.5, z: 3.5}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &2110580807
 GameObject:
   m_ObjectHideFlags: 0
@@ -2154,7 +2154,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerCamera: {fileID: 2045014365}
   PlayerCameraOrigin: {fileID: 2593622830679474148}
-  Capsule_forDebug: {fileID: 2117587531}
   MaxWalkSpeed: 12
   WalkAcc: 6
   MaxRunSpeed: 36
@@ -2164,11 +2163,6 @@ MonoBehaviour:
   SecondJumpMultiplyValue: 1
   SecondJumpHorizonPowerMultiplyValue: 1
   MoveInputRotationSpeed: 0.2
-  CrouchCenter: {x: 0, y: 0.45, z: 0}
-  CrouchHeight: 0.9
-  MaxCrouchSpeed: 8
-  SlidingSpeed: 10
-  keepSlideTime: 8
   wallStatus: 0
   wallLayers:
     serializedVersion: 2
@@ -2185,8 +2179,6 @@ MonoBehaviour:
   isGround: 1
   FirstJumped: 0
   SecondJumped: 0
-  isClouch: 0
-  isSliding: 0
   isWallRun: 0
 --- !u!114 &7856667044145252036
 MonoBehaviour:

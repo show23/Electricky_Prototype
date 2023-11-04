@@ -33,15 +33,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Crouch",
-                    "type": "Button",
-                    "id": "36225f38-7f25-4f75-bae7-6fb107bcf68f",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Run",
                     "type": "Button",
                     "id": "1416bb7d-71f4-46f2-afbf-329737aeacec",
@@ -51,27 +42,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Attack_1",
+                    "name": "Attack",
                     "type": "Button",
                     "id": "1a56f02e-d467-4f00-9e8d-ccfc288280e2",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Attack_2",
-                    "type": "Button",
-                    "id": "b3fa6172-f177-408c-88b4-c6da8a2f69c9",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Attack_3",
-                    "type": "Button",
-                    "id": "6b87296c-0ea9-47f7-8140-763904d02bb8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -81,6 +54,15 @@
                     "name": "Dodge",
                     "type": "Button",
                     "id": "f4f8683c-6702-4027-aad8-5b6d6f72e96e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CameraReset",
+                    "type": "Button",
+                    "id": "c9b081fc-57bf-4757-8bfb-741578d64b14",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -178,30 +160,8 @@
                 },
                 {
                     "name": "",
-                    "id": "6525c929-46ab-4be9-a1e4-1b187c2ef32e",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Crouch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "aa9c66a4-1e37-4c5b-8725-f950b69ff5c5",
-                    "path": "<Keyboard>/ctrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Crouch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "da814f74-d6b3-44e7-866e-cbb020d3d262",
-                    "path": "<Gamepad>/leftTrigger",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -266,67 +226,23 @@
                 },
                 {
                     "name": "",
-                    "id": "a476a7f9-fb93-4e33-9f82-3597e1cbc0dd",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Attack_2",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3d9675c4-8186-436b-a993-a8281fce5de2",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Attack_2",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "716474da-6d5b-4efe-bdec-9789c5728507",
-                    "path": "<Keyboard>/v",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Attack_3",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "48759374-4d21-4ee7-9745-d5fa577835c3",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Attack_3",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "9e8a4e20-fbb0-475b-ba61-c2b5fce1a4ff",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack_1",
+                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "84e87cf6-a629-46b1-a8d8-d3aea0235fc1",
-                    "path": "<Keyboard>/r",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack_1",
+                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -349,6 +265,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "61bcd3de-616b-4153-9838-c9a138256b78",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraReset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2c5bb5c0-3620-420e-9a2b-83f24d49d8d7",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraReset",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
