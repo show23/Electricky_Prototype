@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -102,7 +102,7 @@ public class PlayerAttack : MonoBehaviour
     {
         float distance = Vector3.Distance(transform.position, target.transform.position);
 
-        if (distance <= playerManager.beamRange) // ‹——£‚ª–]‚Ü‚µ‚¢”ÍˆÍ“à‚É‚ ‚é‚©
+        if (distance <= playerManager.beamRange) // è·é›¢ãŒæœ›ã¾ã—ã„ç¯„å›²å†…ã«ã‚ã‚‹ã‹
         {
             GameObject beamInstance = Instantiate(beamPrefab, playerManager.firePoint.position, playerManager.firePoint.rotation);
             Bullet beamScript = beamInstance.GetComponent<Bullet>();
@@ -122,22 +122,22 @@ public class PlayerAttack : MonoBehaviour
         Vector3 playerPosition = transform.position;
         Vector3 targetPosition = enemy.transform.position;
 
-        // Ray‚Ìn“_‚ğ­‚µã‚É‚¸‚ç‚µA­‚µ‘O•û‚É‚àˆÚ“®‚³‚¹‚é
+        // Rayã®å§‹ç‚¹ã‚’å°‘ã—ä¸Šã«ãšã‚‰ã—ã€å°‘ã—å‰æ–¹ã«ã‚‚ç§»å‹•ã•ã›ã‚‹
         Vector3 rayStart = playerPosition + Vector3.up * 2.1f + transform.forward * 2.1f;
 
         Vector3 rayDirection = (targetPosition - rayStart).normalized;
 
-        Debug.Log("ƒŒƒC‚Ì•ûŒü: " + rayDirection);
+        //Debug.Log("ãƒ¬ã‚¤ã®æ–¹å‘: " + rayDirection);
 
-        // Ray‚Ìn“_‚©‚çI“_‚Ü‚Å‚Ìƒ‰ƒCƒ“‚ğÔF‚Å•`‰æ
+        // Rayã®å§‹ç‚¹ã‹ã‚‰çµ‚ç‚¹ã¾ã§ã®ãƒ©ã‚¤ãƒ³ã‚’èµ¤è‰²ã§æç”»
         Debug.DrawLine(rayStart, targetPosition, Color.red, 2f);
 
         RaycastHit hit;
-        int layerMask = ~(1 << LayerMask.NameToLayer("Ignore Raycast")); // Ignore RaycastƒŒƒCƒ„[‚ğ–³‹‚·‚é
+        int layerMask = ~(1 << LayerMask.NameToLayer("Ignore Raycast")); // Ignore Raycastãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ç„¡è¦–ã™ã‚‹
 
         if (Physics.Raycast(rayStart, rayDirection, out hit, Vector3.Distance(rayStart, targetPosition), layerMask))
         {
-            Debug.Log("ƒŒƒC‚ª " + hit.collider.gameObject.name + " ‚É“–‚½‚è‚Ü‚µ‚½");
+            Debug.Log("ãƒ¬ã‚¤ãŒ " + hit.collider.gameObject.name + " ã«å½“ãŸã‚Šã¾ã—ãŸ");
 
             if (hit.collider.gameObject != enemy)
             {
@@ -150,11 +150,11 @@ public class PlayerAttack : MonoBehaviour
 
     private void beemStraight()
     {
-        // ‘ÎÛ‚ªË’öŠO‚Ìê‡AƒvƒŒƒCƒ„[‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü‚É‚Ü‚Á‚·‚®ƒr[ƒ€‚ğ”­Ë
+        // å¯¾è±¡ãŒå°„ç¨‹å¤–ã®å ´åˆã€ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‘ã„ã¦ã„ã‚‹æ–¹å‘ã«ã¾ã£ã™ããƒ“ãƒ¼ãƒ ã‚’ç™ºå°„
         GameObject beamInstance = Instantiate(beamPrefab, playerManager.firePoint.position, Quaternion.LookRotation(transform.forward));
         Bullet beamScript = beamInstance.GetComponent<Bullet>();
-        beamScript.SetTarget(null); // ƒ^[ƒQƒbƒg‚Í‚¢‚ç‚È‚¢‚Ì‚Å null ‚ğİ’è
-        beamInstance.GetComponent<Rigidbody>().velocity = transform.forward * playerManager.beamSpeed; // ƒr[ƒ€‚ğƒvƒŒƒCƒ„[‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü‚Éi‚ß‚é
+        beamScript.SetTarget(null); // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¯ã„ã‚‰ãªã„ã®ã§ null ã‚’è¨­å®š
+        beamInstance.GetComponent<Rigidbody>().velocity = transform.forward * playerManager.beamSpeed; // ãƒ“ãƒ¼ãƒ ã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‘ã„ã¦ã„ã‚‹æ–¹å‘ã«é€²ã‚ã‚‹
         Destroy(beamInstance, 3f);
     }
 
