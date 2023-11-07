@@ -295,6 +295,7 @@ public class PlayerControll : MonoBehaviour
                 //CrouchInput = false;
             }
 
+            attackInputTrigger = false;
             jumpInputTrigger = false;
             dodgeInputTrigger = false;
 
@@ -665,7 +666,7 @@ public class PlayerControll : MonoBehaviour
     }
     private void Attack()
     {
-        //playerAttack.isAttack = true;
+        playerAttack.isAttack = true;
     }
 
     private void HikiyoseAttack()
