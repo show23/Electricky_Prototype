@@ -98,10 +98,10 @@ public class PlayerControll : MonoBehaviour
 
     [Space(30)]
 
-    [Tooltip("速度維持率"), Range(0.97f,1.0f)]
+    [Tooltip("速度維持率"), Range(0.0f,1.0f)]
     public float VelocityHoldRate;
 
-    [Tooltip("空中速度維持率(地上基準)"), Range(0.97f,1.0f)]
+    [Tooltip("空中速度維持率(地上基準)"), Range(0.0f,1.0f)]
     public float AirVelocityHoldRate;
     [Tooltip("空中加速率(地上基準)"), Range(0.0f, 1.0f)]
     public float AirVelocityAccRate;
@@ -139,7 +139,7 @@ public class PlayerControll : MonoBehaviour
 
     //InputAction
     private PlayerInput playerInput;
-    private InputAction move, jump, attack, run, cam, dodge; //crouch, //attack_1, attack_2, attack_3,
+    private InputAction move, jump, attack, run, dodge; // cam, crouch, attack_1, attack_2, attack_3,
 
     private bool jumpInputTrigger = false;
     private bool dodgeInputTrigger = false;
@@ -147,7 +147,7 @@ public class PlayerControll : MonoBehaviour
     
 
     private Vector2 MoveInput;
-    private Vector2 CameraInput;
+    //private Vector2 CameraInput;
     private bool RunInput;
 
     private bool JumpInput;
@@ -206,7 +206,7 @@ public class PlayerControll : MonoBehaviour
         attack = playerInput.actions["Attack"];
 
         run = playerInput.actions["Run"];
-        cam = playerInput.actions["CameraXY"];
+        //cam = playerInput.actions["CameraXY"];
         jumpInputTrigger = false; 
         dodgeInputTrigger = false;
         attackInputTrigger = false;
@@ -269,7 +269,7 @@ public class PlayerControll : MonoBehaviour
         //入力値の更新
         {
             MoveInput = move.ReadValue<Vector2>();
-            CameraInput = cam.ReadValue<Vector2>();
+            //CameraInput = cam.ReadValue<Vector2>();
             JumpInput = jump.ReadValue<float>() > 0;
 
             AttackInput = attack.ReadValue<float>() > 0;
@@ -461,52 +461,52 @@ public class PlayerControll : MonoBehaviour
         //------------------------------------------------------------
         //しゃがみ&スライディング
         //------------------------------------------------------------
-
-        /*
         {
-            if (!isSliding && slideInputTrigger)
+            /*
             {
-                SlidingTimer = 0;
-                isSliding = true;
-                Vector3 vec = s_Rigidbody.velocity;
-                vec.y = 0;
-                s_Rigidbody.AddForce(vec.normalized * SlidingSpeed, ForceMode.Impulse);
-            }
-
-            if (isSliding)
-            {
-                SlidingTimer++;
-
-                if (SlidingTimer > keepSlideTime)
+                if (!isSliding && slideInputTrigger)
                 {
-                    isSliding = false;
+                    SlidingTimer = 0;
+                    isSliding = true;
+                    Vector3 vec = s_Rigidbody.velocity;
+                    vec.y = 0;
+                    s_Rigidbody.AddForce(vec.normalized * SlidingSpeed, ForceMode.VelocityChange);
+                }
+
+                if (isSliding)
+                {
+                    SlidingTimer++;
+
+                    if (SlidingTimer > keepSlideTime)
+                    {
+                        isSliding = false;
+                    }
+                }
+
+                isClouch = false;
+                Capsule_forDebug.transform.localPosition = new Vector3(0, 0.9f, 0);
+                Capsule_forDebug.transform.localScale = new Vector3(0.3f, 0.9f, 0.3f);
+
+                if (CrouchInput || isSliding)
+                {
+                    isClouch = true;
+                    Capsule_forDebug.transform.localPosition = new Vector3(0, 0.45f, 0);
+                    Capsule_forDebug.transform.localScale = new Vector3(0.3f, 0.45f, 0.3f);
+                }
+
+                if (isClouch)
+                {
+                    s_Collider.center = CrouchCenter;
+                    s_Collider.height = CrouchHeight;
+                }
+                else
+                {
+                    s_Collider.center = NormalCenter;
+                    s_Collider.height = NormalHeight;
                 }
             }
-
-            isClouch = false;
-            Capsule_forDebug.transform.localPosition = new Vector3(0, 0.9f, 0);
-            Capsule_forDebug.transform.localScale = new Vector3(0.3f, 0.9f, 0.3f);
-
-            if (CrouchInput || isSliding)
-            {
-                isClouch = true;
-                Capsule_forDebug.transform.localPosition = new Vector3(0, 0.45f, 0);
-                Capsule_forDebug.transform.localScale = new Vector3(0.3f, 0.45f, 0.3f);
-            }
-
-            if (isClouch)
-            {
-                s_Collider.center = CrouchCenter;
-                s_Collider.height = CrouchHeight;
-            }
-            else
-            {
-                s_Collider.center = NormalCenter;
-                s_Collider.height = NormalHeight;
-            }
+            */
         }
-        */
-
         //-------------------------------------------------------------------------------
         //プレイヤーの動きをRigidBodyに入力 移動入力に合わせてプレイヤーの回転
         //-------------------------------------------------------------------------------
@@ -523,6 +523,7 @@ public class PlayerControll : MonoBehaviour
         }
 
         //減速処理(ぬるぬる動く性質の温床)
+        if (MoveInput.magnitude < 0.01f)
         {
             Vector3 selfSpeed = s_Rigidbody.velocity;
             selfSpeed *= speedHoldRate;
@@ -569,12 +570,12 @@ public class PlayerControll : MonoBehaviour
 
             Vector3 MoveVel = moveForward * accValue;
 
-            s_Rigidbody.AddForce(MoveVel);
+            s_Rigidbody.AddForce(MoveVel,ForceMode.Acceleration);
         }
 
-        //プレイヤーの回転
-
-        transform.rotation = Quaternion.LookRotation(Vector3.Slerp(transform.forward, moveForward, MoveInputRotationSpeed), Vector3.up);
+        //入力方向へのプレイヤーの回転
+        if (isGround)
+            transform.rotation = Quaternion.LookRotation(Vector3.Slerp(transform.forward, moveForward, MoveInputRotationSpeed), Vector3.up);
 
         //------------------------------------------------------------
         //ジャンプ
@@ -592,7 +593,8 @@ public class PlayerControll : MonoBehaviour
                     FirstJumped = true;
                     isGround = false;
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                    s_Rigidbody.AddForce(Vector3.up * JumpPower * SecondJumpMultiplyValue + moveForward * InputValue * JumpHorizonPower * SecondJumpHorizonPowerMultiplyValue, ForceMode.Impulse);
+                    transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
+                    s_Rigidbody.AddForce(Vector3.up * JumpPower * SecondJumpMultiplyValue + moveForward * InputValue * JumpHorizonPower * SecondJumpHorizonPowerMultiplyValue, ForceMode.VelocityChange);
                 }
 
                 if (jumpInputTrigger && !FirstJumped)
@@ -600,7 +602,8 @@ public class PlayerControll : MonoBehaviour
                     FirstJumped = true;
                     isGround = false;
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                    s_Rigidbody.AddForce(Vector3.up * JumpPower + moveForward * InputValue * JumpHorizonPower, ForceMode.Impulse);
+                    transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up); 
+                    s_Rigidbody.AddForce(Vector3.up * JumpPower + moveForward * InputValue * JumpHorizonPower, ForceMode.VelocityChange);
                 }
             }
             else
@@ -613,7 +616,8 @@ public class PlayerControll : MonoBehaviour
                     WJtoNextWallTimer = 0;
                     WallRunCheck();
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                    s_Rigidbody.AddForce(Vector3.up * JumpPower + moveForward * InputValue * wallJumpHorizonPower, ForceMode.Impulse);
+                    transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up); 
+                    s_Rigidbody.AddForce(Vector3.up * JumpPower + moveForward * InputValue * wallJumpHorizonPower, ForceMode.VelocityChange);
                 }
             }
         }
@@ -661,17 +665,17 @@ public class PlayerControll : MonoBehaviour
     }
     private void Attack()
     {
-        playerAttack.isAttack = true;
+        //playerAttack.isAttack = true;
     }
 
     private void HikiyoseAttack()
     {
-        playerAttack.isAttack2 = true;
+        //playerAttack.isAttack2 = true;
     }
 
     private void LineAttack()
     {
-        line.isAttack3 = true;
+        //line.isAttack3 = true;
     }
 
 
