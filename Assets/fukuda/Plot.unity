@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 4614.1313, g: 2948.924, b: 2171.137, a: 1}
+  m_IndirectSpecularColor: {r: 4614.1626, g: 2948.932, b: 2171.1526, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1789,7 +1789,7 @@ GameObject:
   - component: {fileID: 2045014367}
   - component: {fileID: 2045014366}
   - component: {fileID: 2045014370}
-  - component: {fileID: 2045014371}
+  - component: {fileID: 2045014373}
   - component: {fileID: 2045014372}
   m_Layer: 0
   m_Name: Main Camera
@@ -2004,28 +2004,6 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
---- !u!114 &2045014371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2045014365}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac059fce0eccec14da0126c137103064, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TargetObj: {fileID: 2593622830679474147}
-  cameraMoveSpeed: 3
-  cameraRotateSpeed: 90
-  Length: 3
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 1
-  CameraInput: {x: 0, y: 0}
-  CamAddValueX: 2.99
-  CamAddValueY: 3.24
 --- !u!114 &2045014372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2057,6 +2035,29 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &2045014373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045014365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63811a91fd14f0c4282c180da0c3d35b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localAngle: {x: 0, y: 0}
+  TargetObj: {fileID: 2593622830679474147}
+  OffsetPos: {x: 0, y: 0, z: 0}
+  Length: 3
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  CameraInput: {x: 0, y: 0}
+  isResetCamera: 0
+  CamAddValueX: 0
+  CamAddValueY: 0
 --- !u!1 &2110580807
 GameObject:
   m_ObjectHideFlags: 0
