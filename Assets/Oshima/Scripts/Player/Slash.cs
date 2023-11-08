@@ -10,12 +10,15 @@ public class Slash : MonoBehaviour
     public int maxCombo = 4;
     public string enemyTag = "Enemy";
     public float attackRange = 4;
-    public float comboResetTime = 1.0f; // タイマーの時間（秒）
+    public float comboResetTime = 1.0f; // タイマーの時間
     private float lastKeyPressTime = 0.0f;
     bool kAllowed = true;
     public float cooldownTime = 0.3f;
     public float hitStop = 0.1f;
     public float attackAngle = 90;
+    public GameObject slashPrefab;
+    public Transform slashPoint;   // ビームの発射位置
+    public Quaternion spawnRotation = Quaternion.Euler(0.0f, 45.0f, 0.0f);
     // Start is called before the first frame update
     void Start()
     {
@@ -32,8 +35,12 @@ public class Slash : MonoBehaviour
             comboCount++;
             lastKeyPressTime = Time.time;
             
-        }
+            GameObject slashInstance = Instantiate(slashPrefab, slashPoint.position, spawnRotation);
+            //Bullet beamScript = beamInstance.GetComponent<Bullet>();
 
+            //Destroy(slashInstance, 3f);
+
+        }
 
         if (Time.time - lastKeyPressTime > comboResetTime)
         {
@@ -80,7 +87,6 @@ public class Slash : MonoBehaviour
                 {
                     Debug.Log("Combo1 Enemyに当たったよ");
                     StartCoroutine(HitStopCoroutine());
-
                 }
             }
         }

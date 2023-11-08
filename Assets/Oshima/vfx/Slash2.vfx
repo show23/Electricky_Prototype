@@ -19,7 +19,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 133
     y: -190
-    width: 2633
+    width: 2635
     height: 1455
 --- !u!114 &114350483966674976
 MonoBehaviour:
@@ -1652,7 +1652,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614661}
   - {fileID: 8926484042661614662}
   m_OutputSlots: []
-  m_Label: 
+  m_Label: BRIGHT SLASH
   m_Data: {fileID: 8926484042661614568}
   m_InputFlowSlot:
   - link:
@@ -1944,7 +1944,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"r":20.338058471679689,"g":32.20192337036133,"b":135.58705139160157,"a":1.0}'
+      m_SerializableObject: '{"r":3.830801010131836,"g":7.29186487197876,"b":35.30998611450195,"a":1.0}'
     m_Space: -1
   m_Property:
     name: _Color
@@ -2110,7 +2110,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 5
+      m_SerializableObject: 5.1
     m_Space: -1
   m_Property:
     name: _VoronoiSpeed
@@ -3668,7 +3668,7 @@ MonoBehaviour:
   m_Parent: {fileID: 114350483966674976}
   m_Children:
   - {fileID: 8926484042661614750}
-  m_UIPosition: {x: 2342, y: 892}
+  m_UIPosition: {x: 2344, y: 892}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -4049,7 +4049,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 2.11
+      m_SerializableObject: 3
     m_Space: -1
   m_Property:
     name: _VoronoiSpeed
