@@ -121,9 +121,10 @@ public class PlayerControll : MonoBehaviour
     public bool isGround = true;
     public bool FirstJumped = false;
     public bool SecondJumped = false;
-
-
     public bool isWallRun = false;
+
+    public bool isAttack = false;
+
 
 
 
@@ -288,6 +289,15 @@ public class PlayerControll : MonoBehaviour
 
             if (isGround)
                 RunInput = run.ReadValue<float>() > 0;
+
+            if (isAttack)
+            {
+                MoveInput = Vector2.zero;
+                JumpInput = false;
+                DodgeInput = false;
+                RunInput = false;
+            }
+
 
 
             if (isWallRun) { 
@@ -758,8 +768,6 @@ public class PlayerControll : MonoBehaviour
                 }
             }
         }
-
-
     }
 
 
@@ -788,4 +796,12 @@ public class PlayerControll : MonoBehaviour
         vec = s_Collider.height * transform.up;
         Gizmos.DrawLine(transform.position + vec, transform.position + vec + transform.up * 0.2f);
     }
+
+
+    public void AttackStatus(bool value)
+    {
+        isAttack = value;
+    }
+
+
 }
