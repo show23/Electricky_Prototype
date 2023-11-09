@@ -7,18 +7,27 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class ObjectPositionCopy : MonoBehaviour
 {
-    [SerializeField]
     private Transform tracePosition;
     
-    [SerializeField,Range(1,10)]
     private float RotationSpeedX = 1.0f;
-    [SerializeField, Range(1, 10)]
     private float RotationSpeedY = 1.0f;
+
+
+    public Vector2 setRotSpeed
+    {
+        get { return new Vector2(RotationSpeedX, RotationSpeedY); }
+        set
+        {
+            Vector2 a = value;
+            RotationSpeedX = a.x;
+            RotationSpeedY = a.y;
+        }
+    }
+
 
     private PlayerInput playerInput;
 
-    private 
-        InputAction cameraXY, cameraReset;
+    private InputAction cameraXY, cameraReset;
 
 
 
@@ -27,9 +36,13 @@ public class ObjectPositionCopy : MonoBehaviour
 
     private void Start()
     {
+        tracePosition = FindObjectOfType<PlayerControll>().transform;
         playerInput = GetComponent<PlayerInput>();
         cameraXY = playerInput.actions["CameraXY"];
         cameraReset = playerInput.actions["CameraReset"];
+
+
+        transform.rotation = tracePosition.rotation;
     }
 
     // Update is called once per frame

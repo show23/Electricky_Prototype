@@ -9,53 +9,80 @@ using UnityEngine.InputSystem;
 public class PlayerControll : MonoBehaviour
 {
     //Other Objects & Scripts
-    public GameObject PlayerCamera;
-    public GameObject PlayerCameraOrigin;
+    private GameObject PlayerCamera;
+    private GameObject PlayerCameraOrigin;
 
     //forDebug
     //2023/11/04
     //スライディング+しゃがみ要素削除のため不要
     //public GameObject Capsule_forDebug;
 
-    [Space(20)]
     //ゲーム内で変更される系のステータス
-    private int m_HP;
-    private int maxHP;
-    
-    private float m_Energy;
+    [SerializeField]
+    private float HP;
+    [SerializeField]
+    private float maxHP;
+
+    [SerializeField]
+    private int HPHealTime;
+
+    private int healTimer;
+    private float oldHP;
+
+    [SerializeField]
+    private float HPHealValue;
+
+    [SerializeField]
+    private float Energy;
+    [SerializeField]
     private float maxEnergy;
+    [SerializeField]
+    private float EnergyAddValue;
 
 
-    public int CurrentHp
+
+    public float CurrentHp
     {
-        get { return m_HP; }
+        get { return HP; }
         set {
-            m_HP = value;
-            if (m_HP > maxHP)
-                m_HP = maxHP;
-            if (m_HP < 0)
+            HP = value;
+            if (HP > maxHP)
+                HP = maxHP;
+            if (HP < 0)
             {
              //ここでゲームオーバー呼んでもいい
                 
-                m_HP = 0;
+                HP = 0;
             }
         }
+    }
+
+    public float CurrentMaxHp
+    {
+        get { return maxHP; }
+        set { maxHP = value; }
     }
     
     public float CurrentEnergy
     {
-        get { return m_Energy; }
+        get { return Energy; }
         set {
-            m_Energy = value;
-            if (m_Energy > maxEnergy)
-                m_Energy = maxEnergy;
-            if (m_Energy < 0)
-                m_Energy = 0;
+            Energy = value;
+            if (Energy > maxEnergy)
+                Energy = maxEnergy;
+            if (Energy < 0)
+                Energy = 0;
         }
     }
 
+    public float CurrentMaxEnergy
+    {
+        get { return maxEnergy; }
+        set { maxEnergy = value; }
+    }
 
 
+    [Space(20)]
 
     //プレイヤーのステータス
     [Tooltip("歩行速度")] 
@@ -161,8 +188,12 @@ public class PlayerControll : MonoBehaviour
     [Tooltip("空中加速率(地上基準)"), Range(0.0f, 1.0f)]
     public float AirVelocityAccRate;
 
-    [Tooltip("プレイヤーの回転速度")]
-    public float PlayerRotationSpeed;
+
+    [Tooltip("プレイヤー加速維持率が使用されるスティック入力値")]
+    private float RateUseInputValue = 0.1f;
+
+    //[Tooltip("プレイヤーの回転速度")]
+    //public float PlayerRotationSpeed;
 
     [Tooltip("現在の速度値")]
     public float playerSpeed;
@@ -240,13 +271,20 @@ public class PlayerControll : MonoBehaviour
 
     void Start()
     {
+        PlayerCamera = FindObjectOfType<CameraMove_ByFukuda_3>().gameObject;
+        PlayerCameraOrigin = GameObject.Find("PlayerCameraOrigin");
         gaugeController = FindObjectOfType<GaugeController>();
+
         s_Rigidbody = GetComponent<Rigidbody>();
         s_Animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         s_Collider = GetComponent<CapsuleCollider>();
         playerAttack = GetComponent<PlayerAttack>();
         line = GetComponent<Line>();
+
+
+        HP = maxHP;
+        Energy = maxEnergy;
 
         /*
         NormalCenter = s_Collider.center;
@@ -613,7 +651,7 @@ public class PlayerControll : MonoBehaviour
 
 
         //減速処理(ぬるぬる動く性質の温床)
-        if (MoveInput.magnitude < 0.01f)
+        if (MoveInput.magnitude < RateUseInputValue)
         {
             Vector3 selfSpeed = s_Rigidbody.velocity;
             selfSpeed *= speedHoldRate;
@@ -682,7 +720,7 @@ public class PlayerControll : MonoBehaviour
         {
             isDodge = true;
             DodgeTimer = 0;
-            this.CurrentEnergy = this.CurrentEnergy - DodgeUseEnergy;
+            this.CurrentEnergy -= DodgeUseEnergy;
             s_Rigidbody.AddForce(moveForward.normalized * DodgeAddPower, ForceMode.Impulse);
         }
 
@@ -751,9 +789,42 @@ public class PlayerControll : MonoBehaviour
             }
         }
 
+        //--------------------------------------------------------------------------------------
+        //エネルギー値の回復
+        //--------------------------------------------------------------------------------------
 
         //速度計測
         playerSpeed = new Vector2(s_Rigidbody.velocity.x, s_Rigidbody.velocity.z).magnitude;
+        if (MoveInput.magnitude > RateUseInputValue)
+        {
+            CurrentEnergy += playerSpeed * EnergyAddValue;
+        }
+
+
+        //----------------------------------------------------------------------------------
+        //体力値の自動回復
+        //----------------------------------------------------------------------------------
+
+        
+
+
+        if (CurrentHp < maxHP)
+        {
+            if (healTimer > HPHealTime)
+            {
+                CurrentHp += HPHealValue;
+            }
+
+            if (healTimer < HPHealTime + 1)
+            {
+                healTimer++;
+            }
+            if (oldHP > CurrentHp)
+            {
+                healTimer = 0;
+            }
+        }
+
 
 
         //-------------------------------------------------------------------------------
@@ -792,12 +863,15 @@ public class PlayerControll : MonoBehaviour
         //--------------------------------------------------------------------------------
         //＃UIを更新
         //--------------------------------------------------------------------------------
-        //gaugeController.UpdateGauge(CurrentHp, maxHP);
+
+        //エネルギーUIの更新
+        //ほんとはUI側スクリプト側から参照してもらうのがいいのかも
+        gaugeController.UpdateGauge(Energy, maxEnergy);
 
     }
     private void Attack()
     {
-        playerAttack.isAttack = true;
+        //playerAttack.isAttack = true;
     }
 
     private void HikiyoseAttack()
