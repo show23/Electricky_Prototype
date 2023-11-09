@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 262.38358, g: 325.10843, b: 430.30963, a: 1}
+  m_IndirectSpecularColor: {r: 262.36942, g: 325.14505, b: 430.36334, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -453,6 +453,37 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 612273611}
   m_SourcePrefab: {fileID: 100100000, guid: debb145ece23b324a94fdfaa24449b8f, type: 3}
+--- !u!1 &121264699
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 121264700}
+  m_Layer: 8
+  m_Name: SlashPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &121264700
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121264699}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.84, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1433521991}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &127684694
 GameObject:
   m_ObjectHideFlags: 0
@@ -3431,7 +3462,7 @@ Transform:
   m_GameObject: {fileID: 455963269}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.56, y: -6.88, z: 0}
+  m_LocalPosition: {x: -10.56, y: -5.27, z: 0}
   m_LocalScale: {x: 1, y: 0.55, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15154,6 +15185,10 @@ MonoBehaviour:
   cooldownTime: 0.3
   hitStop: 0.1
   attackAngle: 180
+  slashPrefab: {fileID: 9063369585147226277, guid: e443ba65a4be8ef4198780dd0cc8144f,
+    type: 3}
+  slashPoint: {fileID: 121264700}
+  spawnRotation: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
 --- !u!114 &1433521981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15401,6 +15436,7 @@ Transform:
   - {fileID: 1973270918}
   - {fileID: 1619551004}
   - {fileID: 1004239711}
+  - {fileID: 121264700}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -20, z: 0}
 --- !u!1 &1440159459
@@ -18243,6 +18279,9 @@ MonoBehaviour:
   cooldownTime: 0.3
   hitStop: 0.1
   attackAngle: 90
+  slashPrefab: {fileID: 0}
+  slashPoint: {fileID: 0}
+  spawnRotation: {x: 0, y: 0.38268346, z: 0, w: 0.9238795}
 --- !u!1 &1997858062
 GameObject:
   m_ObjectHideFlags: 0

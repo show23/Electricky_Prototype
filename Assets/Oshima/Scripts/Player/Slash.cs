@@ -38,7 +38,7 @@ public class Slash : MonoBehaviour
             GameObject slashInstance = Instantiate(slashPrefab, slashPoint.position, spawnRotation);
             //Bullet beamScript = beamInstance.GetComponent<Bullet>();
 
-            //Destroy(slashInstance, 3f);
+            Destroy(slashInstance, 3f);
 
         }
 
