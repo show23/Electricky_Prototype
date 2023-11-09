@@ -12,11 +12,6 @@ public class PlayerControll : MonoBehaviour
     private GameObject PlayerCamera;
     private GameObject PlayerCameraOrigin;
 
-    //forDebug
-    //2023/11/04
-    //スライディング+しゃがみ要素削除のため不要
-    //public GameObject Capsule_forDebug;
-
     //ゲーム内で変更される系のステータス
     [SerializeField]
     private float HP;
@@ -105,37 +100,6 @@ public class PlayerControll : MonoBehaviour
     public float MoveInputRotationSpeed;
 
 
-    //2023/11/04
-    //スライディング+しゃがみ要素削除のため不要
-    /*
-    [Space(20)]
-    public Vector3 CrouchCenter;
-    public float CrouchHeight;
-    [Tooltip("しゃがみ時の速度")]
-    public float MaxCrouchSpeed;
-    [Tooltip("スライディング速度")]
-    public float SlidingSpeed;
-    [Tooltip("スライディング維持フレーム数")]
-    public int keepSlideTime;
-    private int SlidingTimer;
-
-
-    //スライディング関係の初期値設定
-    private Vector3 NormalCenter;
-    private float NormalHeight;
-    
-     
-    
-    public bool isClouch = false;
-    public bool isSliding = false;
-    
-    
-    private bool CrouchInput;
-    private bool slideInputTrigger = false;
-    private bool OldCrouchInput;
-    */
-
-
 
     [Space(20)]
 
@@ -180,20 +144,17 @@ public class PlayerControll : MonoBehaviour
 
     [Space(30)]
 
-    [Tooltip("速度維持率"), Range(0.0f,1.0f)]
-    public float VelocityHoldRate;
+    [Tooltip("速度維持率"), Range(0.0f,1.0f), SerializeField]
+    private float VelocityHoldRate;
 
-    [Tooltip("空中速度維持率(地上基準)"), Range(0.0f,1.0f)]
-    public float AirVelocityHoldRate;
-    [Tooltip("空中加速率(地上基準)"), Range(0.0f, 1.0f)]
-    public float AirVelocityAccRate;
+    [Tooltip("空中速度維持率(地上基準)"), Range(0.0f,1.0f), SerializeField]
+    private float AirVelocityHoldRate;
+    [Tooltip("空中加速率(地上基準)"), Range(0.0f, 1.0f), SerializeField]
+    private float AirVelocityAccRate;
 
 
-    [Tooltip("プレイヤー加速維持率が使用されるスティック入力値")]
+    [Tooltip("プレイヤー加速維持率が使用されるスティック入力値"), SerializeField]
     private float RateUseInputValue = 0.1f;
-
-    //[Tooltip("プレイヤーの回転速度")]
-    //public float PlayerRotationSpeed;
 
     [Tooltip("現在の速度値")]
     public float playerSpeed;
@@ -227,7 +188,7 @@ public class PlayerControll : MonoBehaviour
 
     //InputAction
     private PlayerInput playerInput;
-    private InputAction move, jump, attack, run, dodge; // cam, crouch, attack_1, attack_2, attack_3,
+    private InputAction move, jump, attack, run, dodge;
 
     private bool jumpInputTrigger = false;
     private bool dodgeInputTrigger = false;
@@ -236,27 +197,10 @@ public class PlayerControll : MonoBehaviour
 
 
     private Vector2 MoveInput;
-    //private Vector2 CameraInput;
     private bool RunInput;
 
     private bool JumpInput;
     private bool DodgeInput;
-
-    //2023/11/04
-    //攻撃入力が1つになった為
-    //攻撃入力はリワーク
-
-    /*
-    private bool attack_1_InputTrigger = false;
-    private bool attack_2_InputTrigger = false;
-    private bool attack_3_InputTrigger = false;
-    private bool Attack_1_Input;
-    private bool Attack_2_Input;
-    private bool Attack_3_Input;
-    private bool OldAttack_1_Input;
-    private bool OldAttack_2_Input;
-    private bool OldAttack_3_Input;
-    */
 
 
     private bool attackInputTrigger = false;
@@ -286,24 +230,12 @@ public class PlayerControll : MonoBehaviour
         HP = maxHP;
         Energy = maxEnergy;
 
-        /*
-        NormalCenter = s_Collider.center;
-        NormalHeight = s_Collider.height;
-        attack_1 = playerInput.actions["Attack_1"];
-        attack_2 = playerInput.actions["Attack_2"];
-        attack_3 = playerInput.actions["Attack_3"];
-        crouch = playerInput.actions["Crouch"];
-        slideInputTrigger = false;
-        attack_1_InputTrigger = false;
-        */
-
         move = playerInput.actions["Move"];
         jump = playerInput.actions["Jump"];
         dodge = playerInput.actions["Dodge"];
         attack = playerInput.actions["Attack"];
 
         run = playerInput.actions["Run"];
-        //cam = playerInput.actions["CameraXY"];
         jumpInputTrigger = false; 
         dodgeInputTrigger = false;
         attackInputTrigger = false;
@@ -366,21 +298,9 @@ public class PlayerControll : MonoBehaviour
         //入力値の更新
         {
             MoveInput = move.ReadValue<Vector2>();
-            //CameraInput = cam.ReadValue<Vector2>();
             JumpInput = jump.ReadValue<float>() > 0;
 
             AttackInput = attack.ReadValue<float>() > 0;
-            /*
-            Attack_1_Input = attack_1.ReadValue<float>() > 0;
-            Attack_2_Input = attack_2.ReadValue<float>() > 0;
-            Attack_3_Input = attack_3.ReadValue<float>() > 0;
-            CrouchInput = crouch.ReadValue<float>() > 0;
-            attack_1_InputTrigger = false;
-            attack_2_InputTrigger = false;
-            attack_3_InputTrigger = false;
-            slideInputTrigger = false;
-            */
-
             DodgeInput = dodge.ReadValue<float>() > 0;
 
             if (isGround)
@@ -430,60 +350,6 @@ public class PlayerControll : MonoBehaviour
                 }
             }
 
-            /*
-            if (Attack_1_Input)
-            {
-                if (!OldAttack_1_Input)
-                {
-                    attack_1_InputTrigger = true;
-                }
-            }
-            if (Attack_2_Input)
-            {
-                if (!OldAttack_2_Input)
-                {
-                    attack_2_InputTrigger = true;
-                }
-            }
-            if (Attack_3_Input)
-            {
-                if (!OldAttack_3_Input)
-                {
-                    attack_3_InputTrigger = true;
-                }
-            }
-
-            if (OldCrouchInput)
-            {
-                //スライディング中も勝手にしゃがみ入力
-                {
-                    if (isSliding)
-                    {
-                        CrouchInput = true;
-                    }
-                }
-                //頭頂部になにかあるときに自動でしゃがみ入力
-                {
-                    Vector3 vec = (CrouchHeight - 0.1f) * transform.up;
-                    RaycastHit Hit;
-                    float raycastDistance = NormalHeight - CrouchHeight + 0.2f;
-                    if (Physics.Raycast(transform.position + vec, Vector3.up, out Hit, raycastDistance))
-                    {
-                        CrouchInput = true;
-                    }
-                }
-            }
-
-            if (CrouchInput)
-            {
-                if (!OldCrouchInput && RunInput && isGround)
-                {
-                    slideInputTrigger = true;
-                }
-                RunInput = false;
-            }
-            */
-
             if (DodgeInput)
             {
                 if (!OldDodgeInput)
@@ -493,24 +359,8 @@ public class PlayerControll : MonoBehaviour
             }
 
 
-            //走っているときはスティックいっぱいに入力している判定になる
-            //10/26 仕様変更により削除
-            /*
-            if (RunInput)
-            {
-                Vector2 vec = MoveInput.normalized;
-                MoveInput = vec;
-            }
-            */
-
             OldJumpInput = JumpInput;
             OldAttackInput = AttackInput;
-            /*
-            OldAttack_1_Input = Attack_1_Input;
-            OldAttack_2_Input = Attack_2_Input;
-            OldAttack_3_Input = Attack_3_Input;
-            OldCrouchInput = CrouchInput;
-            */
             OldDodgeInput = DodgeInput;
         }
 
@@ -567,64 +417,6 @@ public class PlayerControll : MonoBehaviour
 
         Vector3 MoveOriginVector = Vector3.Scale(PlayerCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
 
-        /*
-        if (!isWallRun)
-        {
-            transform.rotation = Quaternion.LookRotation(transform.forward + transform.right * CameraInput.x * PlayerRotationSpeed);
-        }
-        */
-
-        //------------------------------------------------------------
-        //しゃがみ&スライディング
-        //------------------------------------------------------------
-        {
-            /*
-            {
-                if (!isSliding && slideInputTrigger)
-                {
-                    SlidingTimer = 0;
-                    isSliding = true;
-                    Vector3 vec = s_Rigidbody.velocity;
-                    vec.y = 0;
-                    s_Rigidbody.AddForce(vec.normalized * SlidingSpeed, ForceMode.VelocityChange);
-                }
-
-                if (isSliding)
-                {
-                    SlidingTimer++;
-
-                    if (SlidingTimer > keepSlideTime)
-                    {
-                        isSliding = false;
-                    }
-                }
-
-                isClouch = false;
-                Capsule_forDebug.transform.localPosition = new Vector3(0, 0.9f, 0);
-                Capsule_forDebug.transform.localScale = new Vector3(0.3f, 0.9f, 0.3f);
-
-                if (CrouchInput || isSliding)
-                {
-                    isClouch = true;
-                    Capsule_forDebug.transform.localPosition = new Vector3(0, 0.45f, 0);
-                    Capsule_forDebug.transform.localScale = new Vector3(0.3f, 0.45f, 0.3f);
-                }
-
-                if (isClouch)
-                {
-                    s_Collider.center = CrouchCenter;
-                    s_Collider.height = CrouchHeight;
-                }
-                else
-                {
-                    s_Collider.center = NormalCenter;
-                    s_Collider.height = NormalHeight;
-                }
-            }
-            */
-        }
-
-
         
 
         //-------------------------------------------------------------------------------
@@ -663,8 +455,6 @@ public class PlayerControll : MonoBehaviour
         if (!isWallRun && !isDodge)
         {
 
-            //Vector3 Vel = Vector3.Scale(s_Rigidbody.velocity, new Vector3(1, 0, 1));
-
             float maxSpeed = MaxWalkSpeed;
             float accValue = WalkAcc;
             if (RunInput)
@@ -672,24 +462,8 @@ public class PlayerControll : MonoBehaviour
                 maxSpeed = MaxRunSpeed;
                 accValue = RunAcc;
             }
-            /*
-            if (CrouchInput)
-            {
-                maxSpeed = MaxCrouchSpeed;
-            }
-            */
             accValue *= speedAddRate;
 
-            /*
-            //加速数値の調整(最高速度を超えないようにする)
-            //↑この処理のせいでかなりごちゃついてしまった
-            float MaxaddSpeed = Mathf.Clamp(maxSpeed - Vel.magnitude, 0, maxSpeed);
-
-            if (accValue >= MaxaddSpeed)
-            {
-                accValue = Mathf.Clamp(accValue - moveForward.magnitude, 0, accValue);
-            }
-            */
 
             Vector3 MoveVel = moveForward * accValue;
             s_Rigidbody.AddForce(MoveVel,ForceMode.Acceleration);
@@ -840,18 +614,6 @@ public class PlayerControll : MonoBehaviour
             
         }
 
-
-        /*
-        if(Attack_2_Input)
-        {
-            HikiyoseAttack();
-        }
-       
-        if(Attack_3_Input)
-        {
-            LineAttack();
-        }
-        */
         //-------------------------------------------------------------------------------
         //#アニメーションをアニメーターに登録
         //-------------------------------------------------------------------------------
