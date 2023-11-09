@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Slash))]
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerControll : MonoBehaviour
 {
     //Other Objects & Scripts
@@ -16,6 +18,44 @@ public class PlayerControll : MonoBehaviour
     //public GameObject Capsule_forDebug;
 
     [Space(20)]
+    //ゲーム内で変更される系のステータス
+    private int m_HP;
+    private int maxHP;
+    
+    private float m_Energy;
+    private float maxEnergy;
+
+
+    public int CurrentHp
+    {
+        get { return m_HP; }
+        set {
+            m_HP = value;
+            if (m_HP > maxHP)
+                m_HP = maxHP;
+            if (m_HP < 0)
+            {
+             //ここでゲームオーバー呼んでもいい
+                
+                m_HP = 0;
+            }
+        }
+    }
+    
+    public float CurrentEnergy
+    {
+        get { return m_Energy; }
+        set {
+            m_Energy = value;
+            if (m_Energy > maxEnergy)
+                m_Energy = maxEnergy;
+            if (m_Energy < 0)
+                m_Energy = 0;
+        }
+    }
+
+
+
 
     //プレイヤーのステータス
     [Tooltip("歩行速度")] 
@@ -68,6 +108,8 @@ public class PlayerControll : MonoBehaviour
     private bool OldCrouchInput;
     */
 
+
+
     [Space(20)]
 
     //壁走り関係の数値設定
@@ -96,6 +138,19 @@ public class PlayerControll : MonoBehaviour
     private int WallRunTimer = 0;
 
 
+    [Space(20)]
+    public int DodgeCoolTime = 240;
+    public int DodgeEndTime = 90;
+    public int DodgeMutekiTime = 10;
+    public int DodgeMutekiStart = 3;
+    private int DodgeTimer = 60;
+    public float DodgeAddPower = 5.0f;
+
+    public float DodgeUseEnergy = 0.0f;
+    public float PerfectDodgeAddEnergy = 10.0f;
+
+
+
     [Space(30)]
 
     [Tooltip("速度維持率"), Range(0.0f,1.0f)]
@@ -113,8 +168,6 @@ public class PlayerControll : MonoBehaviour
     public float playerSpeed;
 
 
-
-
     [Space(20)]
 
     //接地判定
@@ -122,6 +175,8 @@ public class PlayerControll : MonoBehaviour
     public bool FirstJumped = false;
     public bool SecondJumped = false;
     public bool isWallRun = false;
+    public bool isDodge = false;
+    public bool noDamage = false;
 
     public bool isAttack = false;
 
@@ -129,6 +184,7 @@ public class PlayerControll : MonoBehaviour
 
 
     private PlayerAttack playerAttack;
+    private GaugeController gaugeController;
     private Line line;
 
 
@@ -144,8 +200,9 @@ public class PlayerControll : MonoBehaviour
 
     private bool jumpInputTrigger = false;
     private bool dodgeInputTrigger = false;
-    
-    
+
+
+
 
     private Vector2 MoveInput;
     //private Vector2 CameraInput;
@@ -182,7 +239,8 @@ public class PlayerControll : MonoBehaviour
     
 
     void Start()
-    { 
+    {
+        gaugeController = FindObjectOfType<GaugeController>();
         s_Rigidbody = GetComponent<Rigidbody>();
         s_Animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
@@ -295,6 +353,15 @@ public class PlayerControll : MonoBehaviour
                 MoveInput = Vector2.zero;
                 JumpInput = false;
                 DodgeInput = false;
+                RunInput = false;
+            }
+
+            if (isDodge)
+            {
+                MoveInput = Vector2.zero;
+                JumpInput = false;
+                DodgeInput = false;
+                isAttack = false;
                 RunInput = false;
             }
 
@@ -518,6 +585,10 @@ public class PlayerControll : MonoBehaviour
             }
             */
         }
+
+
+        
+
         //-------------------------------------------------------------------------------
         //プレイヤーの動きをRigidBodyに入力 移動入力に合わせてプレイヤーの回転
         //-------------------------------------------------------------------------------
@@ -533,6 +604,14 @@ public class PlayerControll : MonoBehaviour
             speedAddRate = AirVelocityAccRate;
         }
 
+
+        //移動入力処理
+        Vector3 moveForward = MoveOriginVector * MoveInput.y;
+        moveForward += PlayerCamera.transform.right * MoveInput.x;
+        moveForward = Vector3.Scale(moveForward, new Vector3(1, 0, 1));
+
+
+
         //減速処理(ぬるぬる動く性質の温床)
         if (MoveInput.magnitude < 0.01f)
         {
@@ -543,17 +622,10 @@ public class PlayerControll : MonoBehaviour
             s_Rigidbody.velocity = selfSpeed;
         }
 
-        //移動入力処理
-
-        Vector3 moveForward = MoveOriginVector * MoveInput.y;
-        moveForward += PlayerCamera.transform.right * MoveInput.x;
-        moveForward = Vector3.Scale(moveForward, new Vector3(1, 0, 1));
-
-
-        if (!isWallRun)
+        if (!isWallRun && !isDodge)
         {
 
-            Vector3 Vel = Vector3.Scale(s_Rigidbody.velocity, new Vector3(1, 0, 1));
+            //Vector3 Vel = Vector3.Scale(s_Rigidbody.velocity, new Vector3(1, 0, 1));
 
             float maxSpeed = MaxWalkSpeed;
             float accValue = WalkAcc;
@@ -570,6 +642,7 @@ public class PlayerControll : MonoBehaviour
             */
             accValue *= speedAddRate;
 
+            /*
             //加速数値の調整(最高速度を超えないようにする)
             //↑この処理のせいでかなりごちゃついてしまった
             float MaxaddSpeed = Mathf.Clamp(maxSpeed - Vel.magnitude, 0, maxSpeed);
@@ -578,16 +651,61 @@ public class PlayerControll : MonoBehaviour
             {
                 accValue = Mathf.Clamp(accValue - moveForward.magnitude, 0, accValue);
             }
+            */
 
             Vector3 MoveVel = moveForward * accValue;
-
             s_Rigidbody.AddForce(MoveVel,ForceMode.Acceleration);
+
+
+            //新 速度制限
+            {
+                Vector3 Vel = Vector3.Scale(s_Rigidbody.velocity, new Vector3(1, 0, 1));
+
+                if (Vel.magnitude > maxSpeed)
+                {
+                    Vel = Vel.normalized * maxSpeed;
+                    Vel.y = s_Rigidbody.velocity.y;
+                    s_Rigidbody.velocity = Vel;
+                }
+            }
         }
 
         //入力方向へのプレイヤーの回転
         if (isGround)
             transform.rotation = Quaternion.LookRotation(Vector3.Slerp(transform.forward, moveForward, MoveInputRotationSpeed), Vector3.up);
 
+        //------------------------------------------------------------
+        //回避
+        //------------------------------------------------------------
+
+        if (!isDodge && dodgeInputTrigger && DodgeCoolTime < DodgeTimer)
+        {
+            isDodge = true;
+            DodgeTimer = 0;
+            this.CurrentEnergy = this.CurrentEnergy - DodgeUseEnergy;
+            s_Rigidbody.AddForce(moveForward.normalized * DodgeAddPower, ForceMode.Impulse);
+        }
+
+        if (isDodge)
+        {
+
+            if (DodgeMutekiStart == DodgeTimer)
+                noDamage = true;
+
+            if (DodgeMutekiStart+DodgeMutekiTime == DodgeTimer)
+                noDamage = false;
+
+            if (DodgeEndTime == DodgeTimer)
+                isDodge = false;
+
+
+        }
+
+
+        if (DodgeTimer < DodgeCoolTime + 1)
+        {
+            DodgeTimer++;
+        }
         //------------------------------------------------------------
         //ジャンプ
         //------------------------------------------------------------
@@ -671,7 +789,10 @@ public class PlayerControll : MonoBehaviour
 
 
 
-
+        //--------------------------------------------------------------------------------
+        //＃UIを更新
+        //--------------------------------------------------------------------------------
+        //gaugeController.UpdateGauge(CurrentHp, maxHP);
 
     }
     private void Attack()
