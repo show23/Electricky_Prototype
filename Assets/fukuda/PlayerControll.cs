@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(Slash))]
+[RequireComponent(typeof(Player_Slash))]
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerControll : MonoBehaviour
 {
@@ -175,7 +175,7 @@ public class PlayerControll : MonoBehaviour
 
 
 
-    private PlayerAttack playerAttack;
+    private Player_Slash playerAttack;
     private GaugeController gaugeController;
     private Line line;
 
@@ -195,8 +195,12 @@ public class PlayerControll : MonoBehaviour
 
 
 
-
+    //入力値
     private Vector2 MoveInput;
+    //実際に移動で使われる値
+    //攻撃や回避の影響でゼロになる
+    private Vector2 MoveValue;
+    
     private bool RunInput;
 
     private bool JumpInput;
@@ -204,6 +208,7 @@ public class PlayerControll : MonoBehaviour
 
 
     private bool attackInputTrigger = false;
+    [SerializeField]
     private bool AttackInput;
     private bool OldAttackInput;
 
@@ -223,7 +228,7 @@ public class PlayerControll : MonoBehaviour
         s_Animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         s_Collider = GetComponent<CapsuleCollider>();
-        playerAttack = GetComponent<PlayerAttack>();
+        playerAttack = GetComponent<Player_Slash>();
         line = GetComponent<Line>();
 
 
@@ -298,6 +303,7 @@ public class PlayerControll : MonoBehaviour
         //入力値の更新
         {
             MoveInput = move.ReadValue<Vector2>();
+            MoveValue = MoveInput;
             JumpInput = jump.ReadValue<float>() > 0;
 
             AttackInput = attack.ReadValue<float>() > 0;
@@ -308,7 +314,7 @@ public class PlayerControll : MonoBehaviour
 
             if (isAttack)
             {
-                MoveInput = Vector2.zero;
+                MoveValue = Vector2.zero;
                 JumpInput = false;
                 DodgeInput = false;
                 RunInput = false;
@@ -316,7 +322,7 @@ public class PlayerControll : MonoBehaviour
 
             if (isDodge)
             {
-                MoveInput = Vector2.zero;
+                MoveValue = Vector2.zero;
                 JumpInput = false;
                 DodgeInput = false;
                 isAttack = false;
@@ -436,24 +442,28 @@ public class PlayerControll : MonoBehaviour
 
 
         //移動入力処理
+        //ここでの計算はチャージ攻撃などでも使えるので
+        //入力値から直接計算している
+
         Vector3 moveForward = MoveOriginVector * MoveInput.y;
         moveForward += PlayerCamera.transform.right * MoveInput.x;
         moveForward = Vector3.Scale(moveForward, new Vector3(1, 0, 1));
 
 
 
-        //減速処理(ぬるぬる動く性質の温床)
-        if (MoveInput.magnitude < RateUseInputValue)
-        {
-            Vector3 selfSpeed = s_Rigidbody.velocity;
-            selfSpeed *= speedHoldRate;
-            selfSpeed.y = s_Rigidbody.velocity.y;
 
-            s_Rigidbody.velocity = selfSpeed;
-        }
-
-        if (!isWallRun && !isDodge)
+        if (!isWallRun && !isDodge && !isAttack)
         {
+
+            //減速処理(ぬるぬる動く性質の温床)
+            if (MoveValue.magnitude < RateUseInputValue)
+            {
+                Vector3 selfSpeed = s_Rigidbody.velocity;
+                selfSpeed *= speedHoldRate;
+                selfSpeed.y = s_Rigidbody.velocity.y;
+
+                s_Rigidbody.velocity = selfSpeed;
+            }
 
             float maxSpeed = MaxWalkSpeed;
             float accValue = WalkAcc;
@@ -523,7 +533,7 @@ public class PlayerControll : MonoBehaviour
         //------------------------------------------------------------
         {
 
-            float InputValue = MoveInput.magnitude;
+            float InputValue = MoveValue.magnitude;
 
             if (!isWallRun)
             {
@@ -569,7 +579,7 @@ public class PlayerControll : MonoBehaviour
 
         //速度計測
         playerSpeed = new Vector2(s_Rigidbody.velocity.x, s_Rigidbody.velocity.z).magnitude;
-        if (MoveInput.magnitude > RateUseInputValue)
+        if (isGround && !isDodge && !isAttack && MoveValue.magnitude > RateUseInputValue)
         {
             CurrentEnergy += playerSpeed * EnergyAddValue;
         }
@@ -605,14 +615,8 @@ public class PlayerControll : MonoBehaviour
         //#プレイヤーの攻撃処理
         //-------------------------------------------------------------------------------
 
-        if (attackInputTrigger)
-        {
-            Attack();
-        }
-        if (AttackInput)
-        {
-            
-        }
+        Attack(AttackInput,moveForward);
+        
 
         //-------------------------------------------------------------------------------
         //#アニメーションをアニメーターに登録
@@ -631,19 +635,10 @@ public class PlayerControll : MonoBehaviour
         gaugeController.UpdateGauge(Energy, maxEnergy);
 
     }
-    private void Attack()
+    private void Attack(bool val,Vector3 moveVec)
     {
-        //playerAttack.isAttack = true;
-    }
-
-    private void HikiyoseAttack()
-    {
-        //playerAttack.isAttack2 = true;
-    }
-
-    private void LineAttack()
-    {
-        //line.isAttack3 = true;
+        Vector2 vec = new Vector2(moveVec.x, moveVec.z);
+        playerAttack.inputAttackTrigger(val, vec);
     }
 
 
@@ -730,7 +725,7 @@ public class PlayerControll : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Vector3 vec = new Vector3(MoveInput.x, 0, MoveInput.y);
+        Vector3 vec = new Vector3(MoveValue.x, 0, MoveValue.y);
         Gizmos.color = Color.red;
 
         // ベクトルBを回転行列に変換

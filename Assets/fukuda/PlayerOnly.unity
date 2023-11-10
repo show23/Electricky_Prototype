@@ -838,12 +838,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7368924319197142021}
+  - component: {fileID: 7856667044145252037}
   - component: {fileID: 7856667044145252035}
   - component: {fileID: 3504787273512535679}
   - component: {fileID: 7856667044145252033}
   - component: {fileID: 7856667044145252032}
   - component: {fileID: 7856667044145252036}
-  - component: {fileID: 7856667044145252037}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -919,7 +919,7 @@ MonoBehaviour:
   HPHealValue: 1
   Energy: 0
   maxEnergy: 100
-  EnergyAddValue: 0.2
+  EnergyAddValue: 0.01
   MaxWalkSpeed: 16
   WalkAcc: 16
   MaxRunSpeed: 19
@@ -947,6 +947,7 @@ MonoBehaviour:
   VelocityHoldRate: 0.92
   AirVelocityHoldRate: 0.97
   AirVelocityAccRate: 1
+  RateUseInputValue: 0.1
   playerSpeed: 10
   isGround: 1
   FirstJumped: 0
@@ -955,6 +956,7 @@ MonoBehaviour:
   isDodge: 0
   noDamage: 0
   isAttack: 0
+  AttackInput: 0
 --- !u!114 &7856667044145252036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -998,18 +1000,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e1165635866634fa26f5d4b35b43d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCombo: 4
-  attackList:
-  - attackRange: 4
-    attackAngle: 20
+  comboCount: 0
+  ComboAttackList:
+  - attackRange: 3
+    attackAngle: 75
     useEnergy: 10
-    maxDamage: 0
-    minDamage: 0
+    maxDamage: 90
+    minDamage: 10
     comboAccseptStartTime: 0
-    comboAccseptLength: 0
-    cooldownTime: 0
-    hitStop: 2
+    comboAccseptLength: 40
+    cooldownTime: 45
+    hitStop: 1
+  - attackRange: 3
+    attackAngle: 75
+    useEnergy: 10
+    maxDamage: 90
+    minDamage: 10
+    comboAccseptStartTime: 0
+    comboAccseptLength: 40
+    cooldownTime: 45
+    hitStop: 1
+  - attackRange: 3
+    attackAngle: 75
+    useEnergy: 10
+    maxDamage: 90
+    minDamage: 10
+    comboAccseptStartTime: 0
+    comboAccseptLength: 40
+    cooldownTime: 45
+    hitStop: 1
+  - attackRange: 3
+    attackAngle: 75
+    useEnergy: 10
+    maxDamage: 90
+    minDamage: 10
+    comboAccseptStartTime: 0
+    comboAccseptLength: 40
+    cooldownTime: 45
+    hitStop: 1
+  chargeAttack:
+    attackRange: 5
+    attackAngle: 80
+    MaxChargeTime: 180
+    maxDamage: 200
+    minDamage: 20
+    EnergyChargeValue: 0.005
+    runAddSpeed: 12
+    maxrunSpeed: 15
+    cooldownTime: 60
+    hitStop: 1
   enemyTag: Enemy
+  isAttack: 0
+  isChargeAttack: 0
+  inputAttack: 0
+  oldinputAttack: 0
   comboTimer: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
