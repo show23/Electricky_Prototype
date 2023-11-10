@@ -14,6 +14,8 @@ public class Player_Slash : MonoBehaviour
         public float maxDamage;
         public float minDamage;
 
+        public float addSpeedPower;
+
         public int comboAccseptStartTime;
         public int comboAccseptLength;
         
@@ -43,6 +45,10 @@ public class Player_Slash : MonoBehaviour
 
     [SerializeField]
     private int comboCount = 0;
+    
+    [SerializeField, Tooltip("forDebug. do not touch it")]
+    private int comboTimer = 0;
+
     private int chargeTimer = 0;
 
     [SerializeField]
@@ -50,24 +56,19 @@ public class Player_Slash : MonoBehaviour
 
     [SerializeField]
     private ChargeAttack chargeAttack;
-    public string enemyTag = "Enemy";
+    [SerializeField]
+    private string enemyTag = "Enemy";
 
     private Vector3 MoveForward;
 
-    [SerializeField]
     private bool isAttack = false;
-    [SerializeField]
     private bool isChargeAttack = false;
-    [SerializeField]
     private bool inputAttack = false;
-    [SerializeField]
     private bool oldinputAttack = false;
 
     private PlayerControll playerControll;
     private Rigidbody rigidBody;
 
-    [SerializeField,Tooltip("forDebug. do not touch it")]
-    private int comboTimer = 0;
     
     // Start is called before the first frame update
     void Start()
@@ -121,7 +122,8 @@ public class Player_Slash : MonoBehaviour
             {   //攻撃1手目からチャージ攻撃に以降する
                 
                 if (comboCount == 1 && inputAttack 
-                    && comboTimer > ComboAttackList[comboCount].cooldownTime && !inputAttackTrigger)
+                    && comboTimer > ComboAttackList[0].comboAccseptStartTime
+                                + ComboAttackList[0].comboAccseptLength && !inputAttackTrigger)
                 {
                     comboCount = 0;
                     chargeTimer = 0;
@@ -147,7 +149,6 @@ public class Player_Slash : MonoBehaviour
             //貯めながら走る
             if (inputAttack)
             {
-
                 float playerSpeed = new Vector2(rigidBody.velocity.x, rigidBody.velocity.z).magnitude;
                 playerControll.CurrentEnergy += playerSpeed * chargeAttack.EnergyChargeValue;
                 
@@ -200,6 +201,11 @@ public class Player_Slash : MonoBehaviour
     {
         Debug.Log("Combo" + (list+1));
 
+        rigidBody.velocity = Vector3.zero;
+        Vector3 MoveVel = MoveForward.normalized * ComboAttackList[list].addSpeedPower;
+        rigidBody.AddForce(MoveVel, ForceMode.Acceleration);
+
+
         //エネルギー関連の更新
         float energyValue = playerControll.CurrentEnergy / ComboAttackList[list].useEnergy;
         energyValue = Mathf.Clamp(energyValue, 0, 1);
@@ -251,7 +257,6 @@ public class Player_Slash : MonoBehaviour
     {
         if (comboCount == 0)
         {
-            Debug.Log("CheckCombo Pass (combo = 0)");
             return true;
         }
         if (isAttack)
@@ -260,12 +265,10 @@ public class Player_Slash : MonoBehaviour
                 (comboTimer < ComboAttackList[list].comboAccseptStartTime 
                                 + ComboAttackList[list].comboAccseptLength))
             {
-                Debug.Log("CheckCombo Pass (time is good)");
                 return true;
             }
         }
 
-        Debug.Log("CheckCombo not Pass");
         return false;
     }
 

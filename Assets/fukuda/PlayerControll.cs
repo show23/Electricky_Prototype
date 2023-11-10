@@ -80,24 +80,24 @@ public class PlayerControll : MonoBehaviour
     [Space(20)]
 
     //プレイヤーのステータス
-    [Tooltip("歩行速度")] 
-    public float MaxWalkSpeed;
-    [Tooltip("加速度(歩行)")]
-    public float WalkAcc;
-    [Tooltip("走る時の速度")]
-    public float MaxRunSpeed;
-    [Tooltip("加速度(走る)")]
-    public float RunAcc;
-    [Tooltip("プレイヤーの通常ジャンプ力")]
-    public float JumpPower;
-    [Tooltip("プレイヤーの水平方向ジャンプ力")]
-    public float JumpHorizonPower = 0.0f;
-    [Tooltip("プレイヤーの2段ジャンプ時パワー(通常ジャンプ力基準)")]
-    public float SecondJumpMultiplyValue = 1.0f;
-    [Tooltip("プレイヤーの2段ジャンプ時水平方向パワー(通常ジャンプ力基準)")]
-    public float SecondJumpHorizonPowerMultiplyValue = 1.0f;
-    [Tooltip("移動入力によるプレイヤーの回転(Lerp処理)"), Range(0.0f, 1.0f)]
-    public float MoveInputRotationSpeed;
+    [Tooltip("歩行速度"), SerializeField] 
+    private float MaxWalkSpeed;
+    [Tooltip("加速度(歩行)"), SerializeField]
+    private float WalkAcc;
+    [Tooltip("走る時の速度"), SerializeField]
+    private float MaxRunSpeed;
+    [Tooltip("加速度(走る)"), SerializeField]
+    private float RunAcc;
+    [Tooltip("プレイヤーの通常ジャンプ力"), SerializeField]
+    private float JumpPower;
+    [Tooltip("プレイヤーの水平方向ジャンプ力"), SerializeField]
+    private float JumpHorizonPower = 0.0f;
+    [Tooltip("プレイヤーの2段ジャンプ時パワー(通常ジャンプ力基準)"), SerializeField]
+    private float SecondJumpMultiplyValue = 1.0f;
+    [Tooltip("プレイヤーの2段ジャンプ時水平方向パワー(通常ジャンプ力基準)"), SerializeField]
+    private float SecondJumpHorizonPowerMultiplyValue = 1.0f;
+    [Tooltip("移動入力によるプレイヤーの回転(Lerp処理)"), Range(0.0f, 1.0f), SerializeField]
+    private float MoveInputRotationSpeed;
 
 
 
@@ -113,15 +113,20 @@ public class PlayerControll : MonoBehaviour
         Left
     }
 
-    public wallSide wallStatus = wallSide.NoWallDitect;
-    [Tooltip("このレイヤーのオブジェクトにレイが当たった時に壁があると判定する")]
-    public LayerMask wallLayers = 0;
-    public float WallDitectDistance = 0.4f;
+    [SerializeField]
+    private wallSide wallStatus = wallSide.NoWallDitect;
+    [Tooltip("このレイヤーのオブジェクトにレイが当たった時に壁があると判定する"), SerializeField]
+    private LayerMask wallLayers = 0;
 
-    public float wallRunSpeed = 0.0f;
-    public float wallJumpHorizonPower = 0.0f;
-    [Tooltip("壁ジャンプ後、次の壁を検知するまでのフレーム数")]
-    public int WJtoNextWallTime = 0;
+    [SerializeField]
+    private float WallDitectDistance = 0.4f;
+
+    [SerializeField]
+    private float wallRunSpeed = 0.0f;
+    [SerializeField]
+    private float wallJumpHorizonPower = 0.0f;
+    [Tooltip("壁ジャンプ後、次の壁を検知するまでのフレーム数"), SerializeField]
+    private int WJtoNextWallTime = 0;
     private int WJtoNextWallTimer = 0;
     private Vector3 WallRunVec;
     private Vector3 WallNormalVec;
@@ -130,16 +135,25 @@ public class PlayerControll : MonoBehaviour
 
 
     [Space(20)]
-    public int DodgeCoolTime = 240;
-    public int DodgeEndTime = 90;
-    public int DodgeMutekiTime = 10;
-    public int DodgeMutekiStart = 3;
+
+
+    [SerializeField]
+    private int DodgeCoolTime = 240;
+    [SerializeField]
+    private int DodgeEndTime = 90;
+    [SerializeField]
+    private int DodgeMutekiTime = 10;
+    [SerializeField]
+    private int DodgeMutekiStart = 3;
+    [SerializeField]
+    private float DodgeAddPower = 5.0f;
+    [SerializeField]
+    private float DodgeUseEnergy = 0.0f;
+    [SerializeField]
+    private float PerfectDodgeAddEnergy = 10.0f;
+
+
     private int DodgeTimer = 60;
-    public float DodgeAddPower = 5.0f;
-
-    public float DodgeUseEnergy = 0.0f;
-    public float PerfectDodgeAddEnergy = 10.0f;
-
 
 
     [Space(30)]
@@ -153,8 +167,8 @@ public class PlayerControll : MonoBehaviour
     private float AirVelocityAccRate;
 
 
-    [Tooltip("プレイヤー加速維持率が使用されるスティック入力値"), SerializeField]
-    private float RateUseInputValue = 0.1f;
+    [Tooltip("移動スティック入力のデッドゾーン値"), SerializeField]
+    private float UseInputValue = 0.1f;
 
     [Tooltip("現在の速度値")]
     public float playerSpeed;
@@ -303,7 +317,9 @@ public class PlayerControll : MonoBehaviour
         //入力値の更新
         {
             MoveInput = move.ReadValue<Vector2>();
+
             MoveValue = MoveInput;
+            
             JumpInput = jump.ReadValue<float>() > 0;
 
             AttackInput = attack.ReadValue<float>() > 0;
@@ -417,46 +433,50 @@ public class PlayerControll : MonoBehaviour
 
 
 
+        
+
+
         //-------------------------------------------------------------------------------
-        //カメラの角度/壁の角度からプレイヤーの入力値を調整 プレイヤーを回転
+        //カメラの角度/壁の角度からプレイヤーの入力値を調整
         //-------------------------------------------------------------------------------
 
         Vector3 MoveOriginVector = Vector3.Scale(PlayerCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
-
-        
-
-        //-------------------------------------------------------------------------------
-        //プレイヤーの動きをRigidBodyに入力 移動入力に合わせてプレイヤーの回転
-        //-------------------------------------------------------------------------------
-
-
-        float speedHoldRate = VelocityHoldRate;
-        float speedAddRate = 1.0f;
-
-
-        if (!isGround)
-        {
-            speedHoldRate = AirVelocityHoldRate;
-            speedAddRate = AirVelocityAccRate;
-        }
 
 
         //移動入力処理
         //ここでの計算はチャージ攻撃などでも使えるので
         //入力値から直接計算している
 
-        Vector3 moveForward = MoveOriginVector * MoveInput.y;
-        moveForward += PlayerCamera.transform.right * MoveInput.x;
-        moveForward = Vector3.Scale(moveForward, new Vector3(1, 0, 1));
+        Vector3 moveForward = MoveOriginVector;
+        if (UseInputValue < MoveInput.magnitude)
+        {
+            moveForward *= MoveInput.y;
+            moveForward += PlayerCamera.transform.right * MoveInput.x;
+        }
 
+        moveForward = Vector3.Scale(moveForward, new Vector3(1, 0, 1)).normalized;
+
+
+        //-------------------------------------------------------------------------------
+        //プレイヤーの動きをRigidBodyに入力
+        //-------------------------------------------------------------------------------
 
 
 
         if (!isWallRun && !isDodge && !isAttack)
         {
+            float speedHoldRate = VelocityHoldRate;
+            float speedAddRate = 1.0f;
+
+
+            if (!isGround)
+            {
+                speedHoldRate = AirVelocityHoldRate;
+                speedAddRate = AirVelocityAccRate;
+            }
 
             //減速処理(ぬるぬる動く性質の温床)
-            if (MoveValue.magnitude < RateUseInputValue)
+            if (MoveValue.magnitude < UseInputValue)
             {
                 Vector3 selfSpeed = s_Rigidbody.velocity;
                 selfSpeed *= speedHoldRate;
@@ -475,7 +495,7 @@ public class PlayerControll : MonoBehaviour
             accValue *= speedAddRate;
 
 
-            Vector3 MoveVel = moveForward * accValue;
+            Vector3 MoveVel = moveForward * MoveValue.magnitude * accValue;
             s_Rigidbody.AddForce(MoveVel,ForceMode.Acceleration);
 
 
@@ -493,7 +513,7 @@ public class PlayerControll : MonoBehaviour
         }
 
         //入力方向へのプレイヤーの回転
-        if (isGround)
+        if (isGround && UseInputValue < MoveInput.magnitude)
             transform.rotation = Quaternion.LookRotation(Vector3.Slerp(transform.forward, moveForward, MoveInputRotationSpeed), Vector3.up);
 
         //------------------------------------------------------------
@@ -510,7 +530,6 @@ public class PlayerControll : MonoBehaviour
 
         if (isDodge)
         {
-
             if (DodgeMutekiStart == DodgeTimer)
                 noDamage = true;
 
@@ -519,8 +538,6 @@ public class PlayerControll : MonoBehaviour
 
             if (DodgeEndTime == DodgeTimer)
                 isDodge = false;
-
-
         }
 
 
@@ -545,7 +562,7 @@ public class PlayerControll : MonoBehaviour
                     isGround = false;
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
                     transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
-                    s_Rigidbody.AddForce(Vector3.up * JumpPower * SecondJumpMultiplyValue + moveForward * InputValue * JumpHorizonPower * SecondJumpHorizonPowerMultiplyValue, ForceMode.VelocityChange);
+                    s_Rigidbody.AddForce(Vector3.up * JumpPower * SecondJumpMultiplyValue + moveForward.normalized * InputValue * JumpHorizonPower * SecondJumpHorizonPowerMultiplyValue, ForceMode.VelocityChange);
                 }
 
                 if (jumpInputTrigger && !FirstJumped)
@@ -554,7 +571,7 @@ public class PlayerControll : MonoBehaviour
                     isGround = false;
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
                     transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up); 
-                    s_Rigidbody.AddForce(Vector3.up * JumpPower + moveForward * InputValue * JumpHorizonPower, ForceMode.VelocityChange);
+                    s_Rigidbody.AddForce(Vector3.up * JumpPower + moveForward.normalized * InputValue * JumpHorizonPower, ForceMode.VelocityChange);
                 }
             }
             else
@@ -568,7 +585,7 @@ public class PlayerControll : MonoBehaviour
                     WallRunCheck();
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
                     transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up); 
-                    s_Rigidbody.AddForce(Vector3.up * JumpPower + moveForward * InputValue * wallJumpHorizonPower, ForceMode.VelocityChange);
+                    s_Rigidbody.AddForce(Vector3.up * JumpPower + moveForward.normalized * InputValue * wallJumpHorizonPower, ForceMode.VelocityChange);
                 }
             }
         }
@@ -579,7 +596,7 @@ public class PlayerControll : MonoBehaviour
 
         //速度計測
         playerSpeed = new Vector2(s_Rigidbody.velocity.x, s_Rigidbody.velocity.z).magnitude;
-        if (isGround && !isDodge && !isAttack && MoveValue.magnitude > RateUseInputValue)
+        if (isGround && !isDodge && !isAttack && MoveValue.magnitude > UseInputValue)
         {
             CurrentEnergy += playerSpeed * EnergyAddValue;
         }
@@ -637,8 +654,7 @@ public class PlayerControll : MonoBehaviour
     }
     private void Attack(bool val,Vector3 moveVec)
     {
-        Vector2 vec = new Vector2(moveVec.x, moveVec.z);
-        playerAttack.inputAttackTrigger(val, vec);
+        playerAttack.inputAttackTrigger(val, moveVec);
     }
 
 
