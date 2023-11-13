@@ -122,6 +122,10 @@ public class PlayerControll : MonoBehaviour
         public float MaxRunSpeed;
         [Tooltip("走り加速度")]
         public float RunAcc;
+        
+        [Tooltip("移動入力による回転(Lerp処理)"), Range(0.0f, 1.0f)]
+        public float MoveInputRotationSpeed;
+
         [Tooltip("上方向ジャンプ力")]
         public float JumpPower;
         [Tooltip("水平方向ジャンプ力")]
@@ -130,8 +134,6 @@ public class PlayerControll : MonoBehaviour
         public float SecondJumpMultiplyValue;
         [Tooltip("2段ジャンプ時水平方向パワー(通常ジャンプ力基準)")]
         public float SecondJumpHorizonPowerMultiplyValue;
-        [Tooltip("移動入力による回転(Lerp処理)"), Range(0.0f, 1.0f)]
-        public float MoveInputRotationSpeed;
 
 
         [Tooltip("速度維持率"), Range(0.0f, 1.0f)]
