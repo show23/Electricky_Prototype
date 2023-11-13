@@ -245,7 +245,6 @@ public class PlayerControll : MonoBehaviour
 
     private Player_Slash playerAttack;
     private GaugeController gaugeController;
-    private Line line;
 
 
     //Self Objects & Scripts
@@ -276,7 +275,6 @@ public class PlayerControll : MonoBehaviour
 
 
     private bool attackInputTrigger = false;
-    [SerializeField]
     private bool AttackInput;
     private bool OldAttackInput;
 
