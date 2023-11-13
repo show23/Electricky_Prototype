@@ -913,46 +913,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c9ec22346b00d646b370e230adda4d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 0
-  maxHP: 100
-  HPHealTime: 120
-  HPHealValue: 1
-  Energy: 0
-  maxEnergy: 100
-  EnergyAddValue: 0.01
-  MaxWalkSpeed: 16
-  WalkAcc: 16
-  MaxRunSpeed: 19
-  RunAcc: 19
-  JumpPower: 7
-  JumpHorizonPower: 7
-  SecondJumpMultiplyValue: 0.8
-  SecondJumpHorizonPowerMultiplyValue: 0.8
-  MoveInputRotationSpeed: 0.2
-  wallStatus: 0
-  wallLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  WallDitectDistance: 0.4
-  wallRunSpeed: 20
-  wallJumpHorizonPower: 10
-  WJtoNextWallTime: 10
-  DodgeCoolTime: 240
-  DodgeEndTime: 90
-  DodgeMutekiTime: 10
-  DodgeMutekiStart: 3
-  DodgeAddPower: 5
-  DodgeUseEnergy: 0
-  PerfectDodgeAddEnergy: 10
-  VelocityHoldRate: 0.92
-  AirVelocityHoldRate: 0.97
-  AirVelocityAccRate: 1
-  UseInputValue: 0.1
+  _PlayerBasicStatus:
+    HP: 0
+    maxHP: 100
+    HPHealTime: 120
+    HPHealValue: 1
+    Energy: 0
+    maxEnergy: 100
+    EnergyAddValue: 0.01
+    healTimer: 0
+    oldHP: 0
+  _PlayerMoveStatus:
+    MaxWalkSpeed: 16
+    WalkAcc: 16
+    MaxRunSpeed: 19
+    RunAcc: 19
+    JumpPower: 7
+    JumpHorizonPower: 7
+    SecondJumpMultiplyValue: 0.8
+    SecondJumpHorizonPowerMultiplyValue: 0.8
+    MoveInputRotationSpeed: 0.2
+    VelocityHoldRate: 0.92
+    AirVelocityHoldRate: 0.97
+    AirVelocityAccRate: 1
+    UseInputValue: 0.1
+  _WallRunStatus:
+    wallLayers:
+      serializedVersion: 2
+      m_Bits: 1
+    WallDitectDistance: 0.4
+    wallRunSpeed: 20
+    wallJumpHorizonPower: 10
+    WJtoNextWallTime: 10
+    wallStatus: 0
+    WJtoNextWallTimer: 0
+    WallRunVec: {x: 0, y: 0, z: 0}
+    WallNormalVec: {x: 0, y: 0, z: 0}
+    WallDistance: 0
+    WallRunTimer: 0
+  _DodgeStatus:
+    DodgeCoolTime: 180
+    DodgeEndTime: 40
+    DodgeMutekiLength: 10
+    DodgeMutekiStart: 3
+    DodgeAddPower: 6
+    DodgeUseEnergy: 0
+    PerfectDodgeAddEnergy: 20
+    DodgeTimer: 0
+    isDodgePerfectHappened: 0
   playerSpeed: 10
   isGround: 1
   FirstJumped: 0
   SecondJumped: 0
   isWallRun: 0
+  isWallHit: 0
   isDodge: 0
   noDamage: 0
   isAttack: 0
