@@ -299,7 +299,6 @@ public class PlayerControll : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         s_Collider = GetComponent<CapsuleCollider>();
         playerAttack = GetComponent<Player_Slash>();
-        line = GetComponent<Line>();
 
 
         _PlayerBasicStatus.HP = _PlayerBasicStatus.maxHP;
