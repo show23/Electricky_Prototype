@@ -39,37 +39,72 @@ public class Player_Slash : MonoBehaviour
         public float runAddSpeed;
         public float maxrunSpeed;
 
-        public int cooldownTime;
+        //public int cooldownTime;
         public int hitStop;
+
+        [Range(0,1)]
+        public float RotationSpeedValue;
+
+        [HideInInspector]
+        public float currentRotationSpeed;
     }
 
-    [SerializeField]
-    private int comboCount = 0;
-    
-    [SerializeField, Tooltip("forDebug. do not touch it")]
-    private int comboTimer = 0;
+    [System.Serializable]
+    public struct MidAirAttack
+    {
+        public float attackRange;
 
-    private int chargeTimer = 0;
+        public float maxDamage;
+        public float minDamage;
+
+        public float useEnergy;
+
+        public float DownPower;
+
+        //public int cooldownTime;
+        public int hitStop;
+
+        //地面がある と認識する長さ
+        [Space(5),HideInInspector]
+        public float checkUnderLength;
+        [HideInInspector]
+        public float damage;
+    }
+
 
     [SerializeField]
     private List<AttackList> ComboAttackList;
 
     [SerializeField]
     private ChargeAttack chargeAttack;
+
+    [SerializeField]
+    private MidAirAttack midAirAttack;
+
+    [Space(10)]
+    [SerializeField]
+    private int comboCount = 0;
+
+    [SerializeField, Tooltip("forDebug. do not touch it")]
+    private int comboTimer = 0;
+    private int chargeTimer = 0;
+
     [SerializeField]
     private string enemyTag = "Enemy";
 
-    private Vector3 MoveForward;
 
     private bool isAttack = false;
     private bool isChargeAttack = false;
+    private bool isMidAirAttack = false;
     private bool inputAttack = false;
     private bool oldinputAttack = false;
 
     private PlayerControll playerControll;
     private Rigidbody rigidBody;
 
-    
+    [SerializeField]
+    private bool isGround = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,112 +118,179 @@ public class Player_Slash : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        isGround = false;
+
+        float raycastDistance = 0.05f;
+        RaycastHit Hit;
+        if (Physics.Raycast(transform.position + transform.up * 0.01f, Vector3.down, out Hit, raycastDistance))
+        {
+            isGround = true;
+
+            //空中攻撃発動
+            if (isMidAirAttack)
+            {
+                isMidAirAttack = false;
+                isAttack = false;
+
+
+                //ダメージ数値は同じなのにforでやるとコストかかるので
+                //外に出しておく
+                float damage = midAirAttack.damage;
+
+                bool isHit = false;
+                Collider[] hitColliders = Physics.OverlapSphere(transform.position, midAirAttack.attackRange);
+                foreach (Collider col in hitColliders)
+                {
+                    if (col.CompareTag(enemyTag))
+                    {
+                        isHit = true;
+
+                        //ここで敵の体力を減らす処理をする
+                        //ダメージ量はdamageから使ってください
+
+
+
+                    }
+                }
+
+                if (isHit)
+                {
+                    Debug.Log("空中攻撃 Enemyに当たったよ");
+                    StartCoroutine(HitStopCoroutine(midAirAttack.hitStop));
+                }
+            }
+        }
+
+
         if (isAttack)
         {
             if (!isChargeAttack)
                 comboTimer++;
 
-            playerControll.AttackStatus(true);
+            playerControll.AttackStatus(true, isChargeAttack);
         }
         else
         {
-            playerControll.AttackStatus(false);
+            playerControll.AttackStatus(false, false);
         }
 
+        bool inputAttackTrigger = false;
+        if (!oldinputAttack && inputAttack)
+            inputAttackTrigger = true;
 
-        //----------------------------------------------------------------
-        //通常のコンボ攻撃の処理
-        //----------------------------------------------------------------
-
-        if (!isChargeAttack)
+        if (isGround)
         {
-            bool inputAttackTrigger = false;
-            if (!oldinputAttack && inputAttack)
-                inputAttackTrigger = true;
-
-            if (CheckCombo(comboCount) && inputAttackTrigger)
+            //----------------------------------------------------------------
+            //通常のコンボ攻撃の処理
+            //----------------------------------------------------------------
+            if (!isChargeAttack)
             {
-                isAttack = true;
-                Combo(comboCount);
-                comboCount++;
-                comboTimer = 0;
-
-                if (comboCount >= ComboAttackList.Count)
+                if (CheckCombo(comboCount) && inputAttackTrigger)
                 {
-                    comboCount = 0;
-                }
-            }
-            else
-            {   //攻撃1手目からチャージ攻撃に以降する
-                
-                if (comboCount == 1 && inputAttack 
-                    && comboTimer > ComboAttackList[0].comboAccseptStartTime
-                                + ComboAttackList[0].comboAccseptLength && !inputAttackTrigger)
-                {
-                    comboCount = 0;
-                    chargeTimer = 0;
-                    isChargeAttack = true;
-                }
-                
-                if (comboTimer > ComboAttackList[comboCount].cooldownTime)
-                {
-                    isAttack = false;
-                    comboCount = 0;
-                }
-            }
-        }
+                    isAttack = true;
+                    Combo(comboCount);
+                    comboCount++;
+                    comboTimer = 0;
 
-
-        //----------------------------------------------------------------
-        //チャージ攻撃の処理
-        //----------------------------------------------------------------
-
-        if (isChargeAttack)
-        {
-            isAttack = true;
-            //貯めながら走る
-            if (inputAttack)
-            {
-                float playerSpeed = new Vector2(rigidBody.velocity.x, rigidBody.velocity.z).magnitude;
-                playerControll.CurrentEnergy += playerSpeed * chargeAttack.EnergyChargeValue;
-                
-                chargeTimer++;
-
-                Vector3 MoveVel = MoveForward.normalized * chargeAttack.runAddSpeed;
-                rigidBody.AddForce(MoveVel, ForceMode.Acceleration);
-
-                //新 速度制限
-                {
-                    Vector3 Vel = Vector3.Scale(rigidBody.velocity, new Vector3(1, 0, 1));
-
-                    if (Vel.magnitude > chargeAttack.maxrunSpeed)
+                    if (comboCount >= ComboAttackList.Count)
                     {
-                        Vel = Vel.normalized * chargeAttack.maxrunSpeed;
-                        Vel.y = rigidBody.velocity.y;
-                        rigidBody.velocity = Vel;
+                        comboCount = 0;
                     }
                 }
+                else
+                {   //攻撃1手目からチャージ攻撃に以降する
 
-            }
-            else
-            //走り終わって貯め斬り！
-            {
-                Debug.Log("Charge Attack!");
-                //チャージされたフレーム数などからダメージ量を計算
-                float chargeValue = Mathf.Clamp((float)chargeAttack.MaxChargeTime / chargeTimer, 0.0f, 1.0f);
-                float damage = Mathf.Lerp(chargeAttack.minDamage, chargeAttack.maxDamage, chargeValue);
+                    if (comboCount == 1 && inputAttack
+                        && comboTimer > ComboAttackList[0].comboAccseptStartTime
+                                    + ComboAttackList[0].comboAccseptLength && !inputAttackTrigger)
+                    {
+                        comboCount = 0;
+                        chargeTimer = 0;
+                        isChargeAttack = true;
+                        chargeAttack.currentRotationSpeed = playerControll.CurrentRotationSpeed;
+                        playerControll.CurrentRotationSpeed *= chargeAttack.RotationSpeedValue;
+                    }
 
-
-                if (AttackHitCheck(chargeAttack.attackRange, chargeAttack.attackAngle, damage))
-                {
-                    Debug.Log("ChargeAttack Enemyに当たったよ");
-                    StartCoroutine(HitStopCoroutine(chargeAttack.hitStop));
+                    if (comboTimer > ComboAttackList[comboCount].cooldownTime)
+                    {
+                        isAttack = false;
+                        comboCount = 0;
+                    }
                 }
+            }
+
+            //----------------------------------------------------------------
+            //チャージ攻撃の処理
+            //----------------------------------------------------------------
+            if (isChargeAttack)
+            {
+                isAttack = true;
+                //貯めながら走る
+                if (inputAttack)
+                {
+                    float playerSpeed = new Vector2(rigidBody.velocity.x, rigidBody.velocity.z).magnitude;
+                    playerControll.CurrentEnergy += playerSpeed * chargeAttack.EnergyChargeValue;
+
+                    chargeTimer++;
+
+                    Vector3 MoveVel = transform.forward * chargeAttack.runAddSpeed;
+                    //rigidBody.AddForce(MoveVel, ForceMode.Acceleration);
+                    rigidBody.velocity = MoveVel;
+
+                    //新 速度制限
+                    {
+                        Vector3 Vel = Vector3.Scale(rigidBody.velocity, new Vector3(1, 0, 1));
+
+                        if (Vel.magnitude > chargeAttack.maxrunSpeed)
+                        {
+                            Vel = Vel.normalized * chargeAttack.maxrunSpeed;
+                            Vel.y = rigidBody.velocity.y;
+                            rigidBody.velocity = Vel;
+                        }
+                    }
+
+                }
+                else
+                //走り終わって貯め斬り！
+                {
+                    Debug.Log("Charge Attack!");
+                    //チャージされたフレーム数などからダメージ量を計算
+                    float chargeValue = Mathf.Clamp((float)chargeAttack.MaxChargeTime / chargeTimer, 0.0f, 1.0f);
+                    float damage = Mathf.Lerp(chargeAttack.minDamage, chargeAttack.maxDamage, chargeValue);
 
 
-                chargeTimer = 0;
-                isChargeAttack = false;
-                isAttack = false;
+                    if (AttackHitCheck(chargeAttack.attackRange, chargeAttack.attackAngle, damage))
+                    {
+                        Debug.Log("ChargeAttack Enemyに当たったよ");
+                        StartCoroutine(HitStopCoroutine(chargeAttack.hitStop));
+                    }
+
+
+                    chargeTimer = 0;
+                    isChargeAttack = false;
+                    isAttack = false;
+                    playerControll.CurrentRotationSpeed = chargeAttack.currentRotationSpeed;
+                }
+            }
+        }
+
+        if (!isGround && !isAttack)
+        {
+            if (inputAttackTrigger)
+            {
+                comboTimer = 0;
+                rigidBody.velocity = Vector3.zero;
+                rigidBody.AddForce(Vector3.down * midAirAttack.DownPower, ForceMode.VelocityChange);
+                isMidAirAttack = true;
+                isAttack = true;
+
+
+                //エネルギー関連の更新
+                float energyValue = playerControll.CurrentEnergy / midAirAttack.useEnergy;
+                energyValue = Mathf.Clamp(energyValue, 0, 1);
+                playerControll.CurrentEnergy -= midAirAttack.useEnergy;
+
+                midAirAttack.damage = Mathf.Lerp(midAirAttack.minDamage, midAirAttack.maxDamage, energyValue);
             }
         }
 
@@ -202,9 +304,9 @@ public class Player_Slash : MonoBehaviour
         Debug.Log("Combo" + (list+1));
 
         rigidBody.velocity = Vector3.zero;
-        Vector3 MoveVel = MoveForward.normalized * ComboAttackList[list].addSpeedPower;
-        rigidBody.AddForce(MoveVel, ForceMode.Acceleration);
-
+        Vector3 MoveVel = transform.forward * ComboAttackList[list].addSpeedPower;
+        //rigidBody.AddForce(MoveVel, ForceMode.Acceleration);
+        rigidBody.velocity = MoveVel;
 
         //エネルギー関連の更新
         float energyValue = playerControll.CurrentEnergy / ComboAttackList[list].useEnergy;
@@ -299,10 +401,9 @@ public class Player_Slash : MonoBehaviour
 
 
     //攻撃入力がトリガーかどうかは受信側で判断できます
-    public void inputAttackTrigger(bool val,Vector3 moveforward)
+    public void inputAttackTrigger(bool val)
     {
         inputAttack = val;
-        MoveForward = moveforward;
     }
 
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-[RequireComponent(typeof(PlayerInput))]
 public class ObjectPositionCopy : MonoBehaviour
 {
     private Transform tracePosition;
@@ -37,7 +36,7 @@ public class ObjectPositionCopy : MonoBehaviour
     private void Start()
     {
         tracePosition = FindObjectOfType<PlayerControll>().transform;
-        playerInput = GetComponent<PlayerInput>();
+        playerInput = FindObjectOfType<PlayerInput>();
         cameraXY = playerInput.actions["CameraXY"];
         cameraReset = playerInput.actions["CameraReset"];
 
