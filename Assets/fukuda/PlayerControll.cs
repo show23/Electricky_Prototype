@@ -107,10 +107,14 @@ public class PlayerControll : MonoBehaviour
         set { _PlayerBasicStatus.maxEnergy = value; }
     }
 
+    public float CurrentRotationSpeed
+    {
+        get { return _PlayerMoveStatus.MoveInputRotationSpeed; }
+        set { _PlayerMoveStatus.MoveInputRotationSpeed = value; }
+    }
 
 
     //プレイヤーのステータス
-
     [System.Serializable]
     public struct PlayerMoveStatus
     {
@@ -236,6 +240,7 @@ public class PlayerControll : MonoBehaviour
     public bool isDodge = false;
     public bool noDamage = false;
     public bool isAttack = false;
+    public bool isChargeAttack = false;
 
 
 
@@ -385,7 +390,9 @@ public class PlayerControll : MonoBehaviour
 
             if (isAttack)
             {
-                MoveValue = Vector2.zero;
+                if (!isChargeAttack)
+                    MoveValue = Vector2.zero;
+                
                 JumpInput = false;
                 DodgeInput = false;
                 RunInput = false;
@@ -488,11 +495,6 @@ public class PlayerControll : MonoBehaviour
         }
 
 
-
-
-        
-
-
         //-------------------------------------------------------------------------------
         //カメラの角度/壁の角度からプレイヤーの入力値を調整
         //-------------------------------------------------------------------------------
@@ -589,8 +591,8 @@ public class PlayerControll : MonoBehaviour
             _DodgeStatus.DodgeTimer = 0;
             _DodgeStatus.isDodgePerfectHappened = false;
             this.CurrentEnergy -= _DodgeStatus.DodgeUseEnergy;
-            s_Rigidbody.AddForce(
-                moveForward.normalized * _DodgeStatus.DodgeAddPower, ForceMode.Impulse);
+            s_Rigidbody.velocity =
+                transform.forward * _DodgeStatus.DodgeAddPower;
         }
 
         if (isDodge)
@@ -626,7 +628,7 @@ public class PlayerControll : MonoBehaviour
                     FirstJumped = true;
                     isGround = false;
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                    transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
+                    //transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
                     s_Rigidbody.AddForce(
                         Vector3.up * _PlayerMoveStatus.JumpPower 
                         * _PlayerMoveStatus.SecondJumpMultiplyValue 
@@ -641,7 +643,7 @@ public class PlayerControll : MonoBehaviour
                     FirstJumped = true;
                     isGround = false;
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                    transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up); 
+                    //transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up); 
                     s_Rigidbody.AddForce(
                         Vector3.up * _PlayerMoveStatus.JumpPower 
                         + moveForward.normalized * InputValue * _PlayerMoveStatus.JumpHorizonPower,
@@ -709,7 +711,7 @@ public class PlayerControll : MonoBehaviour
         //#プレイヤーの攻撃処理
         //-------------------------------------------------------------------------------
 
-        Attack(AttackInput,moveForward);
+        Attack(AttackInput);
         
 
         //-------------------------------------------------------------------------------
@@ -729,9 +731,9 @@ public class PlayerControll : MonoBehaviour
         gaugeController.UpdateGauge(_PlayerBasicStatus.Energy, _PlayerBasicStatus.maxEnergy);
 
     }
-    private void Attack(bool val,Vector3 moveVec)
+    private void Attack(bool val)
     {
-        playerAttack.inputAttackTrigger(val, moveVec);
+        playerAttack.inputAttackTrigger(val);
     }
 
 
@@ -845,9 +847,10 @@ public class PlayerControll : MonoBehaviour
     }
 
 
-    public void AttackStatus(bool value)
+    public void AttackStatus(bool value, bool charge)
     {
         isAttack = value;
+        isChargeAttack = charge;
     }
 
 
