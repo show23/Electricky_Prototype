@@ -9,7 +9,6 @@ using UnityEngine.InputSystem;
 public class PlayerControll : MonoBehaviour
 {
 
-
     [System.Serializable]
     public struct PlayerBasicStatus
     {
@@ -39,12 +38,109 @@ public class PlayerControll : MonoBehaviour
         [HideInInspector]
         public float oldHP;
     }
+    //プレイヤーのステータス
+    [System.Serializable]
+    public struct PlayerMoveStatus
+    {
+        [Tooltip("最大歩行速度")]
+        public float MaxWalkSpeed;
+        [Tooltip("歩行加速度")]
+        public float WalkAcc;
+        [Tooltip("最大走り速度")]
+        public float MaxRunSpeed;
+        [Tooltip("走り加速度")]
+        public float RunAcc;
+
+        [Tooltip("移動入力による回転(Lerp処理)"), Range(0.0f, 1.0f)]
+        public float MoveInputRotationSpeed;
+
+        [Tooltip("上方向ジャンプ力")]
+        public float JumpPower;
+        [Tooltip("水平方向ジャンプ力")]
+        public float JumpHorizonPower;
+        [Tooltip("2段ジャンプ時パワー(通常ジャンプ力基準)")]
+        public float SecondJumpMultiplyValue;
+        [Tooltip("2段ジャンプ時水平方向パワー(通常ジャンプ力基準)")]
+        public float SecondJumpHorizonPowerMultiplyValue;
 
 
+        [Tooltip("速度維持率"), Range(0.0f, 1.0f)]
+        public float VelocityHoldRate;
+        [Tooltip("空中速度維持率(地上基準)"), Range(0.0f, 1.0f)]
+        public float AirVelocityHoldRate;
+        [Tooltip("空中加速率(地上基準)"), Range(0.0f, 1.0f)]
+        public float AirVelocityAccRate;
+        [Tooltip("移動スティック入力のデッドゾーン値")]
+        public float UseInputValue;
+    }
+
+    public enum wallSide
+    {
+        NoWallDitect,
+        Right,
+        Left
+    }
+    [System.Serializable]
+    public struct WallRunStatus
+    {
+        [Tooltip("壁走り判定のレイヤー設定")]
+        public LayerMask wallLayers;
+
+        [Tooltip("壁判定を取る距離")]
+        public float WallDitectDistance;
+
+        [Tooltip("壁走り速度")]
+        public float wallRunSpeed;
+        [Tooltip("壁ジャンプ水平方向強さ")]
+        public float wallJumpHorizonPower;
+        [Tooltip("壁ジャンプ後、次の壁を認識するまでのフレーム数")]
+        public int WJtoNextWallTime;
+
+        //この下は非表示
+        [HideInInspector]
+        public wallSide wallStatus;
+        [HideInInspector]
+        public int WJtoNextWallTimer;
+        [HideInInspector]
+        public Vector3 WallRunVec;
+        [HideInInspector]
+        public Vector3 WallNormalVec;
+        [HideInInspector]
+        public float WallDistance;
+        [HideInInspector]
+        public int WallRunTimer;
+    }
+
+    [System.Serializable]
+    public struct DodgeStatus
+    {
+        [Tooltip("回避クールタイム")]
+        public int DodgeCoolTime;
+        [Tooltip("回避終了時間")]
+        public int DodgeEndTime;
+        [Tooltip("無敵時間長さ")]
+        public int DodgeMutekiLength;
+        [Tooltip("無敵時間開始フレーム")]
+        public int DodgeMutekiStart;
+
+        [Tooltip("回避発動時の加算速度")]
+        public float DodgeAddPower;
+        [Tooltip("回避の電力消費量")]
+        public float DodgeUseEnergy;
+        [Tooltip("回避成功時の加算エネルギー量")]
+        public float PerfectDodgeAddEnergy;
+
+        [HideInInspector]
+        public int DodgeTimer;
+        [HideInInspector]
+        public bool isDodgePerfectHappened;
+    }
+
+    [Space(-15)]
     [Header("プレイヤーのステータス設定")]
+    [Space(5)]
     [SerializeField]
     private PlayerBasicStatus _PlayerBasicStatus;
-
 
     public float CurrentHp
     {
@@ -114,115 +210,13 @@ public class PlayerControll : MonoBehaviour
     }
 
 
-    //プレイヤーのステータス
-    [System.Serializable]
-    public struct PlayerMoveStatus
-    {
-        [Tooltip("最大歩行速度")]
-        public float MaxWalkSpeed;
-        [Tooltip("歩行加速度")]
-        public float WalkAcc;
-        [Tooltip("最大走り速度")]
-        public float MaxRunSpeed;
-        [Tooltip("走り加速度")]
-        public float RunAcc;
-        
-        [Tooltip("移動入力による回転(Lerp処理)"), Range(0.0f, 1.0f)]
-        public float MoveInputRotationSpeed;
-
-        [Tooltip("上方向ジャンプ力")]
-        public float JumpPower;
-        [Tooltip("水平方向ジャンプ力")]
-        public float JumpHorizonPower;
-        [Tooltip("2段ジャンプ時パワー(通常ジャンプ力基準)")]
-        public float SecondJumpMultiplyValue;
-        [Tooltip("2段ジャンプ時水平方向パワー(通常ジャンプ力基準)")]
-        public float SecondJumpHorizonPowerMultiplyValue;
-
-
-        [Tooltip("速度維持率"), Range(0.0f, 1.0f)]
-        public float VelocityHoldRate;
-        [Tooltip("空中速度維持率(地上基準)"), Range(0.0f, 1.0f)]
-        public float AirVelocityHoldRate;
-        [Tooltip("空中加速率(地上基準)"), Range(0.0f, 1.0f)]
-        public float AirVelocityAccRate;
-        [Tooltip("移動スティック入力のデッドゾーン値")]
-        public float UseInputValue;
-    }
 
     [SerializeField]
     private PlayerMoveStatus _PlayerMoveStatus;
 
     //壁走り関係の数値設定
-
-    public enum wallSide
-    {
-        NoWallDitect,
-        Right,
-        Left
-    }
-
-
-    [System.Serializable]
-    public struct WallRunStatus
-    {
-        [Tooltip("壁走り判定のレイヤー設定")]
-        public LayerMask wallLayers;
-
-        [Tooltip("壁判定を取る距離")]
-        public float WallDitectDistance;
-
-        [Tooltip("壁走り速度")]
-        public float wallRunSpeed;
-        [Tooltip("壁ジャンプ水平方向強さ")]
-        public float wallJumpHorizonPower;
-        [Tooltip("壁ジャンプ後、次の壁を認識するまでのフレーム数")]
-        public int WJtoNextWallTime;
-
-        //この下は非表示
-        [HideInInspector]
-        public wallSide wallStatus;
-        [HideInInspector]
-        public int WJtoNextWallTimer;
-        [HideInInspector]
-        public Vector3 WallRunVec;
-        [HideInInspector]
-        public Vector3 WallNormalVec;
-        [HideInInspector]
-        public float WallDistance;
-        [HideInInspector]
-        public int WallRunTimer;
-    }
-
     [SerializeField]
     private WallRunStatus _WallRunStatus;
-
-    [System.Serializable]
-    public struct DodgeStatus
-    {
-        [Tooltip("回避クールタイム")]
-        public int DodgeCoolTime;
-        [Tooltip("回避終了時間")]
-        public int DodgeEndTime;
-        [Tooltip("無敵時間長さ")]
-        public int DodgeMutekiLength;
-        [Tooltip("無敵時間開始フレーム")]
-        public int DodgeMutekiStart;
-
-        [Tooltip("回避発動時の加算速度")]
-        public float DodgeAddPower;
-        [Tooltip("回避の電力消費量")]
-        public float DodgeUseEnergy;
-        [Tooltip("回避成功時の加算エネルギー量")]
-        public float PerfectDodgeAddEnergy;
-        
-        [HideInInspector]
-        public int DodgeTimer;
-        [HideInInspector]
-        public bool isDodgePerfectHappened;
-    }
-
-
 
     [SerializeField]
     private DodgeStatus _DodgeStatus;
@@ -279,10 +273,7 @@ public class PlayerControll : MonoBehaviour
     private bool DodgeInput;
 
 
-    private bool attackInputTrigger = false;
     private bool AttackInput;
-    private bool OldAttackInput;
-
 
 
     private bool OldJumpInput;
@@ -317,7 +308,6 @@ public class PlayerControll : MonoBehaviour
         run = playerInput.actions["Run"];
         jumpInputTrigger = false; 
         dodgeInputTrigger = false;
-        attackInputTrigger = false;
 
         // マウスカーソルを非表示にし、位置を固定
         Cursor.visible = false;
@@ -412,7 +402,6 @@ public class PlayerControll : MonoBehaviour
                 RunInput = true;
             }
 
-            attackInputTrigger = false;
             jumpInputTrigger = false;
             dodgeInputTrigger = false;
 
@@ -424,13 +413,6 @@ public class PlayerControll : MonoBehaviour
                 }
             }
 
-            if (AttackInput)
-            {
-                if (!OldAttackInput)
-                {
-                    attackInputTrigger = true;
-                }
-            }
 
             if (DodgeInput)
             {
@@ -442,7 +424,6 @@ public class PlayerControll : MonoBehaviour
 
 
             OldJumpInput = JumpInput;
-            OldAttackInput = AttackInput;
             OldDodgeInput = DodgeInput;
         }
 
@@ -578,7 +559,6 @@ public class PlayerControll : MonoBehaviour
         //------------------------------------------------------------
         //回避
         //------------------------------------------------------------
-
         if (!isDodge && dodgeInputTrigger && _DodgeStatus.DodgeCoolTime < _DodgeStatus.DodgeTimer)
         {
             isDodge = true;
@@ -700,7 +680,6 @@ public class PlayerControll : MonoBehaviour
         //-------------------------------------------------------------------------------
         //#プレイヤーの攻撃処理
         //-------------------------------------------------------------------------------
-
         Attack(AttackInput);
         
 
@@ -836,12 +815,9 @@ public class PlayerControll : MonoBehaviour
         Gizmos.DrawLine(transform.position + vec, transform.position + vec + transform.up * 0.2f);
     }
 
-
     public void AttackStatus(bool value, bool charge)
     {
         isAttack = value;
         isChargeAttack = charge;
     }
-
-
 }
