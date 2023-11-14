@@ -329,7 +329,6 @@ public class PlayerControll : MonoBehaviour
     //処理が完成していないものには頭に#をつける
     private void FixedUpdate()
     {
-
         //-------------------------------------------------------------------------------
         //#壁の配置を確認し、カメラの位置を調整、壁判定を取る
         //-------------------------------------------------------------------------------
@@ -411,7 +410,6 @@ public class PlayerControll : MonoBehaviour
 
             if (isWallRun) { 
                 RunInput = true;
-                //CrouchInput = false;
             }
 
             attackInputTrigger = false;
@@ -498,7 +496,6 @@ public class PlayerControll : MonoBehaviour
         //-------------------------------------------------------------------------------
         //カメラの角度/壁の角度からプレイヤーの入力値を調整
         //-------------------------------------------------------------------------------
-
         Vector3 MoveOriginVector = 
             Vector3.Scale(PlayerCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
 
@@ -520,9 +517,6 @@ public class PlayerControll : MonoBehaviour
         //-------------------------------------------------------------------------------
         //プレイヤーの動きをRigidBodyに入力
         //-------------------------------------------------------------------------------
-
-
-
         if (!isWallRun && !isDodge && !isAttack)
         {
             float speedHoldRate = _PlayerMoveStatus.VelocityHoldRate;
@@ -684,10 +678,6 @@ public class PlayerControll : MonoBehaviour
         //----------------------------------------------------------------------------------
         //体力値の自動回復
         //----------------------------------------------------------------------------------
-
-        
-
-
         if (CurrentHp < _PlayerBasicStatus.maxHP)
         {
             if (_PlayerBasicStatus.healTimer > _PlayerBasicStatus.HPHealTime)
