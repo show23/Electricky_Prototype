@@ -263,6 +263,7 @@ public class PlayerControll : MonoBehaviour
 
     //入力値
     private Vector2 MoveInput;
+
     //実際に移動で使われる値
     //攻撃や回避の影響でゼロになる
     private Vector2 MoveValue;
@@ -602,7 +603,7 @@ public class PlayerControll : MonoBehaviour
                     FirstJumped = true;
                     isGround = false;
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                    //transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
+                    transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
                     s_Rigidbody.AddForce(
                         Vector3.up * _PlayerMoveStatus.JumpPower 
                         * _PlayerMoveStatus.SecondJumpMultiplyValue 
@@ -617,7 +618,7 @@ public class PlayerControll : MonoBehaviour
                     FirstJumped = true;
                     isGround = false;
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                    //transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up); 
+                    transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up); 
                     s_Rigidbody.AddForce(
                         Vector3.up * _PlayerMoveStatus.JumpPower 
                         + moveForward.normalized * InputValue * _PlayerMoveStatus.JumpHorizonPower,
