@@ -9,7 +9,6 @@ using UnityEngine.InputSystem;
 public class PlayerControll : MonoBehaviour
 {
 
-
     [System.Serializable]
     public struct PlayerBasicStatus
     {
@@ -33,18 +32,120 @@ public class PlayerControll : MonoBehaviour
 
         [Tooltip("移動での電力回復割合(速度と掛ける)")]
         public float EnergyAddValue;
-        
+
         [HideInInspector]
         public int healTimer;
         [HideInInspector]
         public float oldHP;
     }
+    //プレイヤーのステータス
+    [System.Serializable]
+    public struct PlayerMoveStatus
+    {
+        [Tooltip("最大歩行速度")]
+        public float MaxWalkSpeed;
+        [Tooltip("歩行加速度")]
+        public float WalkAcc;
+        [Tooltip("最大走り速度")]
+        public float MaxRunSpeed;
+        [Tooltip("走り加速度")]
+        public float RunAcc;
+
+        [Tooltip("移動入力による回転(Lerp処理)"), Range(0.0f, 1.0f)]
+        public float MoveInputRotationSpeed;
+
+        [Tooltip("上方向ジャンプ力")]
+        public float JumpPower;
+        [Tooltip("水平方向ジャンプ力")]
+        public float JumpHorizonPower;
+        [Tooltip("2段ジャンプ時パワー(通常ジャンプ力基準)")]
+        public float SecondJumpMultiplyValue;
+        [Tooltip("2段ジャンプ時水平方向パワー(通常ジャンプ力基準)")]
+        public float SecondJumpHorizonPowerMultiplyValue;
 
 
+        [Tooltip("速度維持率"), Range(0.0f, 1.0f)]
+        public float VelocityHoldRate;
+        [Tooltip("空中速度維持率(地上基準)"), Range(0.0f, 1.0f)]
+        public float AirVelocityHoldRate;
+        [Tooltip("空中加速率(地上基準)"), Range(0.0f, 1.0f)]
+        public float AirVelocityAccRate;
+        [Tooltip("移動スティック入力のデッドゾーン値")]
+        public float UseInputValue;
+    }
+
+    public enum wallSide
+    {
+        NoWallDitect,
+        Right,
+        Left
+    }
+    [System.Serializable]
+    public struct WallRunStatus
+    {
+        [Tooltip("壁走り判定のレイヤー設定")]
+        public LayerMask wallLayers;
+
+        [Tooltip("壁判定を取る距離")]
+        public float WallDitectDistance;
+
+        [Tooltip("壁走り速度")]
+        public float wallRunSpeed;
+
+        [Tooltip("壁走り中の高さ変更速度")]
+        public float wallRunClimbSpeed;
+
+        [Tooltip("壁ジャンプ水平方向強さ")]
+        public float wallJumpHorizonPower;
+
+        [Tooltip("壁ジャンプ後、次の壁を認識するまでのフレーム数")]
+        public int WJtoNextWallTime;
+
+        //この下は非表示
+        [HideInInspector]
+        public wallSide wallStatus;
+        [HideInInspector]
+        public int WJtoNextWallTimer;
+        [HideInInspector]
+        public Vector3 WallRunVec;
+        [HideInInspector]
+        public Vector3 WallNormalVec;
+        [HideInInspector]
+        public float WallDistance;
+        [HideInInspector]
+        public int WallRunTimer;
+    }
+
+    [System.Serializable]
+    public struct DodgeStatus
+    {
+        [Tooltip("回避クールタイム")]
+        public int DodgeCoolTime;
+        [Tooltip("回避終了時間")]
+        public int DodgeEndTime;
+        [Tooltip("無敵時間長さ")]
+        public int DodgeMutekiLength;
+        [Tooltip("無敵時間開始フレーム")]
+        public int DodgeMutekiStart;
+
+        [Tooltip("回避発動時の加算速度")]
+        public float DodgeAddPower;
+        [Tooltip("回避の電力消費量")]
+        public float DodgeUseEnergy;
+        [Tooltip("回避成功時の加算エネルギー量")]
+        public float PerfectDodgeAddEnergy;
+
+        [HideInInspector]
+        public int DodgeTimer;
+        [HideInInspector]
+        public bool isDodgePerfectHappened;
+    }
+
+    [Space(-15)]
     [Header("プレイヤーのステータス設定")]
+    [Space(5)]
     [SerializeField]
     private PlayerBasicStatus _PlayerBasicStatus;
-
 
     public float CurrentHp
     {
@@ -57,7 +158,7 @@ public class PlayerControll : MonoBehaviour
                 //複数攻撃を受けたとしても エネルギーの回復は1度だけ
                 if (!_DodgeStatus.isDodgePerfectHappened)
                     CurrentEnergy += _DodgeStatus.PerfectDodgeAddEnergy;
-                
+
                 _DodgeStatus.isDodgePerfectHappened = true;
                 return;
             }
@@ -85,10 +186,10 @@ public class PlayerControll : MonoBehaviour
             if (oldmaxhp < value)
             {
                 CurrentHp += value - oldmaxhp;
-            } 
+            }
         }
     }
-    
+
     public float CurrentEnergy
     {
         get { return _PlayerBasicStatus.Energy; }
@@ -114,115 +215,13 @@ public class PlayerControll : MonoBehaviour
     }
 
 
-    //プレイヤーのステータス
-    [System.Serializable]
-    public struct PlayerMoveStatus
-    {
-        [Tooltip("最大歩行速度")]
-        public float MaxWalkSpeed;
-        [Tooltip("歩行加速度")]
-        public float WalkAcc;
-        [Tooltip("最大走り速度")]
-        public float MaxRunSpeed;
-        [Tooltip("走り加速度")]
-        public float RunAcc;
-        
-        [Tooltip("移動入力による回転(Lerp処理)"), Range(0.0f, 1.0f)]
-        public float MoveInputRotationSpeed;
-
-        [Tooltip("上方向ジャンプ力")]
-        public float JumpPower;
-        [Tooltip("水平方向ジャンプ力")]
-        public float JumpHorizonPower;
-        [Tooltip("2段ジャンプ時パワー(通常ジャンプ力基準)")]
-        public float SecondJumpMultiplyValue;
-        [Tooltip("2段ジャンプ時水平方向パワー(通常ジャンプ力基準)")]
-        public float SecondJumpHorizonPowerMultiplyValue;
-
-
-        [Tooltip("速度維持率"), Range(0.0f, 1.0f)]
-        public float VelocityHoldRate;
-        [Tooltip("空中速度維持率(地上基準)"), Range(0.0f, 1.0f)]
-        public float AirVelocityHoldRate;
-        [Tooltip("空中加速率(地上基準)"), Range(0.0f, 1.0f)]
-        public float AirVelocityAccRate;
-        [Tooltip("移動スティック入力のデッドゾーン値")]
-        public float UseInputValue;
-    }
 
     [SerializeField]
     private PlayerMoveStatus _PlayerMoveStatus;
 
     //壁走り関係の数値設定
-
-    public enum wallSide
-    {
-        NoWallDitect,
-        Right,
-        Left
-    }
-
-
-    [System.Serializable]
-    public struct WallRunStatus
-    {
-        [Tooltip("壁走り判定のレイヤー設定")]
-        public LayerMask wallLayers;
-
-        [Tooltip("壁判定を取る距離")]
-        public float WallDitectDistance;
-
-        [Tooltip("壁走り速度")]
-        public float wallRunSpeed;
-        [Tooltip("壁ジャンプ水平方向強さ")]
-        public float wallJumpHorizonPower;
-        [Tooltip("壁ジャンプ後、次の壁を認識するまでのフレーム数")]
-        public int WJtoNextWallTime;
-
-        //この下は非表示
-        [HideInInspector]
-        public wallSide wallStatus;
-        [HideInInspector]
-        public int WJtoNextWallTimer;
-        [HideInInspector]
-        public Vector3 WallRunVec;
-        [HideInInspector]
-        public Vector3 WallNormalVec;
-        [HideInInspector]
-        public float WallDistance;
-        [HideInInspector]
-        public int WallRunTimer;
-    }
-
     [SerializeField]
     private WallRunStatus _WallRunStatus;
-
-    [System.Serializable]
-    public struct DodgeStatus
-    {
-        [Tooltip("回避クールタイム")]
-        public int DodgeCoolTime;
-        [Tooltip("回避終了時間")]
-        public int DodgeEndTime;
-        [Tooltip("無敵時間長さ")]
-        public int DodgeMutekiLength;
-        [Tooltip("無敵時間開始フレーム")]
-        public int DodgeMutekiStart;
-
-        [Tooltip("回避発動時の加算速度")]
-        public float DodgeAddPower;
-        [Tooltip("回避の電力消費量")]
-        public float DodgeUseEnergy;
-        [Tooltip("回避成功時の加算エネルギー量")]
-        public float PerfectDodgeAddEnergy;
-        
-        [HideInInspector]
-        public int DodgeTimer;
-        [HideInInspector]
-        public bool isDodgePerfectHappened;
-    }
-
-
 
     [SerializeField]
     private DodgeStatus _DodgeStatus;
@@ -237,11 +236,12 @@ public class PlayerControll : MonoBehaviour
     public bool SecondJumped = false;
     public bool isWallRun = false;
     public bool isWallHit = false;
+    public bool canWallUp = false;
+    public bool canWallDown = false;
     public bool isDodge = false;
     public bool noDamage = false;
     public bool isAttack = false;
     public bool isChargeAttack = false;
-
 
 
     //Other Objects & Scripts
@@ -269,25 +269,23 @@ public class PlayerControll : MonoBehaviour
 
     //入力値
     private Vector2 MoveInput;
+
     //実際に移動で使われる値
     //攻撃や回避の影響でゼロになる
     private Vector2 MoveValue;
-    
+
     private bool RunInput;
 
     private bool JumpInput;
     private bool DodgeInput;
 
 
-    private bool attackInputTrigger = false;
     private bool AttackInput;
-    private bool OldAttackInput;
-
 
 
     private bool OldJumpInput;
     private bool OldDodgeInput;
-    
+
 
     void Start()
     {
@@ -305,7 +303,6 @@ public class PlayerControll : MonoBehaviour
         s_Collider = GetComponent<CapsuleCollider>();
         playerAttack = GetComponent<Player_Slash>();
 
-
         _PlayerBasicStatus.HP = _PlayerBasicStatus.maxHP;
         _PlayerBasicStatus.Energy = _PlayerBasicStatus.maxEnergy;
 
@@ -315,9 +312,8 @@ public class PlayerControll : MonoBehaviour
         attack = playerInput.actions["Attack"];
 
         run = playerInput.actions["Run"];
-        jumpInputTrigger = false; 
+        jumpInputTrigger = false;
         dodgeInputTrigger = false;
-        attackInputTrigger = false;
 
         // マウスカーソルを非表示にし、位置を固定
         Cursor.visible = false;
@@ -329,7 +325,6 @@ public class PlayerControll : MonoBehaviour
     //処理が完成していないものには頭に#をつける
     private void FixedUpdate()
     {
-
         //-------------------------------------------------------------------------------
         //#壁の配置を確認し、カメラの位置を調整、壁判定を取る
         //-------------------------------------------------------------------------------
@@ -344,7 +339,7 @@ public class PlayerControll : MonoBehaviour
             }
             if (_WallRunStatus.wallStatus == wallSide.Left)
             {
-                vec = new Vector3( 5, heightOffSet, 0);
+                vec = new Vector3(5, heightOffSet, 0);
             }
 
             PlayerCameraOrigin.transform.localPosition = Vector3.Lerp(PlayerCameraOrigin.transform.localPosition, vec, 0.1f);
@@ -379,7 +374,7 @@ public class PlayerControll : MonoBehaviour
             MoveInput = move.ReadValue<Vector2>();
 
             MoveValue = MoveInput;
-            
+
             JumpInput = jump.ReadValue<float>() > 0;
 
             AttackInput = attack.ReadValue<float>() > 0;
@@ -392,7 +387,7 @@ public class PlayerControll : MonoBehaviour
             {
                 if (!isChargeAttack)
                     MoveValue = Vector2.zero;
-                
+
                 JumpInput = false;
                 DodgeInput = false;
                 RunInput = false;
@@ -409,12 +404,10 @@ public class PlayerControll : MonoBehaviour
 
 
 
-            if (isWallRun) { 
+            if (isWallRun) {
                 RunInput = true;
-                //CrouchInput = false;
             }
 
-            attackInputTrigger = false;
             jumpInputTrigger = false;
             dodgeInputTrigger = false;
 
@@ -426,13 +419,6 @@ public class PlayerControll : MonoBehaviour
                 }
             }
 
-            if (AttackInput)
-            {
-                if (!OldAttackInput)
-                {
-                    attackInputTrigger = true;
-                }
-            }
 
             if (DodgeInput)
             {
@@ -444,7 +430,6 @@ public class PlayerControll : MonoBehaviour
 
 
             OldJumpInput = JumpInput;
-            OldAttackInput = AttackInput;
             OldDodgeInput = DodgeInput;
         }
 
@@ -461,13 +446,13 @@ public class PlayerControll : MonoBehaviour
 
 
         //壁走り開始判定
-        if (!isWallRun && isWallHit && !isGround && RunInput &&
+        if (!isWallRun && isWallHit && canWallUp && canWallDown && !isGround && RunInput &&
             (_WallRunStatus.WJtoNextWallTimer >= _WallRunStatus.WJtoNextWallTime))
         {
             _WallRunStatus.WallRunTimer = 0;
             isWallRun = true;
         }
-        if (!isWallHit) 
+        if (!isWallHit)
             isWallRun = false;
 
         if (isWallRun)
@@ -481,13 +466,32 @@ public class PlayerControll : MonoBehaviour
 
             transform.position = Vector3.Lerp(transform.position, Vec, 0.1f);
 
-            s_Rigidbody.velocity 
+            s_Rigidbody.velocity
                 = _WallRunStatus.WallRunVec * _WallRunStatus.wallRunSpeed;
 
             transform.rotation = Quaternion.LookRotation(_WallRunStatus.WallRunVec, Vector3.up);
-            Vector3 v = s_Rigidbody.velocity;
-            v.y = 0;
-            s_Rigidbody.velocity = v;
+
+            Vector3 velo = s_Rigidbody.velocity;
+            velo.y = 0;
+            //壁走り時の高さ変更
+            if (_PlayerMoveStatus.UseInputValue < Mathf.Abs(MoveValue.x))
+            {
+                float inputX = MoveValue.x;
+
+                if (_WallRunStatus.wallStatus == wallSide.Left)
+                    inputX *= -1;
+                
+                if (!canWallUp && inputX > 0)
+                    inputX = 0;
+
+                if (!canWallDown && inputX < 0)
+                    inputX = 0;
+
+
+                velo.y = inputX * _WallRunStatus.wallRunClimbSpeed;
+            }
+
+            s_Rigidbody.velocity = velo;
         }
         else
         {
@@ -498,8 +502,7 @@ public class PlayerControll : MonoBehaviour
         //-------------------------------------------------------------------------------
         //カメラの角度/壁の角度からプレイヤーの入力値を調整
         //-------------------------------------------------------------------------------
-
-        Vector3 MoveOriginVector = 
+        Vector3 MoveOriginVector =
             Vector3.Scale(PlayerCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
 
 
@@ -520,9 +523,6 @@ public class PlayerControll : MonoBehaviour
         //-------------------------------------------------------------------------------
         //プレイヤーの動きをRigidBodyに入力
         //-------------------------------------------------------------------------------
-
-
-
         if (!isWallRun && !isDodge && !isAttack)
         {
             float speedHoldRate = _PlayerMoveStatus.VelocityHoldRate;
@@ -556,7 +556,7 @@ public class PlayerControll : MonoBehaviour
 
 
             Vector3 MoveVel = moveForward * MoveValue.magnitude * accValue;
-            s_Rigidbody.AddForce(MoveVel,ForceMode.Acceleration);
+            s_Rigidbody.AddForce(MoveVel, ForceMode.Acceleration);
 
 
             //新 速度制限
@@ -574,7 +574,7 @@ public class PlayerControll : MonoBehaviour
 
         //入力方向へのプレイヤーの回転
         if (isGround && _PlayerMoveStatus.UseInputValue < MoveInput.magnitude)
-            transform.rotation = 
+            transform.rotation =
                 Quaternion.LookRotation(
                     Vector3.Slerp(transform.forward,
                     moveForward,
@@ -584,7 +584,6 @@ public class PlayerControll : MonoBehaviour
         //------------------------------------------------------------
         //回避
         //------------------------------------------------------------
-
         if (!isDodge && dodgeInputTrigger && _DodgeStatus.DodgeCoolTime < _DodgeStatus.DodgeTimer)
         {
             isDodge = true;
@@ -628,13 +627,13 @@ public class PlayerControll : MonoBehaviour
                     FirstJumped = true;
                     isGround = false;
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                    //transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
+                    transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
                     s_Rigidbody.AddForce(
-                        Vector3.up * _PlayerMoveStatus.JumpPower 
-                        * _PlayerMoveStatus.SecondJumpMultiplyValue 
-                        + moveForward.normalized * InputValue 
-                        *_PlayerMoveStatus.JumpHorizonPower 
-                        * _PlayerMoveStatus.SecondJumpHorizonPowerMultiplyValue, 
+                        Vector3.up * _PlayerMoveStatus.JumpPower
+                        * _PlayerMoveStatus.SecondJumpMultiplyValue
+                        + moveForward.normalized * InputValue
+                        * _PlayerMoveStatus.JumpHorizonPower
+                        * _PlayerMoveStatus.SecondJumpHorizonPowerMultiplyValue,
                         ForceMode.VelocityChange);
                 }
 
@@ -643,9 +642,9 @@ public class PlayerControll : MonoBehaviour
                     FirstJumped = true;
                     isGround = false;
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                    //transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up); 
+                    transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
                     s_Rigidbody.AddForce(
-                        Vector3.up * _PlayerMoveStatus.JumpPower 
+                        Vector3.up * _PlayerMoveStatus.JumpPower
                         + moveForward.normalized * InputValue * _PlayerMoveStatus.JumpHorizonPower,
                         ForceMode.VelocityChange);
                 }
@@ -660,9 +659,9 @@ public class PlayerControll : MonoBehaviour
                     _WallRunStatus.WJtoNextWallTimer = 0;
                     WallRunCheck();
                     s_Rigidbody.velocity = new Vector3(0, 0, 0);
-                    transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up); 
+                    transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
                     s_Rigidbody.AddForce(
-                        Vector3.up * _PlayerMoveStatus.JumpPower 
+                        Vector3.up * _PlayerMoveStatus.JumpPower
                         + moveForward.normalized * InputValue * _WallRunStatus.wallJumpHorizonPower,
                         ForceMode.VelocityChange);
                 }
@@ -684,10 +683,6 @@ public class PlayerControll : MonoBehaviour
         //----------------------------------------------------------------------------------
         //体力値の自動回復
         //----------------------------------------------------------------------------------
-
-        
-
-
         if (CurrentHp < _PlayerBasicStatus.maxHP)
         {
             if (_PlayerBasicStatus.healTimer > _PlayerBasicStatus.HPHealTime)
@@ -710,9 +705,8 @@ public class PlayerControll : MonoBehaviour
         //-------------------------------------------------------------------------------
         //#プレイヤーの攻撃処理
         //-------------------------------------------------------------------------------
-
         Attack(AttackInput);
-        
+
 
         //-------------------------------------------------------------------------------
         //#アニメーションをアニメーターに登録
@@ -739,9 +733,9 @@ public class PlayerControll : MonoBehaviour
 
     private void WallRunCheck()
     {
-        float offsetY = s_Rigidbody.position.y;
+        float offsetY = s_Collider.center.y;
         Vector3 origin = transform.position + transform.up * offsetY;
-        
+
         float distance = _WallRunStatus.WallDitectDistance + s_Collider.radius;
 
         Vector3 RightNormal = Vector3.zero;
@@ -755,6 +749,10 @@ public class PlayerControll : MonoBehaviour
         bool isLeftHit = false;
         RaycastHit Lefthit;
 
+
+        canWallDown = false;
+        canWallUp = false;
+
         //右壁チェック
         if (Physics.Raycast(origin, Vector3.Lerp(transform.right, transform.forward, 0.4f),
             out Righthit, distance, _WallRunStatus.wallLayers, QueryTriggerInteraction.Ignore))
@@ -765,7 +763,7 @@ public class PlayerControll : MonoBehaviour
         }
 
         //左壁チェック
-        if (Physics.Raycast(origin, Vector3.Lerp(-transform.right,transform.forward, 0.4f), 
+        if (Physics.Raycast(origin, Vector3.Lerp(-transform.right, transform.forward, 0.4f),
             out Lefthit, distance, _WallRunStatus.wallLayers, QueryTriggerInteraction.Ignore))
         {
             isLeftHit = true;
@@ -787,8 +785,7 @@ public class PlayerControll : MonoBehaviour
             bool RightisNear = false;
             if (LeftDist > RightDist)
                 RightisNear = true;
-            
-            isWallHit = true;
+
             if (RightisNear)
             {
                 _WallRunStatus.WallDistance = RightDist;
@@ -809,16 +806,41 @@ public class PlayerControll : MonoBehaviour
                 Vector3 A = -_WallRunStatus.WallNormalVec.normalized;
                 Vector3 B = Vector3.up.normalized;
 
-                _WallRunStatus.WallRunVec = Vector3.Cross(A,B);
+                _WallRunStatus.WallRunVec = Vector3.Scale(Vector3.Cross(A, B), new Vector3(1, 0, 1));
 
                 if (_WallRunStatus.wallStatus == wallSide.Left)
                 {
                     _WallRunStatus.WallRunVec *= -1;
                 }
             }
+
+            isWallHit = true;
+
+            WallClimbRunCheck();
         }
     }
+    private void WallClimbRunCheck()
+    {
+        float distance = _WallRunStatus.WallDitectDistance + s_Collider.radius;
+        float offsetY = s_Collider.center.y;
+        Vector3 originUp = transform.position + transform.up * (offsetY + 0.1f);
+        Vector3 originDown = transform.position - transform.up * 0.1f;
 
+        RaycastHit Hit;
+        if (_WallRunStatus.wallStatus != wallSide.NoWallDitect)
+        {
+            if (Physics.Raycast(originUp, Vector3.Lerp(-_WallRunStatus.WallNormalVec.normalized, transform.forward, 0.4f),
+                out Hit, distance, _WallRunStatus.wallLayers, QueryTriggerInteraction.Ignore))
+            {
+                canWallUp = true;
+            }
+            if (Physics.Raycast(originDown, Vector3.Lerp(-_WallRunStatus.WallNormalVec.normalized, transform.forward, 0.4f),
+            out Hit, distance, _WallRunStatus.wallLayers, QueryTriggerInteraction.Ignore))
+            {
+                canWallDown = true;
+            }
+        }
+    }
 
     private void OnDrawGizmos()
     {
@@ -844,14 +866,15 @@ public class PlayerControll : MonoBehaviour
         Gizmos.color = Color.green;
         vec = s_Collider.height * transform.up;
         Gizmos.DrawLine(transform.position + vec, transform.position + vec + transform.up * 0.2f);
-    }
 
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(s_Rigidbody.position, s_Rigidbody.position + transform.right * 0.5f);
+    }
 
     public void AttackStatus(bool value, bool charge)
     {
         isAttack = value;
         isChargeAttack = charge;
     }
-
-
 }
