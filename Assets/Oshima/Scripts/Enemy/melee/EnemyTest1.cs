@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,13 +17,18 @@ public class EnemyTest1 : MonoBehaviour
     public float rushSpeed = 5f;
     public float chaseRadius = 10.0f;
 
-    public Transform player;
+    private Transform player;
     public float fieldOfViewAngle = 60.0f;
     private int currentPatrolPoint = 0;
    
-    private Vector3 targetPosition;//Playr‚Ì‰ß‹‚ÌˆÊ’u‚ğ•Û‘¶
+    private Vector3 targetPosition;//Playrã®éå»ã®ä½ç½®ã‚’ä¿å­˜
     public EnemyState currentState = EnemyState.Patrol;
 
+    [System.Obsolete]
+    private void Start()
+    {
+       player = FindObjectOfType<PlayerControll>().transform;
+    }
     void Update()
     {
        
@@ -46,29 +51,29 @@ public class EnemyTest1 : MonoBehaviour
 
     void PatrolUpdate()
     {
-        // ƒvƒŒƒCƒ„[‚Ü‚Å‚Ì‹——£‚Æ•ûŒü‚ğŒvZ
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¾ã§ã®è·é›¢ã¨æ–¹å‘ã‚’è¨ˆç®—
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
         float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
 
-        // áŠQ•¨‚ª‚ ‚é‚©Šm”F
+        // éšœå®³ç‰©ãŒã‚ã‚‹ã‹ç¢ºèª
         RaycastHit hit;
         if (Physics.Raycast(transform.position, directionToPlayer, out hit, rushRadius))
         {
             if (hit.collider.CompareTag("Player"))
             {
-                // ƒvƒŒƒCƒ„[‚Ì•ûŒü‚ğŒü‚­
+                // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã‚’å‘ã
                 Quaternion targetRotation1 = Quaternion.LookRotation(new Vector3(directionToPlayer.x, 0, directionToPlayer.z));
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation1, Time.deltaTime * rushSpeed);
                 transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
-                // DetectPlayer ‚É‘JˆÚ
+                // DetectPlayer ã«é·ç§»
                 StartCoroutine(TransitionToDetectPlayer());
                 return;
             }
         }
 
-        //ƒvƒŒƒCƒ„[‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚Ìˆ—
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆã®å‡¦ç†
         transform.position = Vector3.MoveTowards(transform.position, patrolPoints[currentPatrolPoint].position, moveSpeed * Time.deltaTime);
         Vector3 targetDirection = (patrolPoints[currentPatrolPoint].position - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(new Vector3(targetDirection.x, 0, targetDirection.z));
@@ -85,16 +90,16 @@ public class EnemyTest1 : MonoBehaviour
     {
         Debug.Log("DetectPlayer");
 
-        // ƒvƒŒƒCƒ„[‚Ì•ûŒü‚ğŒü‚­
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã‚’å‘ã
         Vector3 directionToPlayer = (targetPosition - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(new Vector3(directionToPlayer.x, 0, directionToPlayer.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rushSpeed);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
-        // ƒvƒŒƒCƒ„[‚ÌÅ‰‚ÌˆÊ’u‚ÉŒü‚©‚¤
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æœ€åˆã®ä½ç½®ã«å‘ã‹ã†
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, rushSpeed * Time.deltaTime);
 
-        // “’B‚Ìè‡’l‚ğİ’è
+        // åˆ°é”ã®é–¾å€¤ã‚’è¨­å®š
         float threshold = 1.0f;
 
         
@@ -103,7 +108,7 @@ public class EnemyTest1 : MonoBehaviour
             currentState = EnemyState.ChasePlayer;
         }
 
-        //// ƒvƒŒƒCƒ„[‚ª rushRadius ‚æ‚è‚à‰“‚¢ê‡‚É Patrol ó‘Ô‚É‘JˆÚ
+        //// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒ rushRadius ã‚ˆã‚Šã‚‚é ã„å ´åˆã« Patrol çŠ¶æ…‹ã«é·ç§»
         //float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         //if (distanceToPlayer > chaseRadius)
         //{
@@ -115,7 +120,7 @@ public class EnemyTest1 : MonoBehaviour
     {
         Debug.Log("ChasePlayer");
 
-        // ƒvƒŒƒCƒ„[‚Ì•ûŒü‚ğŒü‚­
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã‚’å‘ã
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
         float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
@@ -123,7 +128,7 @@ public class EnemyTest1 : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * moveSpeed);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
-        // ƒvƒŒƒCƒ„[‚ÉŒü‚©‚Á‚ÄˆÚ“®
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å‘ã‹ã£ã¦ç§»å‹•
         transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
 
         if (distanceToPlayer > chaseRadius)
@@ -133,11 +138,11 @@ public class EnemyTest1 : MonoBehaviour
         }
     }
 
-    //“Ëi‚·‚é‚Ü‚Å
+    //çªé€²ã™ã‚‹ã¾ã§
     IEnumerator TransitionToDetectPlayer()
     {
        
-        yield return new WaitForSeconds(1.0f); // 1•b‘Ò‚Â
+        yield return new WaitForSeconds(1.0f); // 1ç§’å¾…ã¤
 
         targetPosition = player.position;
         currentState = EnemyState.DetectPlayer;

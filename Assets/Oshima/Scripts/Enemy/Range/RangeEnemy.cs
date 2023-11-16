@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,9 +10,9 @@ public class RangeEnemy : MonoBehaviour
         DetectPlayer,
         ChasePlayer
     }
-    public GameObject bulletPrefab; // ”­Ë‚·‚éPrefab
-    public float fireInterval = 2.0f; // ”­Ë‚ÌŠÔŠui•bj
-    public float bulletSpeed = 5.0f; // ’e‚Ì‘¬“x
+    public GameObject bulletPrefab; // ç™ºå°„ã™ã‚‹Prefab
+    public float fireInterval = 2.0f; // ç™ºå°„ã®é–“éš”ï¼ˆç§’ï¼‰
+    public float bulletSpeed = 5.0f; // å¼¾ã®é€Ÿåº¦
     public float bulletPointOffset = 0.5f;
     private float lastFireTime = 0.0f;
     public Transform[] patrolPoints;
@@ -21,15 +21,20 @@ public class RangeEnemy : MonoBehaviour
     //public float rushSpeed = 5f;
     public float chaseRadius = 10.0f;
     public float minDistanceToPlayer = 5.0f;
-    public Transform player;
+    private Transform player;
     public float fieldOfViewAngle = 60.0f;
     private int currentPatrolPoint = 0;
 
-    private Vector3 targetPosition;//Playr‚Ì‰ß‹‚ÌˆÊ’u‚ğ•Û‘¶
+    private Vector3 targetPosition;//Playrã®éå»ã®ä½ç½®ã‚’ä¿å­˜
     public EnemyState currentState = EnemyState.Patrol;
     // Start is called before the first frame update
-  
+
     // Update is called once per frame
+
+    private void Start()
+    {
+        player = FindObjectOfType<PlayerControll>().transform;
+    }
     void Update()
     {
         switch (currentState)
@@ -50,29 +55,29 @@ public class RangeEnemy : MonoBehaviour
 
     void PatrolUpdate()
     {
-        // ƒvƒŒƒCƒ„[‚Ü‚Å‚Ì‹——£‚Æ•ûŒü‚ğŒvZ
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¾ã§ã®è·é›¢ã¨æ–¹å‘ã‚’è¨ˆç®—
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
         float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
 
-        // áŠQ•¨‚ª‚ ‚é‚©Šm”F
+        // éšœå®³ç‰©ãŒã‚ã‚‹ã‹ç¢ºèª
         RaycastHit hit;
         if (Physics.Raycast(transform.position, directionToPlayer, out hit, rushRadius))
         {
             if (hit.collider.CompareTag("Player"))
             {
-                // ƒvƒŒƒCƒ„[‚Ì•ûŒü‚ğŒü‚­
+                // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã‚’å‘ã
                 Quaternion targetRotation1 = Quaternion.LookRotation(new Vector3(directionToPlayer.x, 0, directionToPlayer.z));
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation1, Time.deltaTime * moveSpeed);
                 transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
-                // DetectPlayer ‚É‘JˆÚ
+                // DetectPlayer ã«é·ç§»
                 StartCoroutine(TransitionToDetectPlayer());
                 return;
             }
         }
 
-        //ƒvƒŒƒCƒ„[‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚Ìˆ—
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆã®å‡¦ç†
         transform.position = Vector3.MoveTowards(transform.position, patrolPoints[currentPatrolPoint].position, moveSpeed * Time.deltaTime);
         Vector3 targetDirection = (patrolPoints[currentPatrolPoint].position - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(new Vector3(targetDirection.x, 0, targetDirection.z));
@@ -84,7 +89,7 @@ public class RangeEnemy : MonoBehaviour
     }
     void DetectPlayerUpdate()
     {
-        // ƒvƒŒƒCƒ„[‚Ì•ûŒü‚ğŒü‚­
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã‚’å‘ã
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
         float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
@@ -94,12 +99,12 @@ public class RangeEnemy : MonoBehaviour
 
         if (distanceToPlayer < minDistanceToPlayer)
         {
-            // ƒvƒŒƒCƒ„[‚ª‹ß‚Ã‚«‚·‚¬‚½ê‡AŒã‘Ş‚·‚é
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè¿‘ã¥ãã™ããŸå ´åˆã€å¾Œé€€ã™ã‚‹
             transform.Translate(Vector3.back * moveSpeed * Time.deltaTime);
         }
         else
         {
-            // ƒvƒŒƒCƒ„[‚ÉŒü‚©‚Á‚ÄˆÚ“®
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å‘ã‹ã£ã¦ç§»å‹•
             transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
         }
 
@@ -127,7 +132,7 @@ public class RangeEnemy : MonoBehaviour
         {
             Vector3 directionToPlayer = (player.position - transform.position).normalized;
 
-            // ƒvƒŒƒCƒ„[‚Ì•ûŒü‚É‘¬“x‚ğ—^‚¦‚Â‚ÂA­‚µãŒü‚«‚É‚à•â³
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã«é€Ÿåº¦ã‚’ä¸ãˆã¤ã¤ã€å°‘ã—ä¸Šå‘ãã«ã‚‚è£œæ­£
             rb.velocity = (directionToPlayer + Vector3.up * bulletPointOffset) * bulletSpeed;
         }
 
@@ -138,7 +143,7 @@ public class RangeEnemy : MonoBehaviour
     IEnumerator TransitionToDetectPlayer()
     {
 
-        yield return new WaitForSeconds(1.0f); // 1•b‘Ò‚Â
+        yield return new WaitForSeconds(1.0f); // 1ç§’å¾…ã¤
 
         targetPosition = player.position;
         currentState = EnemyState.DetectPlayer;

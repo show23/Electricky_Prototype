@@ -1,14 +1,14 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MaterialShader : MonoBehaviour
 {
-    public Material material; // ƒ}ƒeƒŠƒAƒ‹‚ðƒAƒ^ƒbƒ`‚·‚é‚½‚ß‚ÌŒöŠJ•Ï”
+    public Material material; // ãƒžãƒ†ãƒªã‚¢ãƒ«ã‚’ã‚¢ã‚¿ãƒƒãƒã™ã‚‹ãŸã‚ã®å…¬é–‹å¤‰æ•°
     public GameObject rainPrefab;
     public Transform rainPoint;
-    public string floatPropertyName = "_kirikae"; // §Œä‚µ‚½‚¢floatƒvƒƒpƒeƒB‚Ì–¼‘O
-    public float switchStartRainTime = 10.0f; // ƒQ[ƒ€“àŽžŠÔ‚É“ž’B‚µ‚½‚çØ‚è‘Ö‚¦‚éŽžŠÔ
+    public string floatPropertyName = "_kirikae"; // åˆ¶å¾¡ã—ãŸã„floatãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã®åå‰
+    public float switchStartRainTime = 10.0f; // ã‚²ãƒ¼ãƒ å†…æ™‚é–“ã«åˆ°é”ã—ãŸã‚‰åˆ‡ã‚Šæ›¿ãˆã‚‹æ™‚é–“
     public float switchEndRainTime = 10.0f;
     public float switchSpeed = 0.1f;
     private float lerpValue = 0.0f;
@@ -20,7 +20,7 @@ public class MaterialShader : MonoBehaviour
     private GameObject spawnedRain;
 
 
-    // floatƒvƒƒpƒeƒB‚ð•ÏX‚·‚éŠÖ”
+    // floatãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’å¤‰æ›´ã™ã‚‹é–¢æ•°
     public void SetFloatProperty(float value)
     {
         if (material != null)
@@ -33,7 +33,7 @@ public class MaterialShader : MonoBehaviour
     {
 
     }
-    // ƒQ[ƒ€“àŽžŠÔ‚É‰ž‚¶‚ÄfloatƒvƒƒpƒeƒB‚ðØ‚è‘Ö‚¦‚é
+    // ã‚²ãƒ¼ãƒ å†…æ™‚é–“ã«å¿œã˜ã¦floatãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
     void Update()
     {
         Rain();
@@ -49,8 +49,8 @@ public class MaterialShader : MonoBehaviour
 
             if (!hasSpawned)
             {
-                // ƒvƒŒƒnƒu‚©‚çƒCƒ“ƒXƒ^ƒ“ƒX‚ð¶¬
-                spawnedRain = Instantiate(rainPrefab, rainPoint.position, rainPoint.rotation);
+                // ãƒ—ãƒ¬ãƒãƒ–ã‹ã‚‰ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆ
+                //spawnedRain = Instantiate(rainPrefab, rainPoint.position, rainPoint.rotation);
                 hasSpawned = true;
             }
             if (lerpValue >= 1.0f)
