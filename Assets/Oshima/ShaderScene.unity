@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 5262.821, g: 5815.4106, b: 7026.337, a: 1}
+  m_IndirectSpecularColor: {r: 5248.2505, g: 5798.905, b: 7005.953, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12734,13 +12734,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25aa8b3925f62964db6da50851094c3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerManager: {fileID: 0}
-  inputHorizontal: 0
-  inputVertical: 0
-  rb: {fileID: 0}
-  moveSpeed: 0
-  dashSpeed: 0
-  initialPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &1983621256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13681,12 +13674,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0424c86383b4e4ba6e590ee1bdd174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolPoints: []
+  patrolPoints:
+  - {fileID: 699119207}
+  - {fileID: 1130642198}
   moveSpeed: 2
   rushRadius: 5
   rushSpeed: 5
   chaseRadius: 10
-  player: {fileID: 0}
+  player: {fileID: 1983621266}
   fieldOfViewAngle: 60
   currentState: 0
 --- !u!1001 &2134658013
