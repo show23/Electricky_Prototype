@@ -862,11 +862,11 @@ MonoBehaviour:
   _PlayerMoveStatus:
     MaxWalkSpeed: 12
     WalkAcc: 16
-    MaxRunSpeed: 19
-    RunAcc: 19
+    MaxRunSpeed: 21
+    RunAcc: 21
     MoveInputRotationSpeed: 0.2
-    JumpPower: 7
-    JumpHorizonPower: 7
+    JumpPower: 9
+    JumpHorizonPower: 9
     SecondJumpMultiplyValue: 0.8
     SecondJumpHorizonPowerMultiplyValue: 0.8
     VelocityHoldRate: 0.92
@@ -879,6 +879,7 @@ MonoBehaviour:
       m_Bits: 1
     WallDitectDistance: 0.4
     wallRunSpeed: 20
+    wallRunClimbSpeed: 3
     wallJumpHorizonPower: 10
     WJtoNextWallTime: 10
     wallStatus: 0

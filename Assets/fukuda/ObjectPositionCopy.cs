@@ -51,6 +51,8 @@ public class ObjectPositionCopy : MonoBehaviour
 
         transform.rotation = Quaternion.LookRotation(transform.forward + transform.right * CameraInput.x * RotationSpeedX + transform.up * CameraInput.y * RotationSpeedY);
 
+
+
         bool ResetInput = cameraReset.ReadValue<float>() > 0;
         bool ResetTrigger = false;
         if (ResetInput && !oldResetInput)
