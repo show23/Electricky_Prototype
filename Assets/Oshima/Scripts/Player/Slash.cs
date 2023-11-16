@@ -4,88 +4,78 @@ using UnityEngine;
 
 public class Slash : MonoBehaviour
 {
-    [System.Serializable]
-    public struct AttackList
-    {
-        public float attackRange;
-        public float attackAngle;
 
-        public float useEnergy;
-        public float maxDamage;
-        public float minDamage;
-
-        public int comboAccseptStartTime;
-        public int comboAccseptLength;
-        
-        public int cooldownTime;
-        public int hitStop;
-    }
-
+   
     private int comboCount = 0;
     public int maxCombo = 4;
-    [SerializeField]
-    private List<AttackList> attackList;
     public string enemyTag = "Enemy";
-
-    private bool isAttack = false;
-    private bool inputAttack = false;
-
-    private PlayerControll playerControll;
-
-    [SerializeField,Tooltip("forDebug. do not touch it")]
-    private int comboTimer = 0;
-    
+    public float attackRange = 4;
+    public float comboResetTime = 1.0f; // タイマーの時間
+    private float lastKeyPressTime = 0.0f;
+    bool kAllowed = true;
+    public float cooldownTime = 0.3f;
+    public float hitStop = 0.1f;
+    public float attackAngle = 90;
+    public GameObject slashPrefab;
+    public Transform slashPoint;   // ビームの発射位置
+    public Quaternion spawnRotation = Quaternion.Euler(0.0f, 45.0f, 0.0f);
     // Start is called before the first frame update
     void Start()
     {
-        comboTimer = 0;
-        playerControll = FindObjectOfType<PlayerControll>();
+        
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        if (isAttack)
+        
+        if (kAllowed && Input.GetKeyDown(KeyCode.K))
         {
-            comboTimer++;
-        }
-
-        if (CheckCombo(comboCount) && inputAttack)
-        {
-            isAttack = true;
-            Combo(comboCount);
+            kAllowed = false;
             comboCount++;
-            comboTimer = 0;
+            lastKeyPressTime = Time.time;
+            
+            GameObject slashInstance = Instantiate(slashPrefab, slashPoint.position, spawnRotation);
+            //Bullet beamScript = beamInstance.GetComponent<Bullet>();
 
-            if (comboCount >= maxCombo + 1)
-            {
-                comboCount = 0;
-            }
+            Destroy(slashInstance, 3f);
+
         }
 
-        if (comboTimer > attackList[comboCount].cooldownTime)
+        if (Time.time - lastKeyPressTime > comboResetTime)
         {
-            isAttack = false;
             comboCount = 0;
         }
-        inputAttack = false;
+        if (comboCount >= maxCombo + 1)
+        {
+            comboCount = 0;
+        }
+        switch (comboCount)            
+        {
+            case 1:
+                
+                Combo1();
+                break;
+
+            case 2:
+                Combo2();
+                break;
+
+            case 3:
+                Combo3();
+                break;
+            case 4:
+                Combo4();
+                break;
+        }
+        //Debug.Log(comboCount);
     }
 
-    void Combo(int list)
+    void Combo1()
     {
-        Debug.Log("Combo" + list+1);
-        StartCoroutine(EnableKAfterCooldown(list));
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackList[list].attackRange);
-
-        float energyValue = playerControll.CurrentEnergy / attackList[list].useEnergy;
-        energyValue = Mathf.Clamp(energyValue, 0, 1);
-        //ダメージ数値は同じなのにforでやるとコストかかるので
-        //外に出しておく
-        float damage = Mathf.Lerp(attackList[list].minDamage, attackList[list].maxDamage, energyValue);
-
-        playerControll.CurrentEnergy -= attackList[list].useEnergy;
-
-        
+        //Debug.Log("Combo1");
+        StartCoroutine(EnableKAfterCooldown());
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackRange);
         foreach (Collider col in hitColliders)
         {
             if (col.CompareTag(enemyTag))
@@ -93,53 +83,90 @@ public class Slash : MonoBehaviour
                 Vector3 direction = col.transform.position - transform.position;
                 float angle = Vector3.Angle(transform.forward, direction);
 
-                if (angle <= attackList[list].attackAngle / 2)
+                if (angle <= attackAngle / 2)
                 {
-                    Debug.Log("Combo"+list+" Enemyに当たったよ");
-                    StartCoroutine(HitStopCoroutine(list));
+                    Debug.Log("Combo1 Enemyに当たったよ");
+                    StartCoroutine(HitStopCoroutine());
+                }
+            }
+        }
+    }
+    void Combo2()
+    {
+        //Debug.Log("Combo2");
+        StartCoroutine(EnableKAfterCooldown());
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackRange);
+        foreach (Collider col in hitColliders)
+        {
+            if (col.CompareTag(enemyTag))
+            {
+                Vector3 direction = col.transform.position - transform.position;
+                float angle = Vector3.Angle(transform.forward, direction);
 
-                    //ここで敵の体力を減らす処理をする
-                    //ダメージ量はリストから使うのではなく
-                    //電力量を考慮した値を80行目あたりで(damage変数)求めてあるので
-                    //そこから使ってください
+                if (angle <= attackAngle / 2)
+                {
+                    Debug.Log("Combo2 Enemyに当たったよ");
+                    StartCoroutine(HitStopCoroutine());
 
                 }
             }
         }
     }
-
-    bool CheckCombo(int list)
+    void Combo3()
     {
-        if (comboCount == 0)
-            return true;
-
-        if (isAttack)
+        //Debug.Log("Combo3");
+        StartCoroutine(EnableKAfterCooldown());
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackRange);
+        foreach (Collider col in hitColliders)
         {
-            if ((comboCount > attackList[list].comboAccseptStartTime) &&
-                (comboCount <
-                attackList[list].comboAccseptStartTime + attackList[list].comboAccseptLength))
+            if (col.CompareTag(enemyTag))
             {
-                return true;
+                Vector3 direction = col.transform.position - transform.position;
+                float angle = Vector3.Angle(transform.forward, direction);
+
+                if (angle <= attackAngle / 2)
+                {
+                    Debug.Log("Combo3 Enemyに当たったよ");
+                    StartCoroutine(HitStopCoroutine());
+
+                }
             }
         }
-
-        comboCount = 0;
-        return false;
     }
-
-
-    IEnumerator EnableKAfterCooldown(int list)
+    void Combo4()
     {
-        yield return new WaitForSeconds(attackList[list].cooldownTime);
+       // Debug.Log("Combo4");
+        StartCoroutine(EnableKAfterCooldown());
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackRange);
+        foreach (Collider col in hitColliders)
+        {
+            if (col.CompareTag(enemyTag))
+            {
+                Vector3 direction = col.transform.position - transform.position;
+                float angle = Vector3.Angle(transform.forward, direction);
+
+                if (angle <= attackAngle / 2)
+                {
+                    Debug.Log("Combo4 Enemyに当たったよ");
+                    StartCoroutine(HitStopCoroutine());
+
+                }
+            }
+        }
+    }
+    IEnumerator EnableKAfterCooldown()
+    {
+        yield return new WaitForSeconds(cooldownTime);
+        kAllowed = true;
     }
 
-    private IEnumerator HitStopCoroutine(int list)
+    private IEnumerator HitStopCoroutine()
     {
         Debug.Log("HitStop");
         // ヒットストップの開始
         Time.timeScale = 0f;
         // 指定した時間だけ停止
-        yield return new WaitForSecondsRealtime(attackList[list].hitStop);
+        yield return new WaitForSecondsRealtime(hitStop);
         // ヒットストップの終了
         Time.timeScale = 1f;
 
@@ -150,14 +177,7 @@ public class Slash : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.black;
-        //Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
        
-    }
-
-
-
-    public void inputAttackTrigger()
-    {
-        inputAttack = true;
     }
 }
