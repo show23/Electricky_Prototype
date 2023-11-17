@@ -53,6 +53,8 @@ public class PlayerControll : MonoBehaviour
 
         [Tooltip("移動入力による回転(Lerp処理)"), Range(0.0f, 1.0f)]
         public float MoveInputRotationSpeed;
+        [Tooltip("空中での回転(Lerp処理)"), Range(0.0f, 1.0f)]
+        public float MidAirRotationSpeed;
 
         [Tooltip("上方向ジャンプ力")]
         public float JumpPower;
@@ -573,14 +575,22 @@ public class PlayerControll : MonoBehaviour
         }
 
         //入力方向へのプレイヤーの回転
-        if (isGround && _PlayerMoveStatus.UseInputValue < MoveInput.magnitude)
-            transform.rotation =
-                Quaternion.LookRotation(
-                    Vector3.Slerp(transform.forward,
-                    moveForward,
-                    _PlayerMoveStatus.MoveInputRotationSpeed),
-                    Vector3.up);
-
+        if (_PlayerMoveStatus.UseInputValue < MoveInput.magnitude)
+        {
+            if (isGround)
+            {
+                transform.rotation =
+                    Quaternion.LookRotation(
+                        Vector3.Slerp(transform.forward, moveForward, _PlayerMoveStatus.MoveInputRotationSpeed),
+                        Vector3.up);
+            }else
+            { 
+                transform.rotation =
+                    Quaternion.LookRotation(
+                        Vector3.Slerp(transform.forward, moveForward, _PlayerMoveStatus.MidAirRotationSpeed),
+                        Vector3.up);
+            }
+        }
         //------------------------------------------------------------
         //回避
         //------------------------------------------------------------
