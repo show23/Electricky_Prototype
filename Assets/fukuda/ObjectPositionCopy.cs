@@ -29,7 +29,6 @@ public class ObjectPositionCopy : MonoBehaviour
     private InputAction cameraXY, cameraReset;
 
 
-
     private bool oldResetInput = false;
     
 
@@ -51,6 +50,14 @@ public class ObjectPositionCopy : MonoBehaviour
 
         transform.rotation = Quaternion.LookRotation(transform.forward + transform.right * CameraInput.x * RotationSpeedX + transform.up * CameraInput.y * RotationSpeedY);
 
+        Vector3 Rot = transform.eulerAngles;
+        if (Rot.x > 180.00f)
+        {
+            Rot.x -= 360.0f;
+        }
+        Rot.x = Mathf.Clamp(Rot.x, -25, 70);
+
+        transform.eulerAngles = Rot;
 
 
         bool ResetInput = cameraReset.ReadValue<float>() > 0;
@@ -64,7 +71,6 @@ public class ObjectPositionCopy : MonoBehaviour
         {
             transform.rotation = tracePosition.rotation;
         }
-
 
         transform.position = tracePosition.position;
         oldResetInput = ResetInput;
