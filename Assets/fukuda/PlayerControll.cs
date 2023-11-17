@@ -112,8 +112,6 @@ public class PlayerControll : MonoBehaviour
         public Vector3 WallNormalVec;
         [HideInInspector]
         public float WallDistance;
-        [HideInInspector]
-        public int WallRunTimer;
     }
 
     [System.Serializable]
@@ -291,7 +289,6 @@ public class PlayerControll : MonoBehaviour
     {
         _WallRunStatus.wallStatus = wallSide.NoWallDitect;
         _WallRunStatus.WJtoNextWallTimer = 0;
-        _WallRunStatus.WallRunTimer = 0;
 
         PlayerCamera = FindObjectOfType<CameraMove_ByFukuda_3>().gameObject;
         PlayerCameraOrigin = GameObject.Find("PlayerCameraOrigin");
@@ -449,7 +446,7 @@ public class PlayerControll : MonoBehaviour
         if (!isWallRun && isWallHit && canWallUp && canWallDown && !isGround && RunInput &&
             (_WallRunStatus.WJtoNextWallTimer >= _WallRunStatus.WJtoNextWallTime))
         {
-            _WallRunStatus.WallRunTimer = 0;
+            
             isWallRun = true;
         }
         if (!isWallHit)
@@ -461,7 +458,6 @@ public class PlayerControll : MonoBehaviour
             FirstJumped = false;
             SecondJumped = false;
             s_Rigidbody.useGravity = false;
-            _WallRunStatus.WallRunTimer++;
             Vector3 Vec = transform.position - (_WallRunStatus.WallNormalVec.normalized * _WallRunStatus.WallDistance);
 
             transform.position = Vector3.Lerp(transform.position, Vec, 0.1f);
@@ -743,10 +739,12 @@ public class PlayerControll : MonoBehaviour
 
         float RightDist = distance;
         bool isRightHit = false;
+        GameObject RightObj = null;
         RaycastHit Righthit;
 
         float LeftDist = distance;
         bool isLeftHit = false;
+        GameObject LeftObj = null;
         RaycastHit Lefthit;
 
 
@@ -760,6 +758,7 @@ public class PlayerControll : MonoBehaviour
             isRightHit = true;
             RightNormal = Righthit.normal;
             RightDist = Righthit.distance;
+            RightObj = Righthit.transform.gameObject;
         }
 
         //左壁チェック
@@ -769,6 +768,7 @@ public class PlayerControll : MonoBehaviour
             isLeftHit = true;
             LeftNormal = Lefthit.normal;
             LeftDist = Lefthit.distance;
+            LeftObj = Lefthit.transform.gameObject;
         }
 
 
@@ -786,6 +786,7 @@ public class PlayerControll : MonoBehaviour
             if (LeftDist > RightDist)
                 RightisNear = true;
 
+            
             if (RightisNear)
             {
                 _WallRunStatus.WallDistance = RightDist;
@@ -817,9 +818,11 @@ public class PlayerControll : MonoBehaviour
             isWallHit = true;
 
             WallClimbRunCheck();
+
         }
     }
-    private void WallClimbRunCheck()
+
+        private void WallClimbRunCheck()
     {
         float distance = _WallRunStatus.WallDitectDistance + s_Collider.radius;
         float offsetY = s_Collider.center.y;

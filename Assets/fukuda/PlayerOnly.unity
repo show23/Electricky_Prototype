@@ -882,12 +882,14 @@ MonoBehaviour:
     wallRunClimbSpeed: 3
     wallJumpHorizonPower: 10
     WJtoNextWallTime: 10
+    SameWallTime: 60
     wallStatus: 0
     WJtoNextWallTimer: 0
     WallRunVec: {x: 0, y: 0, z: 0}
     WallNormalVec: {x: 0, y: 0, z: 0}
     WallDistance: 0
     WallRunTimer: 0
+    Wall: {fileID: 0}
   _DodgeStatus:
     DodgeCoolTime: 60
     DodgeEndTime: 30
@@ -904,6 +906,8 @@ MonoBehaviour:
   SecondJumped: 0
   isWallRun: 0
   isWallHit: 0
+  canWallUp: 0
+  canWallDown: 0
   isDodge: 0
   noDamage: 0
   isAttack: 0
