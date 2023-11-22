@@ -360,6 +360,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 7070521111600111506, guid: 943e15ea5c5430a4a86be0793ecc5d81,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -865,6 +870,7 @@ MonoBehaviour:
     MaxRunSpeed: 21
     RunAcc: 21
     MoveInputRotationSpeed: 0.2
+    MidAirRotationSpeed: 0
     JumpPower: 9
     JumpHorizonPower: 9
     SecondJumpMultiplyValue: 0.8
@@ -904,6 +910,8 @@ MonoBehaviour:
   SecondJumped: 0
   isWallRun: 0
   isWallHit: 0
+  canWallUp: 0
+  canWallDown: 0
   isDodge: 0
   noDamage: 0
   isAttack: 0
