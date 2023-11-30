@@ -16,15 +16,23 @@ public class Enemy_Shoot : MonoBehaviour
     public float RapidfireInterval = 2.0f; // 発射の間隔（秒）
     public float RapidbulletSpeed = 5.0f; // 弾の速度
     
-    public float bulletPointOffset = 0.5f;
-    private float lastFireTime = 0.0f;
+    //public float bulletPointOffset = 0.5f;
+
+
+    [Tooltip("弾がスポーンする位置 腕のボーンから探して入れてくれ"),SerializeField]
+    private List<Transform> BulletSpawnPosition;
+    private int UsePoint = 0;
+
+
+
+
 
 
     public Transform[] patrolPoints;
     public float moveSpeed = 2f;
-    public float rushRadius = 5f;
+    public float findRadius = 5f;
     public float chaseRadius = 10.0f;
-    public float minDistanceToPlayer = 5.0f;
+    public float maxDistanceToPlayer = 5.0f;
     private Transform player;
     public float fieldOfViewAngle = 60.0f;
     private int currentPatrolPoint = 0;
@@ -39,7 +47,7 @@ public class Enemy_Shoot : MonoBehaviour
     {
         player = FindObjectOfType<PlayerControll>().transform;
     }
-    void Update()
+    void FixedUpdate()
     {
         switch (currentState)
         {
@@ -63,7 +71,7 @@ public class Enemy_Shoot : MonoBehaviour
 
         // 障害物があるか確認
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToPlayer, out hit, rushRadius))
+        if (Physics.Raycast(transform.position, directionToPlayer, out hit, findRadius))
         {
             if (hit.collider.CompareTag("Player"))
             {
@@ -72,7 +80,6 @@ public class Enemy_Shoot : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation1, Time.deltaTime * moveSpeed);
                 transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
-                // DetectPlayer に遷移
                 targetPosition = player.position;
                 currentState = EnemyState.ChasePlayer;
                 return;
@@ -99,12 +106,7 @@ public class Enemy_Shoot : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * moveSpeed);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
-        if (distanceToPlayer < minDistanceToPlayer)
-        {
-            // プレイヤーが近づきすぎた場合、後退する
-            transform.Translate(Vector3.back * moveSpeed * Time.deltaTime);
-        }
-        else
+        if (distanceToPlayer > maxDistanceToPlayer)
         {
             // プレイヤーに向かって移動
             transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
@@ -114,27 +116,31 @@ public class Enemy_Shoot : MonoBehaviour
         {
             currentState = EnemyState.Patrol;
         }
-        if (Time.time - lastFireTime > RapidfireInterval)
-        {
-            FireProjectile(); 
-            lastFireTime = Time.time; 
-        }
     }
 
 
-    void FireProjectile()
+    //AnimationのEventから呼ぶ
+    public void RapidFire()
     {
-        GameObject projectile = Instantiate(RapidbulletPrefab, transform.position, transform.rotation);
+        GameObject projectile = Instantiate(RapidbulletPrefab, BulletSpawnPosition[UsePoint].position, transform.rotation);
 
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            Vector3 directionToPlayer = (player.position - transform.position).normalized;
+            Vector3 directionToPlayer = (player.position - BulletSpawnPosition[UsePoint].position).normalized;
 
             // プレイヤーの方向に速度を与えつつ、少し上向きにも補正
-            rb.velocity = (directionToPlayer + Vector3.up * bulletPointOffset) * RapidbulletSpeed;
+            //rb.velocity = (directionToPlayer + Vector3.up * bulletPointOffset) * RapidbulletSpeed;
+            rb.velocity = directionToPlayer * RapidbulletSpeed;
         }
 
+        UsePoint++;
+
+        if (UsePoint >= BulletSpawnPosition.Count - 1)
+            UsePoint = 0;
+
+        //これ弾の消滅にエフェクトあったほうがいいかも
+        //bullet側のスクリプトにちゃんとエフェクト発生させる機構があるならこのままで
         Destroy(projectile, 3.0f);
     }
 
@@ -142,10 +148,10 @@ public class Enemy_Shoot : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.black;
-        Gizmos.DrawWireSphere(transform.position, rushRadius);
+        Gizmos.DrawWireSphere(transform.position, findRadius);
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, chaseRadius);
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, minDistanceToPlayer);
+        Gizmos.DrawWireSphere(transform.position, maxDistanceToPlayer);
     }
 }
