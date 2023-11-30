@@ -259,7 +259,7 @@ public class Player_Slash : MonoBehaviour
                 else
                 //走り終わって貯め斬り！
                 {
-                    Debug.Log("Charge Attack!");
+                    //Debug.Log("Charge Attack!");
                     //チャージされたフレーム数などからダメージ量を計算
                     float chargeValue = Mathf.Clamp((float)chargeAttack.MaxChargeTime / chargeTimer, 0.0f, 1.0f);
                     float damage = Mathf.Lerp(chargeAttack.minDamage, chargeAttack.maxDamage, chargeValue);
@@ -267,7 +267,7 @@ public class Player_Slash : MonoBehaviour
 
                     if (AttackHitCheck(chargeAttack.attackRange, chargeAttack.attackAngle, damage))
                     {
-                        Debug.Log("ChargeAttack Enemyに当たったよ");
+                        //Debug.Log("ChargeAttack Enemyに当たったよ");
                         StartCoroutine(HitStopCoroutine(chargeAttack.hitStop));
                     }
 
@@ -307,7 +307,7 @@ public class Player_Slash : MonoBehaviour
     //各コンボの攻撃判定
     void Combo(int list)
     {
-        Debug.Log("Combo" + (list+1));
+        //Debug.Log("Combo" + (list+1));
 
         rigidBody.velocity = Vector3.zero;
         Vector3 MoveVel = transform.forward * ComboAttackList[list].addSpeedPower;
@@ -325,7 +325,7 @@ public class Player_Slash : MonoBehaviour
 
         if (AttackHitCheck(ComboAttackList[list].attackRange, ComboAttackList[list].attackAngle, damage))
         {
-            Debug.Log("Combo" + list + " Enemyに当たったよ");
+            //Debug.Log("Combo" + list + " Enemyに当たったよ");
             StartCoroutine(HitStopCoroutine(ComboAttackList[list].hitStop));
         }
     }
@@ -381,13 +381,13 @@ public class Player_Slash : MonoBehaviour
     }
 
 
-    private IEnumerator HitStopCoroutine(float time)
+    private IEnumerator HitStopCoroutine(float flame)
     {
         Debug.Log("HitStop");
         // ヒットストップの開始
         Time.timeScale = 0f;
         // 指定した時間だけ停止
-        yield return new WaitForSecondsRealtime(time);
+        yield return new WaitForSecondsRealtime(flame * Time.fixedTime);
         // ヒットストップの終了
         Time.timeScale = 1f;
 

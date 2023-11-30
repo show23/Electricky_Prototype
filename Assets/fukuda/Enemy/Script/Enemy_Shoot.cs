@@ -7,18 +7,22 @@ public class Enemy_Shoot : MonoBehaviour
     public enum EnemyState
     {
         Patrol,
-        DetectPlayer,
-        ChasePlayer
+        ChasePlayer,
+        RapidShot,
+        ChargeShot
     }
-    public GameObject bulletPrefab; // 発射するPrefab
-    public float fireInterval = 2.0f; // 発射の間隔（秒）
-    public float bulletSpeed = 5.0f; // 弾の速度
+    public GameObject RapidbulletPrefab; // 発射するPrefab
+
+    public float RapidfireInterval = 2.0f; // 発射の間隔（秒）
+    public float RapidbulletSpeed = 5.0f; // 弾の速度
+    
     public float bulletPointOffset = 0.5f;
     private float lastFireTime = 0.0f;
+
+
     public Transform[] patrolPoints;
     public float moveSpeed = 2f;
     public float rushRadius = 5f;
-    //public float rushSpeed = 5f;
     public float chaseRadius = 10.0f;
     public float minDistanceToPlayer = 5.0f;
     private Transform player;
@@ -43,9 +47,6 @@ public class Enemy_Shoot : MonoBehaviour
                 PatrolUpdate();
                 break;
 
-            case EnemyState.DetectPlayer:
-                DetectPlayerUpdate();
-                break;
 
             case EnemyState.ChasePlayer:
                 ChasePlayerUpdate();
@@ -72,7 +73,8 @@ public class Enemy_Shoot : MonoBehaviour
                 transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
                 // DetectPlayer に遷移
-                StartCoroutine(TransitionToDetectPlayer());
+                targetPosition = player.position;
+                currentState = EnemyState.ChasePlayer;
                 return;
             }
         }
@@ -87,7 +89,7 @@ public class Enemy_Shoot : MonoBehaviour
             currentPatrolPoint = (currentPatrolPoint + 1) % patrolPoints.Length;
         }
     }
-    void DetectPlayerUpdate()
+    void ChasePlayerUpdate()
     {
         // プレイヤーの方向を向く
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
@@ -112,20 +114,17 @@ public class Enemy_Shoot : MonoBehaviour
         {
             currentState = EnemyState.Patrol;
         }
-        if (Time.time - lastFireTime > fireInterval)
+        if (Time.time - lastFireTime > RapidfireInterval)
         {
             FireProjectile(); 
             lastFireTime = Time.time; 
         }
     }
 
-    void ChasePlayerUpdate()
-    {
 
-    }
     void FireProjectile()
     {
-        GameObject projectile = Instantiate(bulletPrefab, transform.position, transform.rotation);
+        GameObject projectile = Instantiate(RapidbulletPrefab, transform.position, transform.rotation);
 
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb != null)
@@ -133,21 +132,13 @@ public class Enemy_Shoot : MonoBehaviour
             Vector3 directionToPlayer = (player.position - transform.position).normalized;
 
             // プレイヤーの方向に速度を与えつつ、少し上向きにも補正
-            rb.velocity = (directionToPlayer + Vector3.up * bulletPointOffset) * bulletSpeed;
+            rb.velocity = (directionToPlayer + Vector3.up * bulletPointOffset) * RapidbulletSpeed;
         }
 
         Destroy(projectile, 3.0f);
     }
 
 
-    IEnumerator TransitionToDetectPlayer()
-    {
-
-        yield return new WaitForSeconds(1.0f); // 1秒待つ
-
-        targetPosition = player.position;
-        currentState = EnemyState.DetectPlayer;
-    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.black;
