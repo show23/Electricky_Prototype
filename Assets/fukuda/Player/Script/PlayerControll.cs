@@ -154,7 +154,7 @@ public class PlayerControll : MonoBehaviour
         get { return _PlayerBasicStatus.HP; }
         set {
 
-            //ここに回避をぶち込む
+            //ここで回避
             if (_PlayerBasicStatus.HP > value && noDamage)
             {
                 //複数攻撃を受けたとしても エネルギーの回復は1度だけ

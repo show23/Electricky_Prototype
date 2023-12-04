@@ -1,15 +1,15 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
     public static Bullet instance;
-    private Transform target; // ƒr[ƒ€‚Ì’Ç”ö‘ÎÛ
-    public float beamSpeed = 100f; // ƒr[ƒ€‚Ì‘¬“x
-    public float curveStrength = 1f; // ƒJ[ƒu‚Ì‹­“x
+    private Transform target; // ãƒ“ãƒ¼ãƒ ã®è¿½å°¾å¯¾è±¡
+    public float beamSpeed = 100f; // ãƒ“ãƒ¼ãƒ ã®é€Ÿåº¦
+    public float curveStrength = 1f; // ã‚«ãƒ¼ãƒ–ã®å¼·åº¦
 
-    private float curveDirectionUp = 0; // ƒJ[ƒu•ûŒü‚ğ§Œä‚·‚é•Ï” (0: ã, 1: ¶, 2: ‰E, 3: ãŒü‚«ƒJ[ƒu)
+    private float curveDirectionUp = 0; // ã‚«ãƒ¼ãƒ–æ–¹å‘ã‚’åˆ¶å¾¡ã™ã‚‹å¤‰æ•° (0: ä¸Š, 1: å·¦, 2: å³, 3: ä¸Šå‘ãã‚«ãƒ¼ãƒ–)
     private float curveDirectionRight = 0;
     private float curveDirectionLeft = 0;
     //private void Awake()
@@ -23,7 +23,7 @@ public class Bullet : MonoBehaviour
     //        Destroy(gameObject);
     //    }
     //}
-    // “G‚Ì’ÇÕ‘ÎÛ‚ğİ’è
+    // æ•µã®è¿½è·¡å¯¾è±¡ã‚’è¨­å®š
     public void SetTarget(Transform newTarget)
     {
         target = newTarget;
@@ -31,7 +31,7 @@ public class Bullet : MonoBehaviour
 
     void Start()
     {
-        // ƒJ[ƒu•ûŒü‚ğƒ‰ƒ“ƒ_ƒ€‚É‘I‘ğ
+        // ã‚«ãƒ¼ãƒ–æ–¹å‘ã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«é¸æŠ
         curveDirectionUp = Random.Range(0.0f, 3.0f);
         curveDirectionRight = Random.Range(-3.0f, 3.0f);
         curveDirectionLeft = Random.Range(-3.0f, 3.0f);
@@ -40,13 +40,13 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        // ’Ç”ö‘ÎÛ‚ª‘¶İ‚·‚éê‡
+        // è¿½å°¾å¯¾è±¡ãŒå­˜åœ¨ã™ã‚‹å ´åˆ
         if (target != null)
         {
-            // ƒr[ƒ€‚Ì•ûŒü‚ğİ’èi’Ç”öj
+            // ãƒ“ãƒ¼ãƒ ã®æ–¹å‘ã‚’è¨­å®šï¼ˆè¿½å°¾ï¼‰
             Vector3 direction = (target.position - transform.position).normalized;
 
-            // ƒJ[ƒu‚ğ“K—p
+            // ã‚«ãƒ¼ãƒ–ã‚’é©ç”¨
             Vector3 curve = Vector3.zero;
             curve = new Vector3(curveDirectionLeft, curveDirectionUp, curveDirectionRight) * curveStrength;
            

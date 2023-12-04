@@ -10,7 +10,8 @@ public class Enemy_Blow : MonoBehaviour
         Patrol,
         Chase,
         Punch,
-        Bodyblow
+        Bodyblow,
+        Destroyed
     }
 
 
@@ -21,6 +22,54 @@ public class Enemy_Blow : MonoBehaviour
         Blow,
         End
     }
+
+    //ゲーム内で変更される系のステータス
+    [SerializeField, Tooltip("体力")]
+    private float HP = 100;
+    [SerializeField, Tooltip("最大体力")]
+    private float maxHP = 100;
+
+    [SerializeField]
+    private bool isDestroyed = false;
+    private bool oldDestroy = false;
+
+    [SerializeField]
+    private float DeleteTime = 6.0f;
+
+    public float CurrentHp
+    {
+        get { return HP; }
+        set
+        {
+            HP = value;
+            if (HP > maxHP)
+                HP = maxHP;
+            if (HP <= 0)
+            {
+                //エネミー死亡
+                HP = 0;
+                isDestroyed = true;
+            }
+        }
+    }
+
+    public float CurrentMaxHp
+    {
+        get { return maxHP; }
+        set
+        {
+            float oldmaxhp = maxHP;
+            maxHP = value;
+
+            //最大体力が増えた場合は増えた分体力も増える
+            if (oldmaxhp < value)
+            {
+                CurrentHp += value - oldmaxhp;
+            }
+        }
+    }
+
+
 
     [SerializeField]
     private Transform[] patrolPoints;
@@ -107,9 +156,14 @@ public class Enemy_Blow : MonoBehaviour
         _animator.SetFloat("WalkSpeed", 0.0f);
 
          player = FindObjectOfType<PlayerControll>().transform;
+
+        HP = maxHP;
     }
     void FixedUpdate()
     {
+        if (isDestroyed)
+            currentState = EnemyState.Destroyed;
+
         switch (currentState)
         {
             case EnemyState.Patrol:
@@ -127,17 +181,28 @@ public class Enemy_Blow : MonoBehaviour
             case EnemyState.Bodyblow:
                 BodyBlowUpdate();
                 break;
+            case EnemyState.Destroyed:
+                DestroyedUpdate();
+                break;
         }
 
 
-        //Debug.Log(currentState);
 
         Vector2 vector = new Vector2(oldPos.x - transform.position.x, oldPos.z - transform.position.z);
         _animator.SetFloat("WalkSpeed", MoveAnimationValue * vector.magnitude);
         oldPos = transform.position;
     }
 
-
+    void DestroyedUpdate()
+    {
+        if (!oldDestroy)
+        {
+            _animator.SetBool("isAlive", false);
+            _animator.SetInteger("DeathPattern", Random.Range(0, 2));
+            Destroy(this.gameObject, DeleteTime);
+        }
+        oldDestroy = true;
+    }
 
 
 

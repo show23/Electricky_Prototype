@@ -962,6 +962,7 @@ MonoBehaviour:
   ComboAttackList:
   - attackRange: 3
     attackAngle: 75
+    HitKnockBack: 0
     useEnergy: 10
     maxDamage: 90
     minDamage: 10
@@ -972,6 +973,7 @@ MonoBehaviour:
     hitStop: 1
   - attackRange: 3
     attackAngle: 75
+    HitKnockBack: 0
     useEnergy: 10
     maxDamage: 90
     minDamage: 10
@@ -982,6 +984,7 @@ MonoBehaviour:
     hitStop: 1
   - attackRange: 3
     attackAngle: 75
+    HitKnockBack: 0
     useEnergy: 10
     maxDamage: 90
     minDamage: 10
@@ -992,6 +995,7 @@ MonoBehaviour:
     hitStop: 1
   - attackRange: 3
     attackAngle: 75
+    HitKnockBack: 0
     useEnergy: 10
     maxDamage: 90
     minDamage: 10
@@ -1003,6 +1007,7 @@ MonoBehaviour:
   chargeAttack:
     attackRange: 5
     attackAngle: 80
+    HitKnockBack: 0
     MaxChargeTime: 180
     maxDamage: 200
     minDamage: 20
@@ -1014,7 +1019,8 @@ MonoBehaviour:
     currentRotationSpeed: 0
   midAirAttack:
     attackRange: 5
-    maxDamage: 120
+    HitKnockBack: 0
+    maxDamage: 90
     minDamage: 10
     useEnergy: 20
     DownPower: 5

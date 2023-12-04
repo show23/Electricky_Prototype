@@ -17746,7 +17746,7 @@ GameObject:
   - component: {fileID: 4217560949032472413}
   m_Layer: 0
   m_Name: Enemy_Shoot
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17782,6 +17782,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b775bc8ba287c3469d3fc548a4c6156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HP: 100
+  maxHP: 100
+  isDestroyed: 0
+  DeleteTime: 6
   RapidbulletPrefab: {fileID: 1988847445101023975, guid: e9c307df76711834c97f1256ba3164b9,
     type: 3}
   ChargebulletPrefab: {fileID: 1988847445101023975, guid: e9c307df76711834c97f1256ba3164b9,

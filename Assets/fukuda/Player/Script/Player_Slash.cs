@@ -10,6 +10,8 @@ public class Player_Slash : MonoBehaviour
         public float attackRange;
         public float attackAngle;
 
+        public float HitKnockBack;
+
         public float useEnergy;
         public float maxDamage;
         public float minDamage;
@@ -28,6 +30,8 @@ public class Player_Slash : MonoBehaviour
     {
         public float attackRange;
         public float attackAngle;
+
+        public float HitKnockBack;
 
         public float MaxChargeTime;
 
@@ -53,6 +57,7 @@ public class Player_Slash : MonoBehaviour
     public struct MidAirAttack
     {
         public float attackRange;
+        public float HitKnockBack;
 
         public float maxDamage;
         public float minDamage;
@@ -60,6 +65,7 @@ public class Player_Slash : MonoBehaviour
         public float useEnergy;
 
         public float DownPower;
+
 
         //public int cooldownTime;
         public int hitStop;
@@ -143,6 +149,7 @@ public class Player_Slash : MonoBehaviour
                 {
                     if (col.CompareTag(enemyTag))
                     {
+                        Vector3 direction = (col.transform.position - transform.position).normalized;
                         isHit = true;
 
                         //ここで敵の体力を減らす処理をする
@@ -150,12 +157,13 @@ public class Player_Slash : MonoBehaviour
 
                         if (col.GetComponent<Enemy_Blow>())
                         {
-
+                            col.GetComponent<Enemy_Blow>().CurrentHp -= damage;
                         }
-                        if (col.GetComponent<Enemy_Blow>())
+                        if (col.GetComponent<Enemy_Shoot>())
                         {
-
+                            col.GetComponent<Enemy_Shoot>().CurrentHp -= damage;
                         }
+                        col.GetComponent<Rigidbody>().AddForce(direction * midAirAttack.HitKnockBack, ForceMode.Impulse);
                     }
                 }
 
@@ -265,7 +273,7 @@ public class Player_Slash : MonoBehaviour
                     float damage = Mathf.Lerp(chargeAttack.minDamage, chargeAttack.maxDamage, chargeValue);
 
 
-                    if (AttackHitCheck(chargeAttack.attackRange, chargeAttack.attackAngle, damage))
+                    if (AttackHitCheck(chargeAttack.attackRange, chargeAttack.attackAngle, damage, chargeAttack.HitKnockBack))
                     {
                         //Debug.Log("ChargeAttack Enemyに当たったよ");
                         StartCoroutine(HitStopCoroutine(chargeAttack.hitStop));
@@ -323,14 +331,14 @@ public class Player_Slash : MonoBehaviour
         //外に出しておく
         float damage = Mathf.Lerp(ComboAttackList[list].minDamage, ComboAttackList[list].maxDamage, energyValue);
 
-        if (AttackHitCheck(ComboAttackList[list].attackRange, ComboAttackList[list].attackAngle, damage))
+        if (AttackHitCheck(ComboAttackList[list].attackRange, ComboAttackList[list].attackAngle, damage, ComboAttackList[list].HitKnockBack))
         {
             //Debug.Log("Combo" + list + " Enemyに当たったよ");
             StartCoroutine(HitStopCoroutine(ComboAttackList[list].hitStop));
         }
     }
 
-    bool AttackHitCheck(float range, float angle, float damage)
+    bool AttackHitCheck(float range, float angle, float damage, float KnockBack)
     {
         bool isHit = false;
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, range);
@@ -338,22 +346,25 @@ public class Player_Slash : MonoBehaviour
         {
             if (col.CompareTag(enemyTag))
             {
-                Vector3 direction = col.transform.position - transform.position;
+                Vector3 direction = (col.transform.position - transform.position).normalized;
                 float Tangle = Vector3.Angle(transform.forward, direction);
 
                 if (Tangle <= angle / 2)
                 {
                     isHit = true;
-                    //ここで敵の体力を減らす処理をする
-                    //ダメージ量はdamageから使ってください
+                    //敵の体力を減らす処理
+                    //チャージ攻撃の時だけ別の場所で処理しているが他は共通でこの関数内で処理している
+                    if (col.GetComponent<Enemy_Blow>())
+                    {
+                        col.GetComponent<Enemy_Blow>().CurrentHp -= damage;
+                    }
+                    if (col.GetComponent<Enemy_Shoot>())
+                    {
+                        col.GetComponent<Enemy_Shoot>().CurrentHp -= damage;
+                    }
 
 
-
-
-
-
-
-
+                    col.GetComponent<Rigidbody>().AddForce(direction * KnockBack, ForceMode.Impulse);
                 }
             }
         }
@@ -383,11 +394,11 @@ public class Player_Slash : MonoBehaviour
 
     private IEnumerator HitStopCoroutine(float flame)
     {
-        Debug.Log("HitStop");
+        Debug.Log("Player -> Enemy HitStop (" + flame * Time.deltaTime + " )");
         // ヒットストップの開始
         Time.timeScale = 0f;
         // 指定した時間だけ停止
-        yield return new WaitForSecondsRealtime(flame * Time.fixedTime);
+        yield return new WaitForSecondsRealtime(flame * Time.deltaTime);
         // ヒットストップの終了
         Time.timeScale = 1f;
 

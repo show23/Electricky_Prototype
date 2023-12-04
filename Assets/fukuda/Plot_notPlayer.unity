@@ -1857,6 +1857,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy_Shoot
       objectReference: {fileID: 0}
+    - target: {fileID: 5806026435373760755, guid: 7ecdc42c336764d4eb0ac96e6ac3ea45,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 9178611035043561884, guid: 7ecdc42c336764d4eb0ac96e6ac3ea45,
+        type: 3}
+      propertyPath: maxHP
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 9178611035043561884, guid: 7ecdc42c336764d4eb0ac96e6ac3ea45,
         type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
