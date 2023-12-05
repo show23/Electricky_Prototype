@@ -10992,8 +10992,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4089286136630449685}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.04, y: 0, z: 19.590322}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 30, y: 30, z: 30}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11014,8 +11014,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90aca82e343d37c49b587cea5c0118cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HP: 100
+  maxHP: 100
+  isDestroyed: 0
+  DeleteTime: 6
   patrolPoints:
-  - {fileID: 0}
   - {fileID: 0}
   moveSpeed: 4
   findRadius: 16

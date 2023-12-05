@@ -267,7 +267,7 @@ public class Enemy_Blow : MonoBehaviour
         if (Mathf.Abs(angleToPlayer) < bodyBlowBiginAngle &&
             bodyBlowTime < bodyBlowTimer)
         {
-            Debug.Log("Triggered BodyBlow (time = " + bodyBlowTimer + ")");
+            //Debug.Log("Triggered BodyBlow (time = " + bodyBlowTimer + ")");
             currentState = EnemyState.Bodyblow;
             bodyBlowTimer = 0;
         }
@@ -307,7 +307,12 @@ public class Enemy_Blow : MonoBehaviour
                     //Debug.Log("Bodyblow End (length" + bodyBlowLength + " )");
 
                     if (punchDistance > distanceToPlayer)
+                    {
+                        bodyBlow_Start = false;
                         currentState = EnemyState.Punch;
+                        bodyBlowState = BodyBlowState.Start;
+                        bodyBlowTimer = 0;
+                    }
                     else
                     {
                         _animator.SetTrigger("RushEnd");
@@ -325,7 +330,8 @@ public class Enemy_Blow : MonoBehaviour
             case BodyBlowState.End:
                 if (bodyBlow_End)
                 {
-                    Debug.Log("End BodyBlow");
+                    bodyBlow_Start = false;
+                    //Debug.Log("End BodyBlow");
                     bodyBlowState = BodyBlowState.Start;
                     currentState = EnemyState.Chase;
                     bodyBlowTimer = 0;
@@ -341,6 +347,7 @@ public class Enemy_Blow : MonoBehaviour
     public void RushStart()
     {
         bodyBlow_Start = true;
+        _animator.ResetTrigger("RushBegin");
     }
 
     public void RushHitStart()
@@ -354,14 +361,14 @@ public class Enemy_Blow : MonoBehaviour
     
     public void RushHitEnd()
     {
-        Debug.Log("Animator Trigger BodyBlow Hit");
+        //Debug.Log("Animator Trigger BodyBlow Hit");
         bodyBlow_hasHit = false;
         bodyBlowState = BodyBlowState.End;
     }
     
     public void RushEnd()
     {
-        Debug.Log("Animator Trigger BodyBlow");
+        //Debug.Log("Animator Trigger BodyBlow");
         bodyBlow_End = true;
     }
 
