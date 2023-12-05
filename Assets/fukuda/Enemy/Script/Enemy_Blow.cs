@@ -267,6 +267,7 @@ public class Enemy_Blow : MonoBehaviour
         if (Mathf.Abs(angleToPlayer) < bodyBlowBiginAngle &&
             bodyBlowTime < bodyBlowTimer)
         {
+            Debug.Log("Triggered BodyBlow (time = " + bodyBlowTimer + ")");
             currentState = EnemyState.Bodyblow;
             bodyBlowTimer = 0;
         }
@@ -274,7 +275,6 @@ public class Enemy_Blow : MonoBehaviour
 
     void BodyBlowUpdate()
     {
-
         if (!bodyBlow_Start)
         {
             bodyBlowState = BodyBlowState.Start;
@@ -299,17 +299,19 @@ public class Enemy_Blow : MonoBehaviour
 
                 transform.Translate(Vector3.forward * bodyBlowSpeed * Time.deltaTime);
 
-                if (bodyBlowLength < Vector3.Distance(transform.position, bodyBlowStartpos))
+                if (bodyBlowLength < Vector3.Distance(transform.position, bodyBlowStartpos) &&
+                    bodyBlow_hasHit)
                 {
                     bodyBlow_hasHit = false;
-                    bodyBlow_Start = false;
 
-                    Debug.Log("Bodyblow End (length" + bodyBlowLength + " )");
+                    //Debug.Log("Bodyblow End (length" + bodyBlowLength + " )");
 
                     if (punchDistance > distanceToPlayer)
                         currentState = EnemyState.Punch;
                     else
+                    {
                         _animator.SetTrigger("RushEnd");
+                    }
                 }
 
                 //当たり判定
@@ -323,6 +325,7 @@ public class Enemy_Blow : MonoBehaviour
             case BodyBlowState.End:
                 if (bodyBlow_End)
                 {
+                    Debug.Log("End BodyBlow");
                     bodyBlowState = BodyBlowState.Start;
                     currentState = EnemyState.Chase;
                     bodyBlowTimer = 0;
@@ -338,7 +341,6 @@ public class Enemy_Blow : MonoBehaviour
     public void RushStart()
     {
         bodyBlow_Start = true;
-        Debug.Log("Bodyblow Start (Timer is " + bodyBlowTimer + " )");
     }
 
     public void RushHitStart()
@@ -352,13 +354,15 @@ public class Enemy_Blow : MonoBehaviour
     
     public void RushHitEnd()
     {
+        Debug.Log("Animator Trigger BodyBlow Hit");
         bodyBlow_hasHit = false;
+        bodyBlowState = BodyBlowState.End;
     }
     
     public void RushEnd()
     {
+        Debug.Log("Animator Trigger BodyBlow");
         bodyBlow_End = true;
-        bodyBlowState = BodyBlowState.End;
     }
 
 
