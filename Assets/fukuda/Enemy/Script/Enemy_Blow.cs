@@ -275,13 +275,6 @@ public class Enemy_Blow : MonoBehaviour
 
     void BodyBlowUpdate()
     {
-        if (!bodyBlow_Start)
-        {
-            bodyBlowState = BodyBlowState.Start;
-            _animator.SetTrigger("RushBegin");
-            bodyBlow_isHit = false;
-            bodyBlow_End = false;
-        }
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
@@ -292,6 +285,12 @@ public class Enemy_Blow : MonoBehaviour
         switch (bodyBlowState)
         {
             case BodyBlowState.Start:
+                if (!bodyBlow_Start)
+                {
+                    _animator.SetTrigger("RushBegin");
+                    bodyBlow_isHit = false;
+                    bodyBlow_End = false;
+                }
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * moveSpeed);
                 transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
                 break;
@@ -303,8 +302,6 @@ public class Enemy_Blow : MonoBehaviour
                     bodyBlow_hasHit)
                 {
                     bodyBlow_hasHit = false;
-
-                    //Debug.Log("Bodyblow End (length" + bodyBlowLength + " )");
 
                     if (punchDistance > distanceToPlayer)
                     {
@@ -347,7 +344,6 @@ public class Enemy_Blow : MonoBehaviour
     public void RushStart()
     {
         bodyBlow_Start = true;
-        _animator.ResetTrigger("RushBegin");
     }
 
     public void RushHitStart()
