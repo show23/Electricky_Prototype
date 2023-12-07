@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Player_Bullet : MonoBehaviour
 {
-    public static Bullet instance;
+    public static Player_Bullet instance;
     private Transform target; // ビームの追尾対象
     public float beamSpeed = 100f; // ビームの速度
     public float curveStrength = 1f; // カーブの強度

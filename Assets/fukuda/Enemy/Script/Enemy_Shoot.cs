@@ -68,7 +68,13 @@ public class Enemy_Shoot : MonoBehaviour
     private GameObject ChargebulletPrefab; // 発射するPrefab
 
     public float RapidbulletSpeed = 5.0f; // 弾の速度
+    public float RapidbulletDamage = 5.0f;
+    public float RapidbulletKnockBack = 5.0f;
+
     public float ChargebulletSpeed = 5.0f; // 弾の速度
+    public float ChargebulletDamage = 40.0f;
+    public float ChargebulletKnockBack = 15.0f;
+
 
     [Tooltip("連射される最大の距離")]
     public float maxFireDistance = 5.0f;
@@ -108,6 +114,7 @@ public class Enemy_Shoot : MonoBehaviour
     public float findRadius = 5f;
     public float chaseRadius = 10.0f;
     private Transform player;
+    private Transform playerTarget;
     public float fieldOfViewAngle = 60.0f;
     private int currentPatrolPoint = 0;
 
@@ -120,6 +127,8 @@ public class Enemy_Shoot : MonoBehaviour
     private void Start()
     {
         player = FindObjectOfType<PlayerControll>().transform;
+        playerTarget = FindObjectOfType<PlayerTargetMarker>().transform;
+
         _animator = GetComponent<Animator>();
         oldPos = transform.position;
     }
@@ -295,11 +304,19 @@ public class Enemy_Shoot : MonoBehaviour
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            Vector3 directionToPlayer = (player.position - shootPos).normalized;
+            Vector3 directionToPlayer = (playerTarget.position - shootPos).normalized;
 
             // プレイヤーの方向に速度を与えつつ、少し上向きにも補正
             rb.velocity = directionToPlayer * RapidbulletSpeed;
         }
+
+        EnemyBullet bullet = projectile.GetComponent<EnemyBullet>();
+        if (bullet)
+        {
+            bullet.Damage = RapidbulletDamage;
+            bullet.KnockBackPower = RapidbulletKnockBack;
+        }
+
 
         UsePoint++;
 
@@ -329,8 +346,14 @@ public class Enemy_Shoot : MonoBehaviour
             if (rb != null)
             {
                 // プレイヤーの方向に速度を与える
-                Vector3 directionToPlayer = (player.position - CanonSpawnPosition[UsePoint].position).normalized;
+                Vector3 directionToPlayer = (playerTarget.position - CanonSpawnPosition[UsePoint].position).normalized;
                 rb.velocity = directionToPlayer * ChargebulletSpeed;
+            }
+            EnemyBullet bullet = projectile.GetComponent<EnemyBullet>();
+            if (bullet)
+            {
+                bullet.Damage = ChargebulletDamage;
+                bullet.KnockBackPower = ChargebulletKnockBack;
             }
         }
         canonFired = true;

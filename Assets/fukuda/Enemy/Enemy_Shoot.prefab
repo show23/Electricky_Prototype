@@ -17786,12 +17786,14 @@ MonoBehaviour:
   maxHP: 100
   isDestroyed: 0
   DeleteTime: 6
-  RapidbulletPrefab: {fileID: 1988847445101023975, guid: e9c307df76711834c97f1256ba3164b9,
+  RapidbulletPrefab: {fileID: 7005730344921321800, guid: 943a281570b89864e89206509aac64bc,
     type: 3}
-  ChargebulletPrefab: {fileID: 1988847445101023975, guid: e9c307df76711834c97f1256ba3164b9,
+  ChargebulletPrefab: {fileID: 7005730344921321800, guid: 4f280fe0f148b9e46936dd509fde1cd7,
     type: 3}
   RapidbulletSpeed: 5
+  RapidbulletDamage: 5
   ChargebulletSpeed: 7.5
+  ChargebulletDamage: 5
   maxFireDistance: 16.19
   FireWalkDistance: 11.16
   BulletAnimationValue: 35

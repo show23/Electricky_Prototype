@@ -275,7 +275,6 @@ public class Enemy_Blow : MonoBehaviour
 
     void BodyBlowUpdate()
     {
-
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
         float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
@@ -412,7 +411,7 @@ public class Enemy_Blow : MonoBehaviour
                 player.GetComponent<PlayerControll>().CurrentHp -= damage;
                 player.GetComponent<Rigidbody>().AddForce(direction * knockback, ForceMode.Impulse);
 
-                Debug.Log("Player Damaged (damage " + damage + " )");
+                Debug.Log("Player Damaged (damage " + damage + " by BlowEnemy )");
                 isHit = true;
                 break; //プレイヤーは1人しかいないのでbreak
             }

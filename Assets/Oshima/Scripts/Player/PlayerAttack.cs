@@ -105,7 +105,7 @@ public class PlayerAttack : MonoBehaviour
         if (distance <= playerManager.beamRange) // 距離が望ましい範囲内にあるか
         {
             GameObject beamInstance = Instantiate(beamPrefab, playerManager.firePoint.position, playerManager.firePoint.rotation);
-            Bullet beamScript = beamInstance.GetComponent<Bullet>();
+            Player_Bullet beamScript = beamInstance.GetComponent<Player_Bullet>();
             beamScript.SetTarget(target.transform);
             Destroy(beamInstance, 3f);
         }
@@ -152,7 +152,7 @@ public class PlayerAttack : MonoBehaviour
     {
         // 対象が射程外の場合、プレイヤーの向いている方向にまっすぐビームを発射
         GameObject beamInstance = Instantiate(beamPrefab, playerManager.firePoint.position, Quaternion.LookRotation(transform.forward));
-        Bullet beamScript = beamInstance.GetComponent<Bullet>();
+        Player_Bullet beamScript = beamInstance.GetComponent<Player_Bullet>();
         beamScript.SetTarget(null); // ターゲットはいらないので null を設定
         beamInstance.GetComponent<Rigidbody>().velocity = transform.forward * playerManager.beamSpeed; // ビームをプレイヤーの向いている方向に進める
         Destroy(beamInstance, 3f);
