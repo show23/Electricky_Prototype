@@ -73,9 +73,9 @@ public class Enemy_Blow : MonoBehaviour
 
     [SerializeField]
     private Transform[] patrolPoints;
-    [SerializeField] 
+    [SerializeField]
     private float moveSpeed = 2f;
-    
+
     [SerializeField]
     private float findRadius = 5f;
     [SerializeField]
@@ -89,6 +89,8 @@ public class Enemy_Blow : MonoBehaviour
     private float punchHitRadius = 1.0f;
     [SerializeField]
     private float punchDamage = 10.0f;
+    [SerializeField]
+    private float punchSpeed = 1.0f;
 
 
     private int bodyBlowTimer = 0;
@@ -107,7 +109,7 @@ public class Enemy_Blow : MonoBehaviour
     [SerializeField]
     private float bodyBlowDamage = 20.0f;
 
-    
+
     private float bodyBlowLength = 0.0f;
     private Vector3 bodyBlowStartpos;
 
@@ -136,7 +138,7 @@ public class Enemy_Blow : MonoBehaviour
     [SerializeField]
     private float fieldOfViewAngle = 60.0f;
     private int currentPatrolPoint = 0;
-   
+
     private Vector3 targetPosition;//Playrの過去の位置を保存
     [SerializeField] EnemyState currentState = EnemyState.Patrol;
     private Animator _animator;
@@ -148,14 +150,17 @@ public class Enemy_Blow : MonoBehaviour
 
 
 
+    private Rigidbody rigidbody;
+
     [System.Obsolete]
     private void Start()
     {
-        _animator = GetComponentInChildren<Animator>();
+        rigidbody = GetComponent<Rigidbody>();
+        _animator = GetComponent<Animator>();
         _animator.SetBool("isAlive", true);
         _animator.SetFloat("WalkSpeed", 0.0f);
 
-         player = FindObjectOfType<PlayerControll>().transform;
+        player = FindObjectOfType<PlayerControll>().transform;
 
         HP = maxHP;
     }
@@ -255,12 +260,12 @@ public class Enemy_Blow : MonoBehaviour
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
         // プレイヤーに向かって移動
-        transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+        rigidbody.velocity = (transform.forward * moveSpeed);
 
         if (distanceToPlayer > chaseRadius)
             currentState = EnemyState.Patrol;
 
-        if (distanceToPlayer < punchDistance && 
+        if (distanceToPlayer < punchDistance &&
             !punch_Using)
             currentState = EnemyState.Punch;
 
@@ -295,10 +300,26 @@ public class Enemy_Blow : MonoBehaviour
                 break;
             case BodyBlowState.Blow:
 
-                transform.Translate(Vector3.forward * bodyBlowSpeed * Time.deltaTime);
+                rigidbody.velocity = (transform.forward * bodyBlowSpeed);
 
-                if (bodyBlowLength < Vector3.Distance(transform.position, bodyBlowStartpos) &&
-                    bodyBlow_hasHit)
+
+                bool isWallDitect = false;
+                //前方にEnemyではないオブジェクトがある場合 突進の中止
+                float raycastDistance = 5.0f;
+                RaycastHit Hit;
+                if (Physics.Raycast(transform.position, transform.forward, out Hit, raycastDistance))
+                {
+                    if (Hit.collider.tag != "Ememy" && Hit.collider.tag != "Player" && Hit.collider.tag != "Bullet")
+                        isWallDitect = true;
+                }
+                Vector3 vec1 = transform.position;
+                Vector3 vec2 = player.position;
+
+                vec1.y = 0;
+                vec2.y = 0;
+
+                if ((bodyBlowLength < Vector3.Distance(vec1, vec2) && bodyBlow_hasHit) 
+                    || (isWallDitect && bodyBlow_hasHit))
                 {
                     bodyBlow_hasHit = false;
 
@@ -311,6 +332,7 @@ public class Enemy_Blow : MonoBehaviour
                     }
                     else
                     {
+                        Debug.Log("EnemyRushEnd");
                         _animator.SetTrigger("RushEnd");
                     }
                 }
@@ -320,7 +342,7 @@ public class Enemy_Blow : MonoBehaviour
                 if (!bodyBlow_isHit)
                 {
                     if (bodyBlow_hasHit)
-                      bodyBlow_isHit = AttackHitCheck(bodyBlowHitRadius, bodyBlowDamage, hitKnockback);
+                        bodyBlow_isHit = AttackHitCheck(bodyBlowHitRadius, bodyBlowDamage, hitKnockback);
                 }
                 break;
             case BodyBlowState.End:
@@ -328,15 +350,13 @@ public class Enemy_Blow : MonoBehaviour
                 {
                     bodyBlow_Start = false;
                     //Debug.Log("End BodyBlow");
-                    bodyBlowState = BodyBlowState.Start;
                     currentState = EnemyState.Chase;
+                    bodyBlowState = BodyBlowState.Start;
+                    _animator.ResetTrigger("RushBegin");
                     bodyBlowTimer = 0;
                 }
                 break;
-            default :
-                currentState = EnemyState.Chase;
-                break;
-         }
+        }
 
     }
 
@@ -347,20 +367,26 @@ public class Enemy_Blow : MonoBehaviour
 
     public void RushHitStart()
     {
-        bodyBlow_hasHit = true; 
+        bodyBlow_hasHit = true;
         bodyBlowStartpos = transform.position;
-        bodyBlowLength = Vector3.Distance(transform.position ,player.position) + 4.0f;
+        Vector3 vec1 = transform.position;
+        Vector3 vec2 = player.position;
+
+        vec1.y = 0;
+        vec2.y = 0;
+
+        bodyBlowLength = Vector3.Distance(vec1, vec2) + 2.0f;
         bodyBlowState = BodyBlowState.Blow;
     }
-    
-    
+
+
     public void RushHitEnd()
     {
         //Debug.Log("Animator Trigger BodyBlow Hit");
         bodyBlow_hasHit = false;
         bodyBlowState = BodyBlowState.End;
     }
-    
+
     public void RushEnd()
     {
         //Debug.Log("Animator Trigger BodyBlow");
@@ -375,6 +401,14 @@ public class Enemy_Blow : MonoBehaviour
         {
             _animator.SetTrigger("Punch");
         }
+
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(new Vector3(directionToPlayer.x, 0, directionToPlayer.z));
+
+        rigidbody.velocity = (transform.forward * punchSpeed);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * moveSpeed);
+        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
 
@@ -403,7 +437,7 @@ public class Enemy_Blow : MonoBehaviour
         {
             if (col.CompareTag(PlayerTag))
             {
-                Vector3 direction = Vector3.Normalize( Vector3.Scale(col.transform.position - transform.position, new Vector3(1,0,1)));
+                Vector3 direction = Vector3.Normalize(Vector3.Scale(col.transform.position - transform.position, new Vector3(1, 0, 1)));
 
                 //ここで敵の体力を減らす処理をする
                 //ダメージ量はdamageから使ってください

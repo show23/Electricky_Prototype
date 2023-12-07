@@ -121,11 +121,13 @@ public class Enemy_Shoot : MonoBehaviour
     private Vector3 targetPosition;//Playrの過去の位置を保存
     public EnemyState currentState = EnemyState.Patrol;
     // Start is called before the first frame update
+    private Rigidbody rigidbody;
 
     // Update is called once per frame
 
     private void Start()
     {
+        rigidbody = GetComponent<Rigidbody>();
         player = FindObjectOfType<PlayerControll>().transform;
         playerTarget = FindObjectOfType<PlayerTargetMarker>().transform;
 
@@ -157,8 +159,6 @@ public class Enemy_Shoot : MonoBehaviour
         }
 
 
-        if (currentState != EnemyState.ChargeShot)
-            ChargeTimer++;
 
         Vector2 vector = new Vector2(oldPos.x - transform.position.x, oldPos.z - transform.position.z);
         _animator.SetFloat("WalkSpeed", MoveAnimationValue * vector.magnitude);
@@ -229,7 +229,7 @@ public class Enemy_Shoot : MonoBehaviour
         if (distanceToPlayer > maxFireDistance) 
         {
             // プレイヤーに向かって移動
-            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+            rigidbody.velocity = (transform.forward * moveSpeed);
         }
         
         if (distanceToPlayer < maxFireDistance)
@@ -240,6 +240,8 @@ public class Enemy_Shoot : MonoBehaviour
     }
     void RapidShotUpdate()
     {
+        ChargeTimer++;
+
         // プレイヤーの方向を向く
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         Vector3 directionToPlayer = (player.position - transform.position).normalized;
@@ -250,7 +252,7 @@ public class Enemy_Shoot : MonoBehaviour
         if (distanceToPlayer > FireWalkDistance)
         {
             // プレイヤーに向かって移動
-            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+            rigidbody.velocity = (transform.forward * moveSpeed);
         }
 
         if (ChargeTime < ChargeTimer)
