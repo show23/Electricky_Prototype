@@ -820,7 +820,7 @@ Transform:
   m_GameObject: {fileID: 7856667044145252031}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -699.95, y: 0.52, z: -343.75}
+  m_LocalPosition: {x: -628.86, y: 0.52, z: -204.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -929,6 +929,7 @@ MonoBehaviour:
     MaxRunSpeed: 21
     RunAcc: 18
     MoveInputRotationSpeed: 0.2
+    MidAirRotationSpeed: 0
     JumpPower: 9
     JumpHorizonPower: 9
     SecondJumpMultiplyValue: 0.8
@@ -1020,6 +1021,7 @@ MonoBehaviour:
   ComboAttackList:
   - attackRange: 3
     attackAngle: 75
+    HitKnockBack: 0
     useEnergy: 10
     maxDamage: 90
     minDamage: 10
@@ -1030,6 +1032,7 @@ MonoBehaviour:
     hitStop: 1
   - attackRange: 3
     attackAngle: 75
+    HitKnockBack: 0
     useEnergy: 10
     maxDamage: 90
     minDamage: 10
@@ -1040,6 +1043,7 @@ MonoBehaviour:
     hitStop: 1
   - attackRange: 3
     attackAngle: 75
+    HitKnockBack: 0
     useEnergy: 10
     maxDamage: 90
     minDamage: 10
@@ -1050,6 +1054,7 @@ MonoBehaviour:
     hitStop: 1
   - attackRange: 3
     attackAngle: 75
+    HitKnockBack: 0
     useEnergy: 10
     maxDamage: 90
     minDamage: 10
@@ -1061,6 +1066,7 @@ MonoBehaviour:
   chargeAttack:
     attackRange: 5
     attackAngle: 80
+    HitKnockBack: 0
     MaxChargeTime: 180
     maxDamage: 200
     minDamage: 20
@@ -1072,6 +1078,7 @@ MonoBehaviour:
     currentRotationSpeed: 0
   midAirAttack:
     attackRange: 0
+    HitKnockBack: 0
     maxDamage: 0
     minDamage: 0
     useEnergy: 0
