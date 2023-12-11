@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 262.38358, g: 325.10843, b: 430.30963, a: 1}
+  m_IndirectSpecularColor: {r: 261.80057, g: 324.3278, b: 429.24698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -15178,17 +15178,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e1165635866634fa26f5d4b35b43d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCombo: 4
+  ComboAttackList: []
+  chargeAttack:
+    attackRange: 0
+    attackAngle: 0
+    HitKnockBack: 0
+    MaxChargeTime: 0
+    maxDamage: 0
+    minDamage: 0
+    EnergyChargeValue: 0
+    runAddSpeed: 0
+    maxrunSpeed: 0
+    hitStop: 0
+    RotationSpeedValue: 0
+    currentRotationSpeed: 0
+  midAirAttack:
+    attackRange: 0
+    HitKnockBack: 0
+    maxDamage: 0
+    minDamage: 0
+    useEnergy: 0
+    DownPower: 0
+    hitStop: 0
+    checkUnderLength: 0
+    damage: 0
+  comboCount: 0
+  comboTimer: 0
   enemyTag: Enemy
-  attackRange: 7.64
-  comboResetTime: 1
-  cooldownTime: 0.3
-  hitStop: 0.1
-  attackAngle: 180
-  slashPrefab: {fileID: 9063369585147226277, guid: e443ba65a4be8ef4198780dd0cc8144f,
-    type: 3}
-  slashPoint: {fileID: 121264700}
-  spawnRotation: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
+  isGround: 0
 --- !u!114 &1433521981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15391,34 +15408,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c9ec22346b00d646b370e230adda4d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerCamera: {fileID: 1772194924}
-  PlayerCameraOrigin: {fileID: 1973270917}
-  MaxWalkSpeed: 40
-  WalkAcc: 40
-  MaxRunSpeed: 60
-  RunAcc: 60
-  JumpPower: 6
-  JumpHorizonPower: 3
-  SecondJumpMultiplyValue: 1
-  SecondJumpHorizonPowerMultiplyValue: 1
-  MoveInputRotationSpeed: 0.2
-  wallStatus: 0
-  wallLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  WallDitectDistance: 0.4
-  wallRunSpeed: 32
-  wallJumpHorizonPower: 10
-  WJtoNextWallTime: 10
-  VelocityHoldRate: 0.985
-  AirVelocityHoldRate: 0.985
-  AirVelocityAccRate: 0.716
-  PlayerRotationSpeed: 0.07
+  _PlayerBasicStatus:
+    HP: 0
+    maxHP: 0
+    HPHealTime: 0
+    HPHealValue: 0
+    Energy: 0
+    maxEnergy: 0
+    EnergyAddValue: 0
+    healTimer: 0
+    oldHP: 0
+  _PlayerMoveStatus:
+    MaxWalkSpeed: 0
+    WalkAcc: 0
+    MaxRunSpeed: 0
+    RunAcc: 0
+    MoveInputRotationSpeed: 0
+    MidAirRotationSpeed: 0
+    JumpPower: 0
+    JumpHorizonPower: 0
+    SecondJumpMultiplyValue: 0
+    SecondJumpHorizonPowerMultiplyValue: 0
+    VelocityHoldRate: 0
+    AirVelocityHoldRate: 0
+    AirVelocityAccRate: 0
+    UseInputValue: 0
+  _WallRunStatus:
+    wallLayers:
+      serializedVersion: 2
+      m_Bits: 0
+    WallDitectDistance: 0
+    wallRunSpeed: 0
+    wallRunClimbSpeed: 0
+    wallJumpHorizonPower: 0
+    WJtoNextWallTime: 0
+    wallStatus: 0
+    WJtoNextWallTimer: 0
+    WallRunVec: {x: 0, y: 0, z: 0}
+    WallNormalVec: {x: 0, y: 0, z: 0}
+    WallDistance: 0
+    WallRunTimer: 0
+  _DodgeStatus:
+    DodgeCoolTime: 0
+    DodgeEndTime: 0
+    DodgeMutekiLength: 0
+    DodgeMutekiStart: 0
+    DodgeAddPower: 0
+    DodgeUseEnergy: 0
+    PerfectDodgeAddEnergy: 0
+    DodgeTimer: 0
+    isDodgePerfectHappened: 0
   playerSpeed: 0
   isGround: 1
   FirstJumped: 0
   SecondJumped: 0
   isWallRun: 0
+  isWallHit: 0
+  canWallUp: 0
+  canWallDown: 0
+  isDodge: 0
+  noDamage: 0
+  isAttack: 0
+  isChargeAttack: 0
 --- !u!4 &1433521991
 Transform:
   m_ObjectHideFlags: 0
@@ -16941,10 +16992,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e91661781cb27242a16c657c1e8679b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charaLookAtPosition: {fileID: 1433521991}
   cameraMoveSpeed: 2
   cameraRotateSpeed: 30
+  RotateSpeed: {x: 0.2, y: 0.1}
   basePos: {x: 0, y: 3, z: 4}
+  LookOffset: {x: 0, y: 1, z: 0}
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -18213,34 +18265,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c9ec22346b00d646b370e230adda4d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerCamera: {fileID: 1772194924}
-  PlayerCameraOrigin: {fileID: 1400624791}
-  MaxWalkSpeed: 60
-  WalkAcc: 60
-  MaxRunSpeed: 72
-  RunAcc: 36
-  JumpPower: 0
-  JumpHorizonPower: 0
-  SecondJumpMultiplyValue: 1
-  SecondJumpHorizonPowerMultiplyValue: 1
-  MoveInputRotationSpeed: 0
-  wallStatus: 0
-  wallLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  WallDitectDistance: 0.4
-  wallRunSpeed: 0
-  wallJumpHorizonPower: 0
-  WJtoNextWallTime: 0
-  VelocityHoldRate: 0.98
-  AirVelocityHoldRate: 0.975
-  AirVelocityAccRate: 0.716
-  PlayerRotationSpeed: 0.015
+  _PlayerBasicStatus:
+    HP: 0
+    maxHP: 0
+    HPHealTime: 0
+    HPHealValue: 0
+    Energy: 0
+    maxEnergy: 0
+    EnergyAddValue: 0
+    healTimer: 0
+    oldHP: 0
+  _PlayerMoveStatus:
+    MaxWalkSpeed: 0
+    WalkAcc: 0
+    MaxRunSpeed: 0
+    RunAcc: 0
+    MoveInputRotationSpeed: 0
+    MidAirRotationSpeed: 0
+    JumpPower: 0
+    JumpHorizonPower: 0
+    SecondJumpMultiplyValue: 0
+    SecondJumpHorizonPowerMultiplyValue: 0
+    VelocityHoldRate: 0
+    AirVelocityHoldRate: 0
+    AirVelocityAccRate: 0
+    UseInputValue: 0
+  _WallRunStatus:
+    wallLayers:
+      serializedVersion: 2
+      m_Bits: 0
+    WallDitectDistance: 0
+    wallRunSpeed: 0
+    wallRunClimbSpeed: 0
+    wallJumpHorizonPower: 0
+    WJtoNextWallTime: 0
+    wallStatus: 0
+    WJtoNextWallTimer: 0
+    WallRunVec: {x: 0, y: 0, z: 0}
+    WallNormalVec: {x: 0, y: 0, z: 0}
+    WallDistance: 0
+    WallRunTimer: 0
+  _DodgeStatus:
+    DodgeCoolTime: 0
+    DodgeEndTime: 0
+    DodgeMutekiLength: 0
+    DodgeMutekiStart: 0
+    DodgeAddPower: 0
+    DodgeUseEnergy: 0
+    PerfectDodgeAddEnergy: 0
+    DodgeTimer: 0
+    isDodgePerfectHappened: 0
   playerSpeed: 0
   isGround: 1
   FirstJumped: 0
   SecondJumped: 0
   isWallRun: 0
+  isWallHit: 0
+  canWallUp: 0
+  canWallDown: 0
+  isDodge: 0
+  noDamage: 0
+  isAttack: 0
+  isChargeAttack: 0
 --- !u!4 &1983621266
 Transform:
   m_ObjectHideFlags: 0
@@ -18272,16 +18358,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e1165635866634fa26f5d4b35b43d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCombo: 4
+  ComboAttackList: []
+  chargeAttack:
+    attackRange: 0
+    attackAngle: 0
+    HitKnockBack: 0
+    MaxChargeTime: 0
+    maxDamage: 0
+    minDamage: 0
+    EnergyChargeValue: 0
+    runAddSpeed: 0
+    maxrunSpeed: 0
+    hitStop: 0
+    RotationSpeedValue: 0
+    currentRotationSpeed: 0
+  midAirAttack:
+    attackRange: 0
+    HitKnockBack: 0
+    maxDamage: 0
+    minDamage: 0
+    useEnergy: 0
+    DownPower: 0
+    hitStop: 0
+    checkUnderLength: 0
+    damage: 0
+  comboCount: 0
+  comboTimer: 0
   enemyTag: Enemy
-  attackRange: 4
-  comboResetTime: 1
-  cooldownTime: 0.3
-  hitStop: 0.1
-  attackAngle: 90
-  slashPrefab: {fileID: 0}
-  slashPoint: {fileID: 0}
-  spawnRotation: {x: 0, y: 0.38268346, z: 0, w: 0.9238795}
+  isGround: 0
 --- !u!1 &1997858062
 GameObject:
   m_ObjectHideFlags: 0
