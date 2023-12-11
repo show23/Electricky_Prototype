@@ -11018,6 +11018,16 @@ MonoBehaviour:
   maxHP: 100
   isDestroyed: 0
   DeleteTime: 6
+  SE_VFX_Prefabs:
+    Find: {fileID: 0}
+    LoseSight: {fileID: 0}
+    FootStep: {fileID: 0}
+    Destroyed: {fileID: 0}
+    Damaged: {fileID: 0}
+    ObjectDelete: {fileID: 0}
+    Punch: {fileID: 0}
+    RushStart: {fileID: 0}
+    RushEffect: {fileID: 0}
   patrolPoints:
   - {fileID: 0}
   moveSpeed: 4

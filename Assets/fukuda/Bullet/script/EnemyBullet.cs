@@ -25,14 +25,23 @@ public class EnemyBullet : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
-        {            
+        {
+            float HP = other.GetComponent<PlayerControll>().CurrentHp;
             other.GetComponent<PlayerControll>().CurrentHp -= Damage;
-            Vector3 vector = Vector3.Scale(other.transform.position - transform.position, new Vector3(1,0,1)).normalized;
-            other.GetComponent<Rigidbody>().AddForce(KnockBackPower * vector, ForceMode.Impulse);
 
-            Debug.Log("Player Damaged (damage " + Damage + " by Bullet )");
+            //ヒットしてるかどうかリターンする という処理のことを忘れていたので
+            //こっち側だけで解決することとした
+            if (HP != other.GetComponent<PlayerControll>().CurrentHp)
+            {
+                Vector3 vector = Vector3.Scale(other.transform.position - transform.position, new Vector3(1, 0, 1)).normalized;
+                other.GetComponent<Rigidbody>().AddForce(KnockBackPower * vector, ForceMode.Impulse);
+
+                Debug.Log("Player Damaged (damage " + Damage + " by Bullet )");
+
+                Destroy(gameObject);
+            }
         }
-
+        else
         if (other.tag != "Bullet" && other.tag != "Enemy")
         {
             Destroy(gameObject);

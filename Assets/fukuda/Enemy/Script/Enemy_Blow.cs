@@ -33,15 +33,44 @@ public class Enemy_Blow : MonoBehaviour
     private bool isDestroyed = false;
     private bool oldDestroy = false;
 
+
     [SerializeField]
     private float DeleteTime = 6.0f;
+
+    [System.Serializable]
+    public struct SE_VFX_PrefabList
+    {
+        public GameObject Find;
+        public GameObject LoseSight;
+        public GameObject FootStep;
+        public GameObject Destroyed;
+        public GameObject Damaged;
+        public GameObject ObjectDelete;
+        [Space(10)]
+        public GameObject Punch;
+        public GameObject RushStart;
+
+        [HideInInspector]
+        public GameObject RushEffect;
+    }
+
+    [Tooltip("ここに 効果音とエフェクトがセットになった\nプレハブを入れてください"), CustomLabel("効果音 エフェクト類"), SerializeField]
+    private SE_VFX_PrefabList SE_VFX_Prefabs;
 
     public float CurrentHp
     {
         get { return HP; }
         set
         {
+            if(value < HP)
+            {
+                if (SE_VFX_Prefabs.Damaged)
+                    Instantiate(SE_VFX_Prefabs.Damaged, transform.position, transform.rotation);
+            }
+
             HP = value;
+
+
             if (HP > maxHP)
                 HP = maxHP;
             if (HP <= 0)
@@ -198,6 +227,13 @@ public class Enemy_Blow : MonoBehaviour
         oldPos = transform.position;
     }
 
+    private void OnDestroy()
+    {
+
+        if (SE_VFX_Prefabs.ObjectDelete)
+            Instantiate(SE_VFX_Prefabs.ObjectDelete, transform.position, transform.rotation);
+    }
+
     void DestroyedUpdate()
     {
         if (!oldDestroy)
@@ -205,6 +241,9 @@ public class Enemy_Blow : MonoBehaviour
             _animator.SetBool("isAlive", false);
             _animator.SetInteger("DeathPattern", Random.Range(0, 2));
             Destroy(this.gameObject, DeleteTime);
+
+            if (SE_VFX_Prefabs.Destroyed)
+                Instantiate(SE_VFX_Prefabs.Destroyed, transform.position, transform.rotation);
         }
         oldDestroy = true;
     }
@@ -231,6 +270,11 @@ public class Enemy_Blow : MonoBehaviour
 
                 targetPosition = player.position;
                 currentState = EnemyState.Chase;
+
+
+                if (SE_VFX_Prefabs.Find)
+                    Instantiate(SE_VFX_Prefabs.Find, transform.position, transform.rotation);
+
                 return;
             }
         }
@@ -263,7 +307,12 @@ public class Enemy_Blow : MonoBehaviour
         rigidbody.velocity = (transform.forward * moveSpeed);
 
         if (distanceToPlayer > chaseRadius)
+        {
             currentState = EnemyState.Patrol;
+
+            if (SE_VFX_Prefabs.LoseSight)
+                Instantiate(SE_VFX_Prefabs.LoseSight, transform.position, transform.rotation);
+        }
 
         if (distanceToPlayer < punchDistance &&
             !punch_Using)
@@ -272,7 +321,6 @@ public class Enemy_Blow : MonoBehaviour
         if (Mathf.Abs(angleToPlayer) < bodyBlowBiginAngle &&
             bodyBlowTime < bodyBlowTimer)
         {
-            //Debug.Log("Triggered BodyBlow (time = " + bodyBlowTimer + ")");
             currentState = EnemyState.Bodyblow;
             bodyBlowTimer = 0;
         }
@@ -301,7 +349,6 @@ public class Enemy_Blow : MonoBehaviour
             case BodyBlowState.Blow:
 
                 rigidbody.velocity = (transform.forward * bodyBlowSpeed);
-
 
                 bool isWallDitect = false;
                 //前方にEnemyではないオブジェクトがある場合 突進の中止
@@ -377,11 +424,18 @@ public class Enemy_Blow : MonoBehaviour
 
         bodyBlowLength = Vector3.Distance(vec1, vec2) + 2.0f;
         bodyBlowState = BodyBlowState.Blow;
+
+        if (SE_VFX_Prefabs.RushStart)
+           SE_VFX_Prefabs.RushEffect = Instantiate(SE_VFX_Prefabs.RushStart, transform.position, transform.rotation);
     }
 
 
     public void RushHitEnd()
     {
+
+        if (SE_VFX_Prefabs.RushEffect)
+            DestroyImmediate(SE_VFX_Prefabs.RushEffect);
+        SE_VFX_Prefabs.RushEffect = null;
         //Debug.Log("Animator Trigger BodyBlow Hit");
         bodyBlow_hasHit = false;
         bodyBlowState = BodyBlowState.End;
@@ -420,12 +474,24 @@ public class Enemy_Blow : MonoBehaviour
     {
         //当たり判定-------------
         AttackHitCheck(punchHitRadius, punchDamage, hitKnockback);
+
+
+        if (SE_VFX_Prefabs.Punch)
+            Instantiate(SE_VFX_Prefabs.Punch, transform.position, transform.rotation);
     }
 
     public void PunchEnd()
     {
         currentState = EnemyState.Chase;
         punch_Using = false;
+    }
+    
+
+    public void FootStep()
+    {
+
+        if (SE_VFX_Prefabs.FootStep)
+            Instantiate(SE_VFX_Prefabs.FootStep, transform.position, transform.rotation);
     }
 
 
@@ -442,11 +508,19 @@ public class Enemy_Blow : MonoBehaviour
                 //ここで敵の体力を減らす処理をする
                 //ダメージ量はdamageから使ってください
                 GameObject player = col.gameObject;
-                player.GetComponent<PlayerControll>().CurrentHp -= damage;
-                player.GetComponent<Rigidbody>().AddForce(direction * knockback, ForceMode.Impulse);
 
-                Debug.Log("Player Damaged (damage " + damage + " by BlowEnemy )");
-                isHit = true;
+                float HP = player.GetComponent<PlayerControll>().CurrentHp;
+
+                player.GetComponent<PlayerControll>().CurrentHp -= damage;
+
+
+                if (HP != player.GetComponent<PlayerControll>().CurrentHp)
+                {
+                    player.GetComponent<Rigidbody>().AddForce(direction * knockback, ForceMode.Impulse);
+
+                    Debug.Log("Player Damaged (damage " + damage + " by BlowEnemy )");
+                    isHit = true;
+                }
                 break; //プレイヤーは1人しかいないのでbreak
             }
         }
