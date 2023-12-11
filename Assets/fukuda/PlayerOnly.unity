@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 4607.4507, g: 2945.7659, b: 2170.2932, a: 1}
+  m_IndirectSpecularColor: {r: 4613.444, g: 2948.3733, b: 2170.9963, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -541,6 +541,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2190483976846019795, guid: b888d355362d43d449d9f8cad7accc31,
+        type: 3}
+      propertyPath: _JustDodgeSettings.slowFrame
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 2190483976846019795, guid: b888d355362d43d449d9f8cad7accc31,
+        type: 3}
+      propertyPath: _JustDodgeSettings.slowSpeed
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 2190483976846019795, guid: b888d355362d43d449d9f8cad7accc31,
+        type: 3}
+      propertyPath: _JustDodgeSettings.slowSpeedMultiply
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 7224510167333619255, guid: b888d355362d43d449d9f8cad7accc31,
         type: 3}
       propertyPath: m_Name

@@ -149,20 +149,65 @@ public class PlayerControll : MonoBehaviour
     [SerializeField]
     private PlayerBasicStatus _PlayerBasicStatus;
 
+
+
+    [System.Serializable]
+    public struct SE_VFX_PrefabList
+    {
+        public GameObject FootStep;
+        public GameObject Jump;
+        public GameObject Killed;
+        public GameObject Damaged;
+        public GameObject Dodged;
+    }
+    
+    [System.Serializable]
+    public struct JustDodgeSlow
+    {
+        public float slowSpeedMultiply;
+
+        [Tooltip("スロー中 この数値の加算も遅くなるので注意")]
+        public int slowFrame;
+
+        [HideInInspector]
+        public int slowTimer;
+        [HideInInspector]
+        public float cullentSpeed;
+        [HideInInspector]
+        public float slowSpeed;
+        [HideInInspector]
+        public bool isDodgeSlow;
+    }
+
+
+    [Tooltip("ここに 効果音とエフェクトがセットになった\nプレハブを入れてください"), CustomLabel("効果音 エフェクト類"), SerializeField]
+    private SE_VFX_PrefabList SE_VFX_Prefabs;
+
     public float CurrentHp
     {
         get { return _PlayerBasicStatus.HP; }
         set {
 
             //ここで回避
-            if (_PlayerBasicStatus.HP > value && noDamage)
+            if (_PlayerBasicStatus.HP > value)
             {
-                //複数攻撃を受けたとしても エネルギーの回復は1度だけ
-                if (!_DodgeStatus.isDodgePerfectHappened)
-                    CurrentEnergy += _DodgeStatus.PerfectDodgeAddEnergy;
-
-                _DodgeStatus.isDodgePerfectHappened = true;
-                return;
+                if (noDamage)
+                {
+                    //複数攻撃を受けたとしても エネルギーの回復は1度だけ
+                    if (!_DodgeStatus.isDodgePerfectHappened)
+                    {
+                        if (SE_VFX_Prefabs.Dodged)
+                            Instantiate(SE_VFX_Prefabs.Dodged, transform.position, transform.rotation);
+                        CurrentEnergy += _DodgeStatus.PerfectDodgeAddEnergy;
+                    }
+                    _DodgeStatus.isDodgePerfectHappened = true;
+                    return;
+                }
+                else
+                {
+                    if (SE_VFX_Prefabs.Damaged)
+                        Instantiate(SE_VFX_Prefabs.Damaged, transform.position, transform.rotation);
+                }
             }
 
             _PlayerBasicStatus.HP = value;
@@ -172,6 +217,8 @@ public class PlayerControll : MonoBehaviour
             {
                 //ここでゲームオーバー呼んでもいい
 
+                if (SE_VFX_Prefabs.Killed)
+                    Instantiate(SE_VFX_Prefabs.Killed, transform.position, transform.rotation);
                 _PlayerBasicStatus.HP = 0;
             }
         }
@@ -227,6 +274,8 @@ public class PlayerControll : MonoBehaviour
 
     [SerializeField]
     private DodgeStatus _DodgeStatus;
+    [SerializeField]
+    private JustDodgeSlow _JustDodgeSettings;
 
     [Space(10)]
 
@@ -289,6 +338,9 @@ public class PlayerControll : MonoBehaviour
     private bool OldDodgeInput;
 
 
+    public bool booldebug = false;
+
+
     void Start()
     {
         _WallRunStatus.wallStatus = wallSide.NoWallDitect;
@@ -316,6 +368,9 @@ public class PlayerControll : MonoBehaviour
         run = playerInput.actions["Run"];
         jumpInputTrigger = false;
         dodgeInputTrigger = false;
+
+        _JustDodgeSettings.cullentSpeed = Time.timeScale;
+        _JustDodgeSettings.slowSpeed = Time.timeScale * _JustDodgeSettings.slowSpeedMultiply;
 
         // マウスカーソルを非表示にし、位置を固定
         Cursor.visible = false;
@@ -406,7 +461,8 @@ public class PlayerControll : MonoBehaviour
 
 
 
-            if (isWallRun) {
+            if (isWallRun)
+            {
                 RunInput = true;
             }
 
@@ -482,7 +538,7 @@ public class PlayerControll : MonoBehaviour
 
                 if (_WallRunStatus.wallStatus == wallSide.Left)
                     inputX *= -1;
-                
+
                 if (!canWallUp && inputX > 0)
                     inputX = 0;
 
@@ -583,8 +639,9 @@ public class PlayerControll : MonoBehaviour
                     Quaternion.LookRotation(
                         Vector3.Slerp(transform.forward, moveForward, _PlayerMoveStatus.MoveInputRotationSpeed),
                         Vector3.up);
-            }else
-            { 
+            }
+            else
+            {
                 transform.rotation =
                     Quaternion.LookRotation(
                         Vector3.Slerp(transform.forward, moveForward, _PlayerMoveStatus.MidAirRotationSpeed),
@@ -604,7 +661,7 @@ public class PlayerControll : MonoBehaviour
                 transform.forward * _DodgeStatus.DodgeAddPower;
         }
 
-        if (isDodge)
+        if (isDodge || booldebug)
         {
             if (_DodgeStatus.DodgeMutekiStart == _DodgeStatus.DodgeTimer)
                 noDamage = true;
@@ -614,6 +671,54 @@ public class PlayerControll : MonoBehaviour
 
             if (_DodgeStatus.DodgeEndTime == _DodgeStatus.DodgeTimer)
                 isDodge = false;
+
+
+            //---------------------------------------------------------------------------------
+            //スローモーション
+            //---------------------------------------------------------------------------------
+
+            if ((_DodgeStatus.isDodgePerfectHappened && !_JustDodgeSettings.isDodgeSlow) || booldebug)
+            {
+                _JustDodgeSettings.isDodgeSlow = true;
+                _JustDodgeSettings.slowTimer = 0;
+                booldebug = false;
+            }
+        }
+
+
+        if (_JustDodgeSettings.isDodgeSlow)
+        {
+            float value = 0;
+
+            float timeval = _JustDodgeSettings.slowTimer / _JustDodgeSettings.slowFrame;
+            if (timeval <= 0.5f)
+            {
+                value = Mathf.Lerp(
+                    _JustDodgeSettings.slowSpeed,
+                    _JustDodgeSettings.cullentSpeed,
+                    Mathf.Clamp(timeval * 2, 0, 1)
+                    );
+            }
+            else
+            {
+                value = Mathf.Lerp(
+                    _JustDodgeSettings.slowSpeed,
+                    _JustDodgeSettings.cullentSpeed,
+                    Mathf.Clamp((timeval - 0.5f) * 2, 1, 0)
+                    );
+            }
+
+            Time.timeScale = value;
+
+            Debug.Log("time = " + value + ": timer = " + _JustDodgeSettings.slowTimer);
+
+            if (_JustDodgeSettings.slowTimer > _JustDodgeSettings.slowFrame)
+            {
+                Time.timeScale = _JustDodgeSettings.cullentSpeed;
+                _JustDodgeSettings.isDodgeSlow = false;
+            }
+            else
+                _JustDodgeSettings.slowTimer++;
         }
 
 
@@ -645,6 +750,9 @@ public class PlayerControll : MonoBehaviour
                         * _PlayerMoveStatus.JumpHorizonPower
                         * _PlayerMoveStatus.SecondJumpHorizonPowerMultiplyValue,
                         ForceMode.VelocityChange);
+
+                    if (SE_VFX_Prefabs.Jump)
+                        Instantiate(SE_VFX_Prefabs.Jump, transform.position, transform.rotation);
                 }
 
                 if (jumpInputTrigger && !FirstJumped)
@@ -657,6 +765,8 @@ public class PlayerControll : MonoBehaviour
                         Vector3.up * _PlayerMoveStatus.JumpPower
                         + moveForward.normalized * InputValue * _PlayerMoveStatus.JumpHorizonPower,
                         ForceMode.VelocityChange);
+                    if (SE_VFX_Prefabs.Jump)
+                        Instantiate(SE_VFX_Prefabs.Jump, transform.position, transform.rotation);
                 }
             }
             else
@@ -674,6 +784,8 @@ public class PlayerControll : MonoBehaviour
                         Vector3.up * _PlayerMoveStatus.JumpPower
                         + moveForward.normalized * InputValue * _WallRunStatus.wallJumpHorizonPower,
                         ForceMode.VelocityChange);
+                    if (SE_VFX_Prefabs.Jump)
+                        Instantiate(SE_VFX_Prefabs.Jump, transform.position, transform.rotation);
                 }
             }
         }
@@ -718,6 +830,7 @@ public class PlayerControll : MonoBehaviour
         Attack(AttackInput);
 
 
+
         //-------------------------------------------------------------------------------
         //#アニメーションをアニメーターに登録
         //-------------------------------------------------------------------------------
@@ -735,6 +848,7 @@ public class PlayerControll : MonoBehaviour
         gaugeController.UpdateGauge(_PlayerBasicStatus.Energy, _PlayerBasicStatus.maxEnergy);
 
     }
+
     private void Attack(bool val)
     {
         playerAttack.inputAttackTrigger(val);
@@ -886,5 +1000,12 @@ public class PlayerControll : MonoBehaviour
     {
         isAttack = value;
         isChargeAttack = charge;
+    }
+
+
+    public void FootStep()
+    {
+        if (SE_VFX_Prefabs.FootStep)
+            Instantiate(SE_VFX_Prefabs.FootStep, transform.position, transform.rotation);
     }
 }

@@ -27,11 +27,34 @@ public class Enemy_Shoot : MonoBehaviour
     [SerializeField]
     private float DeleteTime = 6.0f;
 
+    [System.Serializable]
+    public struct SE_VFX_PrefabList
+    {
+        public GameObject Find;
+        public GameObject LoseSight;
+        public GameObject FootStep;
+        public GameObject Destroyed;
+        public GameObject Damaged;
+        public GameObject ObjectDelete;
+        [Space(10)]
+        public GameObject RapidShot;
+        public GameObject ChargeShoot;
+    }
+
+    [Tooltip("ここに 効果音とエフェクトがセットになった\nプレハブを入れてください"), CustomLabel("効果音 エフェクト類"), SerializeField]
+    private SE_VFX_PrefabList SE_VFX_Prefabs;
+
     public float CurrentHp
     {
         get { return HP; }
         set
         {
+            if (value < HP)
+            {
+                if (SE_VFX_Prefabs.Damaged)
+                    Instantiate(SE_VFX_Prefabs.Damaged, transform.position, transform.rotation);
+            }
+
             HP = value;
             if (HP > maxHP)
                 HP = maxHP;
@@ -104,6 +127,7 @@ public class Enemy_Shoot : MonoBehaviour
     private List<Transform> CanonSpawnPosition;
 
 
+
     private int UsePoint = 0;
 
     private Animator _animator;
@@ -120,10 +144,12 @@ public class Enemy_Shoot : MonoBehaviour
 
     private Vector3 targetPosition;//Playrの過去の位置を保存
     public EnemyState currentState = EnemyState.Patrol;
-    // Start is called before the first frame update
     private Rigidbody rigidbody;
 
-    // Update is called once per frame
+
+
+
+
 
     private void Start()
     {
@@ -165,6 +191,11 @@ public class Enemy_Shoot : MonoBehaviour
         _animator.SetFloat("Walk_withBullet_Speed", BulletAnimationValue * vector.magnitude);
         oldPos = transform.position;
     }
+    private void OnDestroy()
+    {
+        if (SE_VFX_Prefabs.ObjectDelete)
+            Instantiate(SE_VFX_Prefabs.ObjectDelete, transform.position, transform.rotation);
+    }
 
     void DestroyedUpdate()
     {
@@ -173,6 +204,9 @@ public class Enemy_Shoot : MonoBehaviour
             _animator.SetBool("isAlive",false);
             _animator.SetInteger("DeathPattern", Random.Range(0, 2));
             Destroy(this.gameObject, DeleteTime);
+
+            if (SE_VFX_Prefabs.Destroyed)
+                Instantiate(SE_VFX_Prefabs.Destroyed, transform.position, transform.rotation);
         }
         oldDestroy = true;
     }
@@ -197,6 +231,11 @@ public class Enemy_Shoot : MonoBehaviour
 
                 targetPosition = player.position;
                 currentState = EnemyState.ChasePlayer;
+
+
+                if (SE_VFX_Prefabs.Find)
+                    Instantiate(SE_VFX_Prefabs.Find, transform.position, transform.rotation);
+
                 return;
             }
         }
@@ -224,6 +263,9 @@ public class Enemy_Shoot : MonoBehaviour
         if (distanceToPlayer > chaseRadius)
         {
             currentState = EnemyState.Patrol;
+
+            if (SE_VFX_Prefabs.LoseSight)
+                Instantiate(SE_VFX_Prefabs.LoseSight, transform.position, transform.rotation);
         }
 
         if (distanceToPlayer > maxFireDistance) 
@@ -302,15 +344,18 @@ public class Enemy_Shoot : MonoBehaviour
 
 
         GameObject projectile = Instantiate(RapidbulletPrefab, shootPos, transform.rotation);
-
+        
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            Vector3 directionToPlayer = (playerTarget.position - shootPos).normalized;
+        
+        Vector3 directionToPlayer = (playerTarget.position - shootPos).normalized;
 
-            // プレイヤーの方向に速度を与えつつ、少し上向きにも補正
-            rb.velocity = directionToPlayer * RapidbulletSpeed;
-        }
+        // プレイヤーの方向に速度を与えつつ、少し上向きにも補正
+        rb.velocity = directionToPlayer * RapidbulletSpeed;
+
+
+        if (SE_VFX_Prefabs.RapidShot)
+            Instantiate(SE_VFX_Prefabs.RapidShot, shootPos, transform.rotation);
+
 
         EnemyBullet bullet = projectile.GetComponent<EnemyBullet>();
         if (bullet)
@@ -345,24 +390,33 @@ public class Enemy_Shoot : MonoBehaviour
             GameObject projectile = Instantiate(RapidbulletPrefab, CanonSpawnPosition[i].position, transform.rotation);
 
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                // プレイヤーの方向に速度を与える
-                Vector3 directionToPlayer = (playerTarget.position - CanonSpawnPosition[UsePoint].position).normalized;
-                rb.velocity = directionToPlayer * ChargebulletSpeed;
-            }
+
+            // プレイヤーの方向に速度を与える
+            Vector3 directionToPlayer = (playerTarget.position - CanonSpawnPosition[UsePoint].position).normalized;
+            rb.velocity = directionToPlayer * ChargebulletSpeed;
+
             EnemyBullet bullet = projectile.GetComponent<EnemyBullet>();
-            if (bullet)
-            {
-                bullet.Damage = ChargebulletDamage;
-                bullet.KnockBackPower = ChargebulletKnockBack;
-            }
+            
+            bullet.Damage = ChargebulletDamage;
+            bullet.KnockBackPower = ChargebulletKnockBack;
+
+
+            if (SE_VFX_Prefabs.ChargeShoot)
+                Instantiate(SE_VFX_Prefabs.ChargeShoot, CanonSpawnPosition[i].position, transform.rotation);
         }
         canonFired = true;
     }
     public void EndCanon()
     {
         canonEnd = true;
+    }
+
+
+    public void FootStep()
+    {
+
+        if (SE_VFX_Prefabs.FootStep)
+            Instantiate(SE_VFX_Prefabs.FootStep, transform.position, transform.rotation);
     }
 
     private void OnDrawGizmos()
