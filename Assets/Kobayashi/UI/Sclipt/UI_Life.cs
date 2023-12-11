@@ -24,9 +24,13 @@ public class UI_Life : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //float energy_now = _playerControl.CurrentEnergy;
-        //float energy_max = _playerControl.CurrentMaxEnergy;
+        float Life_now = _playerControl.CurrentHp;
+        float Life_max = _playerControl.CurrentMaxHp;
 
-        //_fadeImage.Range = 1.0f - (energy_now / energy_max);
+        _slider.value = Life_now / Life_max;
+
+        _text.text = Life_now.ToString("f0") + " / " + Life_max.ToString("f0");
+
+        //_fadeImage.Range = 1.0f - (Life_now / Life_max);
     }
 }
