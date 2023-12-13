@@ -24,7 +24,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: street 5
-  m_Shader: {fileID: -6465566751694194690, guid: 8c6d0c7957c0ab848aec8817c4b6de97,
+  m_Shader: {fileID: -6465566751694194690, guid: d20bb9d70ae5c1d45820af3ec13884ec,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -145,7 +145,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Puddles:
-        m_Texture: {fileID: 2800000, guid: db20fb2f0a0a1ee4881b1a63bb757149, type: 3}
+        m_Texture: {fileID: 2800000, guid: f30ca45556ee8204787984d064337f8c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Ripple:
@@ -344,7 +344,7 @@ Material:
     - _MainTiling: {r: 1, g: 1, b: 0, a: 0}
     - _RippleSpeed: {r: 1.03, g: 0, b: 0, a: 0}
     - _RippleTiling: {r: 200, g: 200, b: 0, a: 0}
-    - _SmoothTiling: {r: 0.45, g: 0.18, b: 0, a: 0}
+    - _SmoothTiling: {r: 0.005, g: 0.005, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _TransmittanceColor: {r: 1, g: 1, b: 1, a: 1}
