@@ -308,6 +308,7 @@ MonoBehaviour:
     oldHP: 0
   SE_VFX_Prefabs:
     FootStep: {fileID: 0}
+    Jump: {fileID: 0}
     Killed: {fileID: 0}
     Damaged: {fileID: 0}
     Dodged: {fileID: 0}
@@ -351,6 +352,13 @@ MonoBehaviour:
     PerfectDodgeAddEnergy: 20
     DodgeTimer: 0
     isDodgePerfectHappened: 0
+  _JustDodgeSettings:
+    slowSpeedMultiply: 0
+    slowFrame: 0
+    slowTimer: 0
+    cullentSpeed: 0
+    slowSpeed: 0
+    isDodgeSlow: 0
   playerSpeed: 10
   isGround: 1
   FirstJumped: 0
@@ -363,6 +371,7 @@ MonoBehaviour:
   noDamage: 0
   isAttack: 0
   isChargeAttack: 0
+  booldebug: 0
 --- !u!95 &1283570873820363389
 Animator:
   serializedVersion: 7
