@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 5261.6177, g: 5814.0083, b: 7024.048, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -820,7 +820,7 @@ Transform:
   m_GameObject: {fileID: 7856667044145252031}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -698.1, y: 0, z: -368.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -923,6 +923,12 @@ MonoBehaviour:
     EnergyAddValue: 0.01
     healTimer: 0
     oldHP: 0
+  SE_VFX_Prefabs:
+    FootStep: {fileID: 0}
+    Jump: {fileID: 0}
+    Killed: {fileID: 0}
+    Damaged: {fileID: 0}
+    Dodged: {fileID: 0}
   _PlayerMoveStatus:
     MaxWalkSpeed: 16
     WalkAcc: 14
@@ -963,6 +969,13 @@ MonoBehaviour:
     PerfectDodgeAddEnergy: 20
     DodgeTimer: 0
     isDodgePerfectHappened: 0
+  _JustDodgeSettings:
+    slowSpeedMultiply: 0
+    slowFrame: 0
+    slowTimer: 0
+    cullentSpeed: 0
+    slowSpeed: 0
+    isDodgeSlow: 0
   playerSpeed: 10
   isGround: 1
   FirstJumped: 0
@@ -975,6 +988,7 @@ MonoBehaviour:
   noDamage: 0
   isAttack: 0
   isChargeAttack: 0
+  booldebug: 0
 --- !u!114 &7856667044145252036
 MonoBehaviour:
   m_ObjectHideFlags: 0
