@@ -57,7 +57,7 @@ Material:
     - _CullModeForward: 0
     - _DepthOffsetEnable: 0
     - _DotNoizeScale: 30
-    - _DotsSize: 1
+    - _DotsSize: 1.5
     - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
@@ -91,7 +91,7 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
-    - _DotsColor: {r: 1.0592737, g: 0.38453683, b: 0, a: 1}
+    - _DotsColor: {r: 2.2706032, g: 0.8242728, b: 0, a: 1}
     - _DotsTiling: {r: 8, g: 8, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
