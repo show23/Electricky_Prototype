@@ -23,6 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEditor;
+using UnityEngine.Rendering;
 
 public class FadeImage : UnityEngine.UI.Graphic , IFade
 {
@@ -32,8 +34,7 @@ public class FadeImage : UnityEngine.UI.Graphic , IFade
 	[SerializeField, Range (0, 1)]
 	private float cutoutRange;
 
-	public Color _color;
-
+    [SerializeField] private Color _color;
 
     public float Range {
 		get {
@@ -44,6 +45,24 @@ public class FadeImage : UnityEngine.UI.Graphic , IFade
 			UpdateMaskCutout (cutoutRange);
 		}
 	}
+
+	public Color MainColor
+	{
+		get { 
+			return _color; 
+		}
+		set
+		{
+			_color = value;
+            material.SetColor("_Color", _color);
+        }
+	}
+
+	public void SetMaskTexture(string path)
+	{
+        maskTexture = AssetDatabase.LoadAssetAtPath(path, typeof(Texture)) as Texture;
+        material.SetTexture("_MaskTex", maskTexture);
+    }
 
 	protected override void Start ()
 	{

@@ -47,9 +47,17 @@ public class Fade : MonoBehaviour
 		fade.Range = cutoutRange;
 	}
 
-	IEnumerator FadeoutCoroutine (float time, System.Action action)
+    void ImageFill()
+    {
+        cutoutRange = 1f;
+        fade.Range = cutoutRange;
+    }
+
+    IEnumerator FadeoutCoroutine (float time, System.Action action)
 	{
-		float endTime = Time.timeSinceLevelLoad + time * (cutoutRange);
+		ImageFill();
+
+        float endTime = Time.timeSinceLevelLoad + time * (cutoutRange);
 
 		var endFrame = new WaitForEndOfFrame ();
 
@@ -106,4 +114,5 @@ public class Fade : MonoBehaviour
 	{
 		return FadeIn (time, null);
 	}
+
 }
