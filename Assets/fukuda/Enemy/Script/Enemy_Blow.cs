@@ -365,22 +365,25 @@ public class Enemy_Blow : MonoBehaviour
                 vec1.y = 0;
                 vec2.y = 0;
 
-                if ((bodyBlowLength < Vector3.Distance(vec1, vec2) && bodyBlow_hasHit) 
-                    || (isWallDitect && bodyBlow_hasHit))
+                if (bodyBlow_hasHit)
                 {
-                    bodyBlow_hasHit = false;
+                    if (bodyBlowLength < Vector3.Distance(vec1, vec2)
+                        || isWallDitect || bodyBlow_isHit)
+                    {
+                        bodyBlow_hasHit = false;
 
-                    if (punchDistance > distanceToPlayer)
-                    {
-                        bodyBlow_Start = false;
-                        currentState = EnemyState.Punch;
-                        bodyBlowState = BodyBlowState.Start;
-                        bodyBlowTimer = 0;
-                    }
-                    else
-                    {
-                        Debug.Log("EnemyRushEnd");
-                        _animator.SetTrigger("RushEnd");
+                        if (punchDistance > distanceToPlayer)
+                        {
+                            bodyBlow_Start = false;
+                            currentState = EnemyState.Punch;
+                            bodyBlowState = BodyBlowState.Start;
+                            bodyBlowTimer = 0;
+                        }
+                        else
+                        {
+                            Debug.Log("EnemyRushEnd");
+                            _animator.SetTrigger("RushEnd");
+                        }
                     }
                 }
 
