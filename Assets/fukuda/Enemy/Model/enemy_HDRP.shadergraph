@@ -243,7 +243,7 @@
     ],
     "m_CustomEditorGUI": "",
     "m_SupportVFX": false,
-    "m_SupportComputeForVertexSetup": false
+    "m_SupportLineRendering": false
 }
 
 {
@@ -761,6 +761,7 @@
     "m_ObjectId": "60fb013b1b804a3f938d404f286d7eb6",
     "m_RayTracing": false,
     "m_MaterialType": 0,
+    "m_MaterialTypeMask": 2,
     "m_RefractionModel": 0,
     "m_SSSTransmission": true,
     "m_EnergyConservingSpecular": true,
@@ -1419,10 +1420,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -622.0,
-            "y": 500.0000305175781,
+            "x": -1030.4000244140625,
+            "y": 507.1999816894531,
             "width": 208.0,
-            "height": 434.9999694824219
+            "height": 431.9999694824219
         }
     },
     "m_Slots": [
@@ -1759,8 +1760,8 @@
     },
     "m_Color": {
         "color": {
-            "r": 425365.65625,
-            "g": 4122.3759765625,
+            "r": 383.4981689453125,
+            "g": 3.7166225910186769,
             "b": 0.0,
             "a": 0.0
         },
@@ -1832,7 +1833,7 @@
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.Rendering.HighDefinition.ShaderGraph.SystemData",
     "m_ObjectId": "ec05c4dfeb0544ef9f795b5a80916256",
-    "m_MaterialNeedsUpdateHash": 529,
+    "m_MaterialNeedsUpdateHash": 531,
     "m_SurfaceType": 0,
     "m_RenderingPass": 1,
     "m_BlendMode": 0,
@@ -1842,7 +1843,6 @@
     "m_OpaqueCullMode": 2,
     "m_SortPriority": 0,
     "m_AlphaTest": false,
-    "m_ExcludeFromTUAndAA": false,
     "m_TransparentDepthPrepass": false,
     "m_TransparentDepthPostpass": false,
     "m_SupportLodCrossFade": false,
@@ -1857,7 +1857,8 @@
     "m_TessellationShapeFactor": 0.75,
     "m_TessellationBackFaceCullEpsilon": -0.25,
     "m_TessellationMaxDisplacement": 0.009999999776482582,
-    "m_Version": 1,
+    "m_DebugSymbols": false,
+    "m_Version": 2,
     "inspectorFoldoutMask": 0
 }
 
