@@ -15,7 +15,7 @@ Material:
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -23,11 +23,32 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _HeightMap:
+        m_Texture: {fileID: 2800000, guid: c9499f106ec5c8a4484872440fe9d6e4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _WidthMap:
+        m_Texture: {fileID: 2800000, guid: 68afd271828c47e4e86f478d45b6f9db, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _WindDistortionMap:
+        m_Texture: {fileID: 2800000, guid: 4ce1d22bfe5ad2c4e914d65f9b9383a0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
-    m_Colors: []
+    m_Floats:
+    - _Height: 5.1
+    - _Width: 0.5
+    - _WindFrequency: 0.1
+    - _WindPower: 0
+    m_Colors:
+    - _BottomColor: {r: 0, g: 0.4528302, b: 0.014607412, a: 1}
+    - _HeightRate: {r: 0.28, g: 0.12, b: 0.09, a: 0.28}
+    - _TopColor: {r: 0, g: 1, b: 0.029061556, a: 1}
+    - _WidthRate: {r: 1148.88, g: 0.6, b: 0.45, a: 0}
+    - _WindPowerRate: {r: 4.34, g: 4.25, b: 3.62, a: 1.55}
   m_BuildTextureStacks: []
