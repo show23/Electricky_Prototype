@@ -7,8 +7,17 @@ public class Timer_decimal_TMP : MonoBehaviour
 {
 	[SerializeField]
 	private int minute;
+	public int Minute 
+	{
+		get { return minute; }
+	}
+
 	[SerializeField]
 	private float seconds;
+	private float Seconds
+	{
+		get { return seconds; }
+	}	
 	private float timedecimal;
 	//　前のUpdateの時の秒数
 	private float oldSeconds;
@@ -21,7 +30,7 @@ public class Timer_decimal_TMP : MonoBehaviour
 		minute = 0;
 		seconds = 0f;
 		oldSeconds = 0f;
-		timerText = GetComponentInChildren<TextMeshProUGUI>();
+        timerText = GetComponentInChildren<TextMeshProUGUI>();
 	}
 
 	void Update()
