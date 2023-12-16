@@ -64,8 +64,11 @@ public class Enemy_Blow : MonoBehaviour
         {
             if(value < HP)
             {
+                Vector3 pos = transform.position;
+                pos.y += 1.3f;
+
                 if (SE_VFX_Prefabs.Damaged)
-                    Instantiate(SE_VFX_Prefabs.Damaged, transform.position, transform.rotation);
+                    Instantiate(SE_VFX_Prefabs.Damaged, pos, transform.rotation);
             }
 
             HP = value;
