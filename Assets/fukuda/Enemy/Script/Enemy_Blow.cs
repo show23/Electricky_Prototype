@@ -271,7 +271,6 @@ public class Enemy_Blow : MonoBehaviour
                 targetPosition = player.position;
                 currentState = EnemyState.Chase;
 
-
                 if (SE_VFX_Prefabs.Find)
                     Instantiate(SE_VFX_Prefabs.Find, transform.position, transform.rotation);
 
