@@ -213,6 +213,7 @@ public class PlayerControll : MonoBehaviour
             _PlayerBasicStatus.HP = value;
             if (_PlayerBasicStatus.HP > _PlayerBasicStatus.maxHP)
                 _PlayerBasicStatus.HP = _PlayerBasicStatus.maxHP;
+
             if (_PlayerBasicStatus.HP < 0)
             {
                 //ここでゲームオーバー呼んでもいい
@@ -220,12 +221,11 @@ public class PlayerControll : MonoBehaviour
                 if (SE_VFX_Prefabs.Killed)
                     Instantiate(SE_VFX_Prefabs.Killed, transform.position, transform.rotation);
 
+                Debug.Log("PlayerDead");
 
-                s_Animator.SetBool("isAlive", false);
+                s_Animator.SetBool("Dead", true);
                 _PlayerBasicStatus.HP = 0;
             }
-            else
-                s_Animator.SetBool("isAlive", true);
         }
     }
 
@@ -374,7 +374,6 @@ public class PlayerControll : MonoBehaviour
         jumpInputTrigger = false;
         dodgeInputTrigger = false;
 
-        s_Animator.SetBool("isAlive", true);
 
         _JustDodgeSettings.cullentSpeed = Time.timeScale;
         _JustDodgeSettings.slowSpeed = Time.timeScale * _JustDodgeSettings.slowSpeedMultiply;
@@ -858,7 +857,7 @@ public class PlayerControll : MonoBehaviour
 
         if (RunInput)
         {
-            inputValue += 1;
+            inputValue *= 2;
         }
 
         s_Animator.SetFloat("SpeedValue", inputValue);

@@ -195,6 +195,13 @@ public class Player_Slash : MonoBehaviour
         if (!oldinputAttack && inputAttack)
             inputAttackTrigger = true;
 
+        for (int i = 0; i < 2; i++)
+        {
+            s_Animator.SetBool("Attack" + i, false);
+        }
+
+
+
         if (isGround)
         {
             //----------------------------------------------------------------
@@ -207,8 +214,7 @@ public class Player_Slash : MonoBehaviour
                     isAttack = true;
                     Combo(comboCount);
                     
-
-                    s_Animator.SetTrigger("isAttack");
+                    s_Animator.SetBool("Attack" + comboCount, true);
                     s_Animator.SetFloat("ComboCount", comboCount);
 
                     comboCount++;
