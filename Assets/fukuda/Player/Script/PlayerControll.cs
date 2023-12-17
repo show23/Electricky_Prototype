@@ -219,6 +219,9 @@ public class PlayerControll : MonoBehaviour
 
                 if (SE_VFX_Prefabs.Killed)
                     Instantiate(SE_VFX_Prefabs.Killed, transform.position, transform.rotation);
+
+
+                s_Animator.SetBool("isAlive", false);
                 _PlayerBasicStatus.HP = 0;
             }
         }
@@ -369,6 +372,8 @@ public class PlayerControll : MonoBehaviour
         jumpInputTrigger = false;
         dodgeInputTrigger = false;
 
+        s_Animator.SetBool("isAlive", true);
+
         _JustDodgeSettings.cullentSpeed = Time.timeScale;
         _JustDodgeSettings.slowSpeed = Time.timeScale * _JustDodgeSettings.slowSpeedMultiply;
 
@@ -421,6 +426,8 @@ public class PlayerControll : MonoBehaviour
                 FirstJumped = true;
                 isGround = false;
             }
+
+            s_Animator.SetBool("isGround",isGround);
         }
         //-------------------------------------------------------------------------------
         //プレイヤーの入力値の検知
@@ -753,6 +760,8 @@ public class PlayerControll : MonoBehaviour
 
                     if (SE_VFX_Prefabs.Jump)
                         Instantiate(SE_VFX_Prefabs.Jump, transform.position, transform.rotation);
+
+                    s_Animator.SetTrigger("Jump");
                 }
 
                 if (jumpInputTrigger && !FirstJumped)
@@ -765,8 +774,11 @@ public class PlayerControll : MonoBehaviour
                         Vector3.up * _PlayerMoveStatus.JumpPower
                         + moveForward.normalized * InputValue * _PlayerMoveStatus.JumpHorizonPower,
                         ForceMode.VelocityChange);
+
                     if (SE_VFX_Prefabs.Jump)
                         Instantiate(SE_VFX_Prefabs.Jump, transform.position, transform.rotation);
+                    
+                    s_Animator.SetTrigger("Jump");
                 }
             }
             else
@@ -784,8 +796,11 @@ public class PlayerControll : MonoBehaviour
                         Vector3.up * _PlayerMoveStatus.JumpPower
                         + moveForward.normalized * InputValue * _WallRunStatus.wallJumpHorizonPower,
                         ForceMode.VelocityChange);
+
                     if (SE_VFX_Prefabs.Jump)
                         Instantiate(SE_VFX_Prefabs.Jump, transform.position, transform.rotation);
+                    
+                    s_Animator.SetTrigger("Jump");
                 }
             }
         }
@@ -835,8 +850,21 @@ public class PlayerControll : MonoBehaviour
         //#アニメーションをアニメーターに登録
         //-------------------------------------------------------------------------------
 
+        float inputValue = MoveInput.magnitude;
 
+        if (RunInput)
+        {
+            inputValue += 1;
+        }
 
+        s_Animator.SetFloat("SpeedValue", inputValue);
+        s_Animator.SetBool("WallRun", isWallRun);
+
+        bool isRight = false;
+        if (_WallRunStatus.wallStatus == wallSide.Right)
+            isRight = true;
+        
+        s_Animator.SetBool("isRight", isRight);
 
 
         //--------------------------------------------------------------------------------
