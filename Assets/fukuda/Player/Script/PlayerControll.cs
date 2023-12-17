@@ -224,6 +224,8 @@ public class PlayerControll : MonoBehaviour
                 s_Animator.SetBool("isAlive", false);
                 _PlayerBasicStatus.HP = 0;
             }
+            else
+                s_Animator.SetBool("isAlive", true);
         }
     }
 

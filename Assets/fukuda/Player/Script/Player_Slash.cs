@@ -108,6 +108,8 @@ public class Player_Slash : MonoBehaviour
     private PlayerControll playerControll;
     private Rigidbody rigidBody;
 
+    private Animator s_Animator;
+
     [SerializeField]
     private bool isGround = false;
 
@@ -117,6 +119,7 @@ public class Player_Slash : MonoBehaviour
         chargeTimer = 0;
         comboTimer = 0;
         comboCount = 0;
+        s_Animator = GetComponent<Animator>();
         playerControll = GetComponent<PlayerControll>();
         rigidBody = GetComponent<Rigidbody>();
     }
@@ -203,6 +206,11 @@ public class Player_Slash : MonoBehaviour
                 {
                     isAttack = true;
                     Combo(comboCount);
+                    
+
+                    s_Animator.SetTrigger("isAttack");
+                    s_Animator.SetFloat("ComboCount", comboCount);
+
                     comboCount++;
                     comboTimer = 0;
 
