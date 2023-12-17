@@ -73,6 +73,20 @@ public class Player_Slash_2 : MonoBehaviour
         public float damage;
     }
 
+    [System.Serializable]
+    public struct SE_VFX_PrefabList
+    {
+        public GameObject Attack1;
+        public GameObject Attack2;
+        public GameObject Attack3;
+
+        public GameObject MidAirAttack;
+
+        //public GameObject ChargeAttack;
+    }
+
+    [Tooltip("ここに 効果音とエフェクトがセットになった\nプレハブを入れてください"), CustomLabel("効果音 エフェクト類"), SerializeField]
+    private SE_VFX_PrefabList SE_VFX_Prefabs;
 
     [SerializeField]
     private List<AttackList> ComboAttackList;
@@ -295,6 +309,22 @@ public class Player_Slash_2 : MonoBehaviour
                 }
             }
         }
+
+        switch (listNum)
+        {
+            case 0:
+                Instantiate(SE_VFX_Prefabs.Attack1, transform.position, transform.rotation);
+                break;
+            case 1:
+                Instantiate(SE_VFX_Prefabs.Attack2, transform.position, transform.rotation);
+                break;
+            case 2:
+                Instantiate(SE_VFX_Prefabs.Attack3, transform.position, transform.rotation);
+                break;
+        }
+
+
+
         if ( isHit)
             StartCoroutine(HitStopCoroutine(ComboAttackList[listNum].hitStop));
     }
