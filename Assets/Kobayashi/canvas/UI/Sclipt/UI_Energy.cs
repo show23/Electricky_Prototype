@@ -16,9 +16,9 @@ public class UI_Energy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _playerControl = GameObject.Find("Player").GetComponent<PlayerControll>();
+        _playerControl = FindObjectOfType<PlayerControll>().GetComponent<PlayerControll>();
 
-        
+
     }
 
     // Update is called once per frame

@@ -945,18 +945,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1258015618 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 11486218, guid: 53c22e1773be7f84aad8ed8b7b58fa6e,
-    type: 3}
-  m_PrefabInstance: {fileID: 892247284}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 448623d86f85950479f00cc5367d0ca9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1355711889
 GameObject:
   m_ObjectHideFlags: 0
@@ -1437,11 +1425,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1431557813651807252, guid: 48060da7f3e19aa43b7a634553d8b218,
-        type: 3}
-      propertyPath: _fadeImage
-      value: 
-      objectReference: {fileID: 1258015618}
     - target: {fileID: 1754975615390398969, guid: 48060da7f3e19aa43b7a634553d8b218,
         type: 3}
       propertyPath: m_AnchorMax.x
