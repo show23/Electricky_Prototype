@@ -427,6 +427,8 @@ public class PlayerControll : MonoBehaviour
                 isGround = false;
             }
 
+
+
             s_Animator.SetBool("isGround",isGround);
         }
         //-------------------------------------------------------------------------------
