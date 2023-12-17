@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(Player_Slash))]
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerControll : MonoBehaviour
 {
@@ -305,6 +304,7 @@ public class PlayerControll : MonoBehaviour
     private GameObject PlayerCameraOrigin;
 
     private Player_Slash playerAttack;
+    private Player_Slash_2 playerAttack2;
     private GaugeController gaugeController;
 
 
@@ -361,6 +361,7 @@ public class PlayerControll : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         s_Collider = GetComponent<CapsuleCollider>();
         playerAttack = GetComponent<Player_Slash>();
+        playerAttack2 = GetComponent<Player_Slash_2>();
 
         _PlayerBasicStatus.HP = _PlayerBasicStatus.maxHP;
         _PlayerBasicStatus.Energy = _PlayerBasicStatus.maxEnergy;
@@ -882,7 +883,10 @@ public class PlayerControll : MonoBehaviour
 
     private void Attack(bool val)
     {
-        playerAttack.inputAttackTrigger(val);
+        if (playerAttack)
+            playerAttack.inputAttackTrigger(val);
+        if (playerAttack2)
+            playerAttack2.inputAttackTrigger(val);
     }
 
 
