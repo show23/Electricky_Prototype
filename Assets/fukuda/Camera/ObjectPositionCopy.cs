@@ -34,7 +34,7 @@ public class ObjectPositionCopy : MonoBehaviour
 
     private void Start()
     {
-        tracePosition = FindObjectOfType<PlayerControll>().transform;
+        tracePosition = FindObjectOfType<PlayerInput>().transform;
         playerInput = FindObjectOfType<PlayerInput>();
         cameraXY = playerInput.actions["CameraXY"];
         cameraReset = playerInput.actions["CameraReset"];

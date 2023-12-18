@@ -115,6 +115,7 @@ public class Player_Slash_2 : MonoBehaviour
     private bool oldinputAttack = false;
 
     private PlayerControll playerControll;
+    private PlayerControll_2 playerControll_2;
     private Rigidbody rigidBody;
 
     private Animator s_Animator;
@@ -131,6 +132,7 @@ public class Player_Slash_2 : MonoBehaviour
         comboCount = 0;
         s_Animator = GetComponent<Animator>();
         playerControll = GetComponent<PlayerControll>();
+        playerControll_2 = GetComponent<PlayerControll_2>();
         rigidBody = GetComponent<Rigidbody>();
     }
 
@@ -192,11 +194,17 @@ public class Player_Slash_2 : MonoBehaviour
         if (isAttack)
         {
             //第一引数 攻撃をしているかどうか 第二引数 チャージ攻撃か(移動制御をこちらに渡す)
-            playerControll.AttackStatus(true, isChargeAttack);
+            if (playerControll)
+                playerControll.AttackStatus(true, isChargeAttack); 
+            if (playerControll_2)
+                playerControll_2.AttackStatus(true, isChargeAttack);
         }
         else
         {
-            playerControll.AttackStatus(false, false);
+            if (playerControll)
+                playerControll.AttackStatus(false, false);
+            if (playerControll_2)
+                playerControll_2.AttackStatus(false, false);
         }
 
         bool inputAttackTrigger = false;
@@ -243,9 +251,21 @@ public class Player_Slash_2 : MonoBehaviour
 
 
                 //エネルギー関連の更新
-                float energyValue = playerControll.CurrentEnergy / midAirAttack.useEnergy;
-                energyValue = Mathf.Clamp(energyValue, 0, 1);
-                playerControll.CurrentEnergy -= midAirAttack.useEnergy;
+                float energyValue = 0;
+                if (playerControll)
+                {
+                    energyValue = playerControll.CurrentEnergy / midAirAttack.useEnergy;
+                    energyValue = Mathf.Clamp(energyValue, 0, 1);
+                    playerControll.CurrentEnergy -= midAirAttack.useEnergy;
+                }
+                if (playerControll_2)
+                {
+                    energyValue = playerControll_2.CurrentEnergy / midAirAttack.useEnergy;
+                    energyValue = Mathf.Clamp(energyValue, 0, 1);
+                    playerControll_2.CurrentEnergy -= midAirAttack.useEnergy;
+                }
+
+
 
                 midAirAttack.damage = Mathf.Lerp(midAirAttack.minDamage, midAirAttack.maxDamage, energyValue);
             }
@@ -268,9 +288,19 @@ public class Player_Slash_2 : MonoBehaviour
     void AttackFrame(int listNum)
     {
         //エネルギー関連の更新
-        float energyValue = playerControll.CurrentEnergy / ComboAttackList[listNum].useEnergy;
-        energyValue = Mathf.Clamp(energyValue, 0, 1);
-        playerControll.CurrentEnergy -= ComboAttackList[listNum].useEnergy;
+        float energyValue = 0;
+        if (playerControll)
+        {
+            energyValue = playerControll.CurrentEnergy / midAirAttack.useEnergy;
+            energyValue = Mathf.Clamp(energyValue, 0, 1);
+            playerControll.CurrentEnergy -= midAirAttack.useEnergy;
+        }
+        if (playerControll_2)
+        {
+            energyValue = playerControll_2.CurrentEnergy / midAirAttack.useEnergy;
+            energyValue = Mathf.Clamp(energyValue, 0, 1);
+            playerControll_2.CurrentEnergy -= midAirAttack.useEnergy;
+        }
 
         float range = ComboAttackList[listNum].attackRange;
         float angle = ComboAttackList[listNum].attackAngle;
@@ -313,13 +343,16 @@ public class Player_Slash_2 : MonoBehaviour
         switch (listNum)
         {
             case 0:
-                Instantiate(SE_VFX_Prefabs.Attack1, transform.position, transform.rotation);
+                if (SE_VFX_Prefabs.Attack1)
+                    Instantiate(SE_VFX_Prefabs.Attack1, transform.position, transform.rotation);
                 break;
             case 1:
-                Instantiate(SE_VFX_Prefabs.Attack2, transform.position, transform.rotation);
+                if (SE_VFX_Prefabs.Attack2)
+                    Instantiate(SE_VFX_Prefabs.Attack2, transform.position, transform.rotation);
                 break;
             case 2:
-                Instantiate(SE_VFX_Prefabs.Attack3, transform.position, transform.rotation);
+                if (SE_VFX_Prefabs.Attack3)
+                    Instantiate(SE_VFX_Prefabs.Attack3, transform.position, transform.rotation);
                 break;
         }
 
