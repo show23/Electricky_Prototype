@@ -41,14 +41,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Height: 5.1
-    - _Width: 0.5
-    - _WindFrequency: 0.1
-    - _WindPower: 0
+    - _Height: 1.5
+    - _Width: 0.6
+    - _WindFrequency: 0.062
+    - _WindPower: 0.4
     m_Colors:
     - _BottomColor: {r: 0, g: 0.4528302, b: 0.014607412, a: 1}
-    - _HeightRate: {r: 0.28, g: 0.12, b: 0.09, a: 0.28}
-    - _TopColor: {r: 0, g: 1, b: 0.029061556, a: 1}
-    - _WidthRate: {r: 1148.88, g: 0.6, b: 0.45, a: 0}
+    - _HeightRate: {r: 16.25, g: 6.25, b: 2.78, a: 0.28}
+    - _TopColor: {r: 0, g: 1, b: 0.02745098, a: 1}
+    - _WidthRate: {r: 4.35, g: 2.28, b: 0.45, a: 0}
     - _WindPowerRate: {r: 4.34, g: 4.25, b: 3.62, a: 1.55}
   m_BuildTextureStacks: []
