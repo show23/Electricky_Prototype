@@ -26,7 +26,9 @@ public class Timer_decimal_TMP : MonoBehaviour
 	[SerializeField]
 	private TextMeshProUGUI timerText;
 
-	private bool isStop;
+    private int enemyBreak;
+
+    private bool isStop;
     private IEnumerator s;
 	private SaveSystem saveSystem;
 
@@ -37,7 +39,9 @@ public class Timer_decimal_TMP : MonoBehaviour
 		oldSeconds = 0f;
         timerText = GetComponentInChildren<TextMeshProUGUI>();
 
-		isStop = false;
+		enemyBreak = 0;
+
+        isStop = false;
 
         saveSystem = GetComponentInChildren<SaveSystem>();
 		s = EndTimer();
@@ -69,7 +73,7 @@ public class Timer_decimal_TMP : MonoBehaviour
 			yield break;
 		}
 
-        saveSystem.Save(minute, seconds);
+        saveSystem.Save(minute, seconds, enemyBreak);
         yield return null;
 
     }
@@ -78,4 +82,9 @@ public class Timer_decimal_TMP : MonoBehaviour
 	{
 		StartCoroutine(s);
 	}
+
+	public void AddBreakEnemyCount(int count)
+	{
+        enemyBreak += count;
+    }
 }
