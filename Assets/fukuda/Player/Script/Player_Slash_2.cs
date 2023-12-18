@@ -85,7 +85,7 @@ public class Player_Slash_2 : MonoBehaviour
         //public GameObject ChargeAttack;
     }
 
-    [Tooltip("ここに 効果音とエフェクトがセットになった\nプレハブを入れてください"), CustomLabel("効果音 エフェクト類"), SerializeField]
+    [Tooltip("ここに 効果音とエフェクトがセットになった\nプレハブを入れてください"), SerializeField]
     private SE_VFX_PrefabList SE_VFX_Prefabs;
 
     [SerializeField]

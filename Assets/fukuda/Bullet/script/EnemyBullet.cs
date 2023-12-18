@@ -7,7 +7,7 @@ public class EnemyBullet : MonoBehaviour
     public float Damage = 0.0f;
     public float KnockBackPower = 0.0f;
 
-    [Tooltip("エフェクト等をここに置くと良き"),CustomLabel("オブジェクト破壊時に出現するオブジェクト")]
+    [Tooltip("エフェクト等をここに置くと良き")]
     public GameObject onDestroySpawnObject;
 
     private void OnDestroy()
@@ -26,12 +26,12 @@ public class EnemyBullet : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            float HP = other.GetComponent<PlayerControll>().CurrentHp;
-            other.GetComponent<PlayerControll>().CurrentHp -= Damage;
+            float HP = other.GetComponent<PlayerControll_2>().CurrentHp;
+            other.GetComponent<PlayerControll_2>().CurrentHp -= Damage;
 
             //ヒットしてるかどうかリターンする という処理のことを忘れていたので
             //こっち側だけで解決することとした
-            if (HP != other.GetComponent<PlayerControll>().CurrentHp)
+            if (HP != other.GetComponent<PlayerControll_2>().CurrentHp)
             {
                 Vector3 vector = Vector3.Scale(other.transform.position - transform.position, new Vector3(1, 0, 1)).normalized;
                 other.GetComponent<Rigidbody>().AddForce(KnockBackPower * vector, ForceMode.Impulse);
