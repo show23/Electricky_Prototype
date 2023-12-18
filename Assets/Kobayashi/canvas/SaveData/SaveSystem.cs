@@ -18,15 +18,7 @@ public class SaveSystem : MonoBehaviour
         public rankData[] rankDatas;
 
         public rankData thisTimeData;
-    }
-
-    [System.Serializable]
-    public class WrittenSaveData
-    {
-        public int thisMinute;
-        public float thisSecond;
-
-        
+        public int thisBreak;
     }
 
 
@@ -39,10 +31,17 @@ public class SaveSystem : MonoBehaviour
     private rankData[] nowData = new rankData[5];
 
     private rankData thisData;
-
-    private SaveDataRanking dataTime;
     public rankData ThisData
     { get { return thisData; } }
+
+    private int breakEnemy = 0;
+    public int BreakEnemy 
+    {
+        get { return breakEnemy; }
+    }
+
+    private SaveDataRanking dataTime;
+    
 
     private void Start()
     {
@@ -68,8 +67,10 @@ public class SaveSystem : MonoBehaviour
         dataTime.thisTimeData = new rankData();
         dataTime.thisTimeData.seconds = 59.99f;
         dataTime.thisTimeData.minute = 99;
+        dataTime.thisBreak = 0;
 
         thisData = new rankData();
+        
     }
 
     private void IsUpdateData(rankData data)
@@ -116,7 +117,7 @@ public class SaveSystem : MonoBehaviour
         return false;
     }
 
-    public void Save(int minute, float second)
+    public void Save(int minute, float second, int enemyBreak)
     {
         Load();
 
@@ -133,6 +134,7 @@ public class SaveSystem : MonoBehaviour
 
         dataTime.thisTimeData.minute = minute;
         dataTime.thisTimeData.seconds = second;
+        dataTime.thisBreak = enemyBreak;
 
         string json = JsonUtility.ToJson(dataTime);
 
@@ -166,6 +168,7 @@ public class SaveSystem : MonoBehaviour
 
             thisData.minute = 99;
             thisData.seconds = 59.9f;
+            dataTime.thisBreak = 0;
         }
     }
 }

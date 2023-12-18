@@ -18,7 +18,18 @@ public class Result : MonoBehaviour
     // time ka score no dottika dakede yoikamo?
     [SerializeField] private TextMeshProUGUI _textTime;
 
+    [SerializeField] private TextMeshProUGUI _textEnemyBreak;
+
     private SaveSystem saveSystem;
+
+    private enum State
+    { 
+        intro,
+        thisTimeResult,
+        input,
+        ranking
+    }
+
 
     // other scene
     private Scene _scene;
@@ -30,7 +41,6 @@ public class Result : MonoBehaviour
     {
         // _scene = SceneManager.GetSceneByName("f");
 
-
         saveSystem = GetComponentInChildren<SaveSystem>();
         saveSystem.Load();
 
@@ -38,8 +48,11 @@ public class Result : MonoBehaviour
         float seconds = saveSystem.ThisData.seconds;
         float timedecimal = seconds * 100 - (int)seconds * 100;
 
+        int enemyBreak = saveSystem.BreakEnemy;
+
         //_textTime = GetComponentInChildren<TextMeshProUGUI>();
         _textTime.text = minute.ToString("00") + ":" + ((int)seconds).ToString("00") + ":" + ((int)timedecimal).ToString("00");
+        _textEnemyBreak.text = enemyBreak.ToString("0000");
 
         _coroutine = StartCoroutine(SceneInPos());
     }

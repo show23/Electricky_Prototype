@@ -39,8 +39,9 @@ public class Title_script : MonoBehaviour
 
         fade.FadeOut(time);        
         yield return new WaitForSeconds(time);
-        Debug.Log("out");
-        
+
+        yield return new WaitForSeconds(1.0f);
+
         fade.FadeIn(time);
         yield return new WaitForSeconds(time);
 
@@ -52,7 +53,6 @@ public class Title_script : MonoBehaviour
         fadeImage.SetMaskTexture("Assets/Kobayashi/Flame/Clip_cross_repetition.png");
 
         fade.FadeOut(time);
-
         yield return new WaitForSeconds(time);
 
         fadeImage.MainColor = Color.white;

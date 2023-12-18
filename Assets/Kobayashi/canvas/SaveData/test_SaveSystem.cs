@@ -17,7 +17,7 @@ public class test_SaveSystem : MonoBehaviour
     void Start()
     {
 
-        _saveSystem.Save(1, 49f);
+        _saveSystem.Save(1, 49f, 0);
 
         Debug.Log(_saveSystem.BestData.Length);
     }
