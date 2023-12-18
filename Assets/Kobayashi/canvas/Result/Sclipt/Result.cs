@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 
 public class Result : MonoBehaviour
 {
@@ -34,10 +36,16 @@ public class Result : MonoBehaviour
         Non,
 
         Intro,
+        InThisResult,
         ThisResult,
         OutThisResult,
         InRanking,
         Ranking,
+        OutRanking,
+
+        Move,
+        ManualResult,
+        ManualRanking,
 
         End
     }
@@ -46,7 +54,8 @@ public class Result : MonoBehaviour
     // other scene
     private Scene _scene;
 
-    private IEnumerator[] c;
+    private IEnumerator c;
+    private IEnumerator cMove;
     private Coroutine _coroutine;
 
     // Start is called before the first frame update
@@ -78,8 +87,8 @@ public class Result : MonoBehaviour
             _rankTime[i].text = minute.ToString("00") + ":" + ((int)seconds).ToString("00") + ":" + ((int)timedecimal).ToString("00");
         }
 
-        c = new IEnumerator[] {SceneInResultPos(), SceneOutResultPos(), SceneInRankPos() };
-        _coroutine = StartCoroutine(c[0]);
+        c = SceneInResultAndClearPos();
+        _coroutine = StartCoroutine(c);
     }
 
     // Update is called once per frame
@@ -88,8 +97,41 @@ public class Result : MonoBehaviour
         
     }
 
-    private IEnumerator SceneInResultPos()
+    public void PressDecision()
     {
+        if(state == State.ThisResult)
+        {
+            StopCoroutine(c);
+            c = SceneOutResultPos();
+            _coroutine = StartCoroutine(c);
+        }
+        else if(state == State.Ranking | state == State.ManualResult | state == State.ManualRanking) 
+        {
+            SceneManager.LoadScene("Title");
+        }
+    }
+
+    public void PressLeftAndRight()
+    {
+        Debug.Log(state);
+
+        if(state == State.ManualResult) 
+        {
+            c = SceneOutResultPos(true);
+            _coroutine = StartCoroutine(c);
+        }
+        if(state == State.ManualRanking | state == State.Ranking)
+        {
+            c = SceneOutRankPos();
+            _coroutine = StartCoroutine(c);
+        }
+    }
+
+    // 0
+    private IEnumerator SceneInResultAndClearPos()
+    {
+        state = State.Intro;
+
         Vector2 yC = _resultClear.anchoredPosition;
         Vector2 xG = _resultGroup.anchoredPosition;
         Vector2 yR = _resultRank.anchoredPosition;
@@ -120,12 +162,18 @@ public class Result : MonoBehaviour
         _resultClear.anchoredPosition = new Vector2(yC.x, _resultClrearEndPosY);
         _resultGroup.anchoredPosition = new Vector2(_resultGroupEndPosX, xG.y);
 
+        state = State.ThisResult;
         yield return new WaitForSeconds(_waitTime);
-        _coroutine = StartCoroutine(c[1]);
+
+        cMove = SceneOutResultPos();
+        _coroutine = StartCoroutine(cMove);
     }
 
-    private IEnumerator SceneOutResultPos()
+    // 1  5(true)
+    private IEnumerator SceneOutResultPos(bool manual = false)
     {
+        state = State.OutThisResult;
+
         Vector2 xC = _resultClear.anchoredPosition;
         Vector2 yG = _resultGroup.anchoredPosition;
         Vector2 yR = _resultRank.anchoredPosition;
@@ -153,12 +201,23 @@ public class Result : MonoBehaviour
 
         _resultGroup.anchoredPosition = new Vector2(0.0f, yG.y);
 
-        //yield return new WaitForSeconds(_waitTime);
-        _coroutine = StartCoroutine(c[2]);
+        if (manual)
+        {
+            cMove = SceneInRankPos(true);
+            _coroutine = StartCoroutine(cMove);
+        }
+        else
+        {
+            cMove = SceneInRankPos();
+            _coroutine = StartCoroutine(cMove);
+        }
     }
 
-    private IEnumerator SceneInRankPos()
+    // 2  6(true)
+    private IEnumerator SceneInRankPos(bool manual = false)
     {
+        state = State.InRanking;
+
         Vector2 xC = _resultClear.anchoredPosition;
         Vector2 yG = _resultGroup.anchoredPosition;
         Vector2 yR = _resultRank.anchoredPosition;
@@ -185,5 +244,80 @@ public class Result : MonoBehaviour
         }
 
         _resultRank.anchoredPosition = new Vector2(_resultRankEndPosX, yR.y);
+
+        if( manual ) 
+            state = State.ManualRanking;
+        else
+            state = State.Ranking;
+    }
+
+    // 3
+    private IEnumerator SceneOutRankPos()
+    {
+        state = State.OutRanking;
+
+        Vector2 xC = _resultClear.anchoredPosition;
+        Vector2 yG = _resultGroup.anchoredPosition;
+        Vector2 yR = _resultRank.anchoredPosition;
+
+        _resultClear.anchoredPosition = new Vector2(xC.x, _resultClrearEndPosY);
+        _resultGroup.anchoredPosition = new Vector2(0.0f, yG.y);
+        _resultRank.anchoredPosition = new Vector2(_resultRankEndPosX, yR.y);
+
+        float timeAdd = 0.0f;
+
+        for (;;)
+        {
+            float rankPosX = _resultRankEndPosX * (Time.deltaTime / _resultInTime);
+
+            _resultRank.anchoredPosition -= new Vector2(rankPosX, 0.0f);
+
+            timeAdd += Time.deltaTime;
+            if (timeAdd >= _resultInTime)
+            {
+                break;
+            }
+
+            yield return null;
+        }
+
+        _resultRank.anchoredPosition = new Vector2(0.0f, yR.y);
+        cMove = SceneInResultPos();
+        _coroutine = StartCoroutine(cMove);
+    }
+
+    // 4
+    private IEnumerator SceneInResultPos()
+    {
+        state = State.InThisResult;
+
+        Vector2 xC = _resultClear.anchoredPosition;
+        Vector2 yG = _resultGroup.anchoredPosition;
+        Vector2 yR = _resultRank.anchoredPosition;
+
+        _resultClear.anchoredPosition = new Vector2(xC.x, _resultClrearEndPosY);
+        _resultGroup.anchoredPosition = new Vector2(0.0f, yG.y);
+        _resultRank.anchoredPosition = new Vector2(0.0f, yR.y);
+
+        float timeAdd = 0.0f;
+
+        for (;;)
+        {
+            float groupPosX = _resultGroupEndPosX * (Time.deltaTime / _resultInTime);
+
+            _resultGroup.anchoredPosition += new Vector2(groupPosX, 0.0f);
+
+            timeAdd += Time.deltaTime;
+            if (timeAdd >= _resultInTime)
+            {
+                break;
+            }
+
+            yield return null;
+        }
+
+        _resultGroup.anchoredPosition = new Vector2(_resultGroupEndPosX, yG.y);
+
+        state = State.ManualResult;
     }
 }
