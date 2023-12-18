@@ -158,7 +158,7 @@ public class Enemy_Shoot : MonoBehaviour
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
-        player = FindObjectOfType<PlayerControll>().transform;
+        player = FindObjectOfType<PlayerControll_2>().transform;
         playerTarget = FindObjectOfType<PlayerTargetMarker>().transform;
 
         _animator = GetComponent<Animator>();

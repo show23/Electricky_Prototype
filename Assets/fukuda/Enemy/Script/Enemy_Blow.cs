@@ -193,7 +193,7 @@ public class Enemy_Blow : MonoBehaviour
         _animator.SetBool("isAlive", true);
         _animator.SetFloat("WalkSpeed", 0.0f);
 
-        player = FindObjectOfType<PlayerControll>().transform;
+        player = FindObjectOfType<PlayerControll_2>().transform;
 
         HP = maxHP;
     }
