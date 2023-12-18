@@ -54,7 +54,7 @@ public class Enemy_Blow : MonoBehaviour
         public GameObject RushEffect;
     }
 
-    [Tooltip("ここに 効果音とエフェクトがセットになった\nプレハブを入れてください"), CustomLabel("効果音 エフェクト類"), SerializeField]
+    [Tooltip("ここに 効果音とエフェクトがセットになった\nプレハブを入れてください"), SerializeField]
     private SE_VFX_PrefabList SE_VFX_Prefabs;
 
     public float CurrentHp
@@ -515,12 +515,12 @@ public class Enemy_Blow : MonoBehaviour
                 //ダメージ量はdamageから使ってください
                 GameObject player = col.gameObject;
 
-                float HP = player.GetComponent<PlayerControll>().CurrentHp;
+                float HP = player.GetComponent<PlayerControll_2>().CurrentHp;
 
-                player.GetComponent<PlayerControll>().CurrentHp -= damage;
+                player.GetComponent<PlayerControll_2>().CurrentHp -= damage;
 
 
-                if (HP != player.GetComponent<PlayerControll>().CurrentHp)
+                if (HP != player.GetComponent<PlayerControll_2>().CurrentHp)
                 {
                     player.GetComponent<Rigidbody>().AddForce(direction * knockback, ForceMode.Impulse);
 
