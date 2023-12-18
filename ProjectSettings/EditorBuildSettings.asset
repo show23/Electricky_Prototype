@@ -5,7 +5,11 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/OutdoorsScene.unity
     guid: 8124e5870f4fd4c779e7a5f994e84ad1
+  - enabled: 1
+    path: Assets/amako/Main_Scene_Amako.unity
+    guid: f607e338020bac046af105c2944b071a
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
