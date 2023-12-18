@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 262.38358, g: 325.10843, b: 430.30963, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -938,6 +938,7 @@ GameObject:
   - component: {fileID: 1146559344}
   - component: {fileID: 1146559343}
   - component: {fileID: 1146559347}
+  - component: {fileID: 1146559348}
   m_Layer: 5
   m_Name: Result_Canvas
   m_TagString: Untagged
@@ -1048,9 +1049,19 @@ MonoBehaviour:
   _resultClrearEndPosY: -185
   _resultGroupEndPosX: -1050
   _resultInTime: 0.5
-  _textTime: {fileID: 0}
-  _textScore: {fileID: 0}
-  _textBreak: {fileID: 0}
+  _textTime: {fileID: 1578867871}
+--- !u!114 &1146559348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1146559342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 020b6ed6202518c4db265860ffc2d234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1188822605
 GameObject:
   m_ObjectHideFlags: 0
@@ -1909,7 +1920,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2072920239
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1924,10 +1935,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1146559346}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2500, y: 1794}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2072920240
 MonoBehaviour:
