@@ -668,6 +668,7 @@
     "m_ObjectId": "4f8a16c6d9a440078ba5d0c26c2904fb",
     "m_RayTracing": false,
     "m_MaterialType": 0,
+    "m_MaterialTypeMask": 2,
     "m_RefractionModel": 0,
     "m_SSSTransmission": true,
     "m_EnergyConservingSpecular": true,
@@ -745,7 +746,7 @@
     ],
     "m_CustomEditorGUI": "",
     "m_SupportVFX": false,
-    "m_SupportComputeForVertexSetup": false
+    "m_SupportLineRendering": false
 }
 
 {
@@ -883,10 +884,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -553.0,
-            "y": 49.0,
-            "width": 208.00003051757813,
-            "height": 435.0
+            "x": -734.9999389648438,
+            "y": -86.00000762939453,
+            "width": 208.0,
+            "height": 434.9999694824219
         }
     },
     "m_Slots": [
@@ -1084,7 +1085,7 @@
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.Rendering.HighDefinition.ShaderGraph.SystemData",
     "m_ObjectId": "928c542e52754b459813cb3b52ff0391",
-    "m_MaterialNeedsUpdateHash": 529,
+    "m_MaterialNeedsUpdateHash": 531,
     "m_SurfaceType": 0,
     "m_RenderingPass": 1,
     "m_BlendMode": 0,
@@ -1094,7 +1095,6 @@
     "m_OpaqueCullMode": 2,
     "m_SortPriority": 0,
     "m_AlphaTest": false,
-    "m_ExcludeFromTUAndAA": false,
     "m_TransparentDepthPrepass": false,
     "m_TransparentDepthPostpass": false,
     "m_SupportLodCrossFade": false,
@@ -1109,7 +1109,8 @@
     "m_TessellationShapeFactor": 0.75,
     "m_TessellationBackFaceCullEpsilon": -0.25,
     "m_TessellationMaxDisplacement": 0.009999999776482582,
-    "m_Version": 1,
+    "m_DebugSymbols": false,
+    "m_Version": 2,
     "inspectorFoldoutMask": 0
 }
 
@@ -1618,10 +1619,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -649.0,
+            "x": -647.0,
             "y": 564.0,
-            "width": 208.0,
-            "height": 126.99993896484375
+            "width": 207.99996948242188,
+            "height": 124.99993896484375
         }
     },
     "m_Slots": [
@@ -1641,9 +1642,9 @@
     },
     "m_Color": {
         "color": {
-            "r": 11128.75,
-            "g": 81667.9609375,
-            "b": 262144.0,
+            "r": 2.03507137298584,
+            "g": 14.934303283691407,
+            "b": 47.937255859375,
             "a": 0.0
         },
         "mode": 1
