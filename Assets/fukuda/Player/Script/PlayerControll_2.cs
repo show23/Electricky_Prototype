@@ -847,7 +847,7 @@ public class PlayerControll_2 : MonoBehaviour
 
         //エネルギーUIの更新
         //ほんとはUI側スクリプト側から参照してもらうのがいいのかも
-        gaugeController.UpdateGauge(_PlayerBasicStatus.Energy, _PlayerBasicStatus.maxEnergy);
+        //gaugeController.UpdateGauge(_PlayerBasicStatus.Energy, _PlayerBasicStatus.maxEnergy);
 
     }
 

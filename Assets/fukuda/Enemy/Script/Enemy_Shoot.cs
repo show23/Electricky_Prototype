@@ -391,7 +391,7 @@ public class Enemy_Shoot : MonoBehaviour
     {
         for (int i = 0; i < 2; i++)
         {
-            GameObject projectile = Instantiate(RapidbulletPrefab, CanonSpawnPosition[i].position, transform.rotation);
+            GameObject projectile = Instantiate(ChargebulletPrefab, CanonSpawnPosition[i].position, transform.rotation);
 
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
@@ -407,6 +407,7 @@ public class Enemy_Shoot : MonoBehaviour
 
             if (SE_VFX_Prefabs.ChargeShoot)
                 Instantiate(SE_VFX_Prefabs.ChargeShoot, CanonSpawnPosition[i].position, transform.rotation);
+            Destroy(projectile, 3.0f);
         }
         canonFired = true;
     }
