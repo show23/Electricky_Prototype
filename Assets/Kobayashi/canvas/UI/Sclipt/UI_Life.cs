@@ -27,6 +27,8 @@ public class UI_Life : MonoBehaviour
         float Life_now = _playerControl.CurrentHp;
         float Life_max = _playerControl.CurrentMaxHp;
 
+        
+
         _slider.value = Life_now / Life_max;
 
         _text.text = Life_now.ToString("f0") + " / " + Life_max.ToString("f0");
