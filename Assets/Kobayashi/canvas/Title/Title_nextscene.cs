@@ -23,7 +23,7 @@ public class Title_nextscene : MonoBehaviour
     {
         if(!nextscenecheck)
         {
-            SceneManager.LoadScene("Main_Scene");
+            SceneManager.LoadScene("BuildScene");
             nextscenecheck = true;
         }
     }
