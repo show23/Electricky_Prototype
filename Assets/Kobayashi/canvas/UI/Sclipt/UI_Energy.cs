@@ -9,14 +9,14 @@ public class UI_Energy : MonoBehaviour
     [SerializeField] protected Image _gaugeImage;
     [SerializeField] protected TextMeshProUGUI _text;
 
-    private PlayerControll _playerControl;
+    private PlayerControll_2 _playerControl;
 
     private float _lastEnergy;
 
     // Start is called before the first frame update
     void Start()
     {
-        _playerControl = FindObjectOfType<PlayerControll>().GetComponent<PlayerControll>();
+        _playerControl = FindObjectOfType<PlayerControll_2>().GetComponent<PlayerControll_2>();
 
 
     }

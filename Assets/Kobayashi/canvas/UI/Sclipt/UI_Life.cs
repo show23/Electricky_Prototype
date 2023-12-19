@@ -11,14 +11,14 @@ public class UI_Life : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI _text;
     [SerializeField] protected FadeImage _fadeImage;
 
-    private PlayerControll _playerControl;
+    private PlayerControll_2 _playerControl;
 
     private float _lastEnergy;
 
     // Start is called before the first frame update
     void Start()
     {
-        _playerControl = FindObjectOfType<PlayerControll>().GetComponent<PlayerControll>();
+        _playerControl = FindObjectOfType<PlayerControll_2>().GetComponent<PlayerControll_2>();
     }
 
     // Update is called once per frame
