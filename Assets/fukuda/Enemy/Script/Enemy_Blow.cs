@@ -378,6 +378,8 @@ public class Enemy_Blow : MonoBehaviour
                         if (punchDistance > distanceToPlayer)
                         {
                             bodyBlow_Start = false;
+                            if (SE_VFX_Prefabs.RushEffect)
+                                Destroy(SE_VFX_Prefabs.RushEffect);
                             currentState = EnemyState.Punch;
                             bodyBlowState = BodyBlowState.Start;
                             bodyBlowTimer = 0;
@@ -432,7 +434,7 @@ public class Enemy_Blow : MonoBehaviour
         bodyBlowState = BodyBlowState.Blow;
 
         if (SE_VFX_Prefabs.RushStart)
-           SE_VFX_Prefabs.RushEffect = Instantiate(SE_VFX_Prefabs.RushStart, transform.position, transform.rotation);
+           SE_VFX_Prefabs.RushEffect = Instantiate(SE_VFX_Prefabs.RushStart, transform);
     }
 
 
@@ -440,7 +442,7 @@ public class Enemy_Blow : MonoBehaviour
     {
 
         if (SE_VFX_Prefabs.RushEffect)
-            DestroyImmediate(SE_VFX_Prefabs.RushEffect);
+            Destroy(SE_VFX_Prefabs.RushEffect);
         SE_VFX_Prefabs.RushEffect = null;
         //Debug.Log("Animator Trigger BodyBlow Hit");
         bodyBlow_hasHit = false;

@@ -344,15 +344,15 @@ public class Player_Slash_2 : MonoBehaviour
         {
             case 0:
                 if (SE_VFX_Prefabs.Attack1)
-                    Instantiate(SE_VFX_Prefabs.Attack1, transform.position, transform.rotation);
+                    Instantiate(SE_VFX_Prefabs.Attack1, transform);
                 break;
             case 1:
                 if (SE_VFX_Prefabs.Attack2)
-                    Instantiate(SE_VFX_Prefabs.Attack2, transform.position, transform.rotation);
+                    Instantiate(SE_VFX_Prefabs.Attack2, transform);
                 break;
             case 2:
                 if (SE_VFX_Prefabs.Attack3)
-                    Instantiate(SE_VFX_Prefabs.Attack3, transform.position, transform.rotation);
+                    Instantiate(SE_VFX_Prefabs.Attack3, transform);
                 break;
         }
 

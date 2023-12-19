@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.005638719, g: 0.004838005, b: 0.0039998908, a: 1}
+  m_IndirectSpecularColor: {r: 0.005638723, g: 0.0048379987, b: 0.003999906, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -66931,6 +66931,18 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9178611035043561884, guid: 7ecdc42c336764d4eb0ac96e6ac3ea45,
+        type: 3}
+      propertyPath: RapidbulletPrefab
+      value: 
+      objectReference: {fileID: 6040714372205183046, guid: 9d72a00fc7a6687458c5533c869a2a30,
+        type: 3}
+    - target: {fileID: 9178611035043561884, guid: 7ecdc42c336764d4eb0ac96e6ac3ea45,
+        type: 3}
+      propertyPath: ChargebulletPrefab
+      value: 
+      objectReference: {fileID: 6040714372205183046, guid: 9d72a00fc7a6687458c5533c869a2a30,
+        type: 3}
     - target: {fileID: 9178611035043561884, guid: 7ecdc42c336764d4eb0ac96e6ac3ea45,
         type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
