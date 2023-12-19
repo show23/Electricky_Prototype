@@ -60,7 +60,7 @@ public class FadeImage : UnityEngine.UI.Graphic , IFade
 
 	public void SetMaskTexture(string path)
 	{
-        maskTexture = AssetDatabase.LoadAssetAtPath(path, typeof(Texture)) as Texture;
+        //maskTexture = AssetDatabase.LoadAssetAtPath(path, typeof(Texture)) as Texture;
         material.SetTexture("_MaskTex", maskTexture);
     }
 
