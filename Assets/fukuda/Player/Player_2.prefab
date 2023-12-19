@@ -10598,7 +10598,8 @@ MonoBehaviour:
       type: 3}
     Attack3: {fileID: 5982297572687363638, guid: 88123f6f678ca2e4b845f671c8cee100,
       type: 3}
-    MidAirAttack: {fileID: 0}
+    MidAirAttack: {fileID: 5559245661090333674, guid: c0067a397d2124f4b9bffbc1663752f4,
+      type: 3}
   ComboAttackList:
   - attackRange: 2
     attackAngle: 90
@@ -10677,7 +10678,8 @@ MonoBehaviour:
     FootStep: {fileID: 0}
     Jump: {fileID: 0}
     Killed: {fileID: 0}
-    Damaged: {fileID: 0}
+    Damaged: {fileID: 496337191819926466, guid: 7919d158905dec44c87f228bd0f80656,
+      type: 3}
     Dodged: {fileID: 0}
   _PlayerMoveStatus:
     MaxWalkSpeed: 12
