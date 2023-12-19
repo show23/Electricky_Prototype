@@ -7,7 +7,7 @@ public class EffectKiller : MonoBehaviour
     [SerializeField,Tooltip("プレハブの生存時間")]
     private float LifeTime = 2.0f;
 
-    private void Awake()
+    public void OnCall()
     {
         Destroy(this.gameObject, LifeTime);
     }
