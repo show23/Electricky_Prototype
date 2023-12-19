@@ -135,6 +135,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5630164973215781080, guid: 0d7ac0720cd25c14280c718cada54ce3,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630164973215781080, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630164973215781080, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630164973215781080, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: -704.05
       objectReference: {fileID: 0}
@@ -182,6 +197,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
+      propertyPath: _PlayerMoveStatus.MaxRunSpeed
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
+      propertyPath: _PlayerMoveStatus.MaxWalkSpeed
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -240,6 +265,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2734735695397896093, guid: 943e15ea5c5430a4a86be0793ecc5d81,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2862375670058859476, guid: 943e15ea5c5430a4a86be0793ecc5d81,
         type: 3}
       propertyPath: m_Pivot.x
@@ -349,6 +379,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7697568637272240163, guid: 943e15ea5c5430a4a86be0793ecc5d81,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 104
+      objectReference: {fileID: 0}
+    - target: {fileID: 7697568637272240163, guid: 943e15ea5c5430a4a86be0793ecc5d81,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 436
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
