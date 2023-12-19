@@ -27,10 +27,9 @@ public class UI_Energy : MonoBehaviour
         float energy_now = _playerControl.CurrentEnergy;
         float energy_max = _playerControl.CurrentMaxEnergy;
 
-        if(_lastEnergy ==  energy_now) 
+        if(_lastEnergy !=  energy_now) 
         {
             _gaugeImage.fillAmount = energy_now / energy_max;
-
 
             _text.text = energy_now.ToString("F0");
         }
