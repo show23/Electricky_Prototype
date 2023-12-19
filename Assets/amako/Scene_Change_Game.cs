@@ -21,7 +21,7 @@ public class Scene_Change_Game : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            SceneManager.LoadScene("ResultScene");
+            SceneManager.LoadScene("Result");
         }
     }
 }
