@@ -47,6 +47,8 @@ public class Result : MonoBehaviour
         ManualResult,
         ManualRanking,
 
+        RoadTitle,
+
         End
     }
     private State state = State.Non;
@@ -107,6 +109,7 @@ public class Result : MonoBehaviour
         }
         else if(state == State.Ranking | state == State.ManualResult | state == State.ManualRanking) 
         {
+            state = State.RoadTitle;
             SceneManager.LoadScene("Title");
         }
     }
