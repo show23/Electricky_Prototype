@@ -380,6 +380,7 @@ public class Enemy_Blow : MonoBehaviour
                             bodyBlow_Start = false;
                             if (SE_VFX_Prefabs.RushEffect)
                                 Destroy(SE_VFX_Prefabs.RushEffect);
+
                             currentState = EnemyState.Punch;
                             bodyBlowState = BodyBlowState.Start;
                             bodyBlowTimer = 0;
