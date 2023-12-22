@@ -785,7 +785,7 @@ public class PlayerControll_2 : MonoBehaviour
 
         //速度計測
         playerSpeed = new Vector2(s_Rigidbody.velocity.x, s_Rigidbody.velocity.z).magnitude;
-        if (isGround && !isDodge && !isAttack && MoveValue.magnitude > _PlayerMoveStatus.UseInputValue)
+        if ((isGround || isWallRun) && !isDodge && !isAttack && MoveValue.magnitude > _PlayerMoveStatus.UseInputValue)
         {
             CurrentEnergy += playerSpeed * _PlayerBasicStatus.EnergyAddValue;
         }
