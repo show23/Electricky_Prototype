@@ -9,14 +9,12 @@ public class TestMessage : MonoBehaviour
     Messagewindow MessageWindow;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         MessageWindowObj.SetActive(true);
 
         MessageWindow = MessageWindowObj.GetComponent<Messagewindow>();
         Message.Add("test");
-        Message.Add("test2");
-        Message.Add("test3");
         MessageWindow.GetList(Message);
     }
 

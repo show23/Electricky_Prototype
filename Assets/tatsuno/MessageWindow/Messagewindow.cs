@@ -9,7 +9,7 @@ public class Messagewindow : MonoBehaviour
     public TextMeshProUGUI MessageText;
     List<string> Message = new List<string>();
     public float WindowChangeSec = 1;
-    float ChangeSecCount;
+    bool HideMessageWindow = false;
 
     // Start is called before the first frame update
     void Start()
@@ -29,28 +29,37 @@ public class Messagewindow : MonoBehaviour
 
     void UpdateMessage()
     {
-        ChangeSecCount += Time.deltaTime;
-
-        if (ChangeSecCount > WindowChangeSec)
+        if (!HideMessageWindow)
         {
-            ChangeSecCount = 0;
-
-            if (Message.Count > 1)
-            {
-                Message.RemoveAt(0);
-                MessageText.text = Message[0];
-            }
-            else
-            {
-                MessageWindow.SetActive(false);
-                clearMessage();
-            }
+            //Message.RemoveAt(0);
+            //MessageText.text = Message[0];
         }
+        else
+        {
+            MessageWindow.SetActive(false);
+            clearMessage();
+        }
+
+        //if (Message.Count > 1)
+        //{
+        //    Message.RemoveAt(0);
+        //    MessageText.text = Message[0];
+        //}
+        //else
+        //{
+        //    MessageWindow.SetActive(false);
+        //    clearMessage();
+        //}
     }
 
     public void GetList(List<string> list)
     {
         Message = list;
+    }
+
+    public void GetTextAreaCollision(bool AreaCollision)
+    {
+        HideMessageWindow = AreaCollision;
     }
 
     void clearMessage()
