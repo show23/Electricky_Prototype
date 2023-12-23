@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8723188808163704612}
   - component: {fileID: 5586186894979574442}
   - component: {fileID: 1768177936771827738}
+  - component: {fileID: 8322056038984584175}
   m_Layer: 0
   m_Name: slash
   m_TagString: Untagged
@@ -4997,3 +4998,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounces01: {fileID: 8300000, guid: ce71c7a1381333f4aa194ea1b9b03ad8, type: 3}
+--- !u!114 &8322056038984584175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5982297572687363638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baeee73853956614a9616a17b8aec599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LifeTime: 2
