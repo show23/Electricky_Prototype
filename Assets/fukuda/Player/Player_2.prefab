@@ -10676,11 +10676,12 @@ MonoBehaviour:
     oldHP: 0
   SE_VFX_Prefabs:
     FootStep: {fileID: 0}
-    Jump: {fileID: 0}
+    Jump: {fileID: 8544500027460436417, guid: 4893f40413e1b1b4181260c0ec71964b, type: 3}
     Killed: {fileID: 0}
     Damaged: {fileID: 496337191819926466, guid: 7919d158905dec44c87f228bd0f80656,
       type: 3}
-    Dodged: {fileID: 0}
+    Dodged: {fileID: 4377921401967923234, guid: 24308a1a550c12e4dbb69b6244652358,
+      type: 3}
   _PlayerMoveStatus:
     MaxWalkSpeed: 12
     MaxRunSpeed: 21

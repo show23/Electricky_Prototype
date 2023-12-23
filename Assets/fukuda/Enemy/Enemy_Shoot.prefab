@@ -15062,14 +15062,20 @@ MonoBehaviour:
   isDestroyed: 0
   DeleteTime: 6
   SE_VFX_Prefabs:
-    Find: {fileID: 0}
-    LoseSight: {fileID: 0}
-    FootStep: {fileID: 0}
-    Destroyed: {fileID: 8489359247905992583}
-    Damaged: {fileID: 7809428942348663616}
+    Find: {fileID: 5127726161339080760, guid: bf72c63f86d0647479b006feceb1b62b, type: 3}
+    LoseSight: {fileID: 2637404446124859596, guid: c972d2c1a94079b43b622f853f0f5fed,
+      type: 3}
+    FootStep: {fileID: 3639968767071527676, guid: da29fbf4d94abe84a878a5fe26206c8a,
+      type: 3}
+    Destroyed: {fileID: 4442249795467718437, guid: 7da4286184c7a5c41a9929b18a9c863b,
+      type: 3}
+    Damaged: {fileID: 3867646935757516259, guid: 13479b55c467be24e83700e7454bf4a5,
+      type: 3}
     ObjectDelete: {fileID: 0}
-    RapidShot: {fileID: 5557904630998303976}
-    ChargeShoot: {fileID: 5557904630998303976}
+    RapidShot: {fileID: 4988856412496204584, guid: 954ac5b3b9f314a4d90e506b998de559,
+      type: 3}
+    ChargeShoot: {fileID: 4988856412496204584, guid: 954ac5b3b9f314a4d90e506b998de559,
+      type: 3}
   RapidbulletPrefab: {fileID: 6040714372205183046, guid: 9d72a00fc7a6687458c5533c869a2a30,
     type: 3}
   ChargebulletPrefab: {fileID: 6040714372205183046, guid: 9d72a00fc7a6687458c5533c869a2a30,
