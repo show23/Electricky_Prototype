@@ -8447,15 +8447,17 @@ MonoBehaviour:
   isDestroyed: 0
   DeleteTime: 6
   SE_VFX_Prefabs:
-    Find: {fileID: 0}
-    LoseSight: {fileID: 0}
-    FootStep: {fileID: 0}
+    Find: {fileID: 5127726161339080760, guid: bf72c63f86d0647479b006feceb1b62b, type: 3}
+    LoseSight: {fileID: 2637404446124859596, guid: c972d2c1a94079b43b622f853f0f5fed,
+      type: 3}
+    FootStep: {fileID: 3639968767071527676, guid: da29fbf4d94abe84a878a5fe26206c8a,
+      type: 3}
     Destroyed: {fileID: 4442249795467718437, guid: 7da4286184c7a5c41a9929b18a9c863b,
       type: 3}
     Damaged: {fileID: 3867646935757516259, guid: 13479b55c467be24e83700e7454bf4a5,
       type: 3}
     ObjectDelete: {fileID: 0}
-    Punch: {fileID: 0}
+    Punch: {fileID: 4721849885601014119, guid: b44cef3c410dde249baa2ab99994afad, type: 3}
     RushStart: {fileID: 2086687547338966689, guid: d961e50bc8694304093bf3141cbf0ff6,
       type: 3}
     RushEffect: {fileID: 0}
