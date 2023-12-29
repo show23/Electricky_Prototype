@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
+using Unity.VisualScripting;
+//using UnityEditor.SearchService;
 
 public class Result : MonoBehaviour
 {
@@ -55,6 +57,9 @@ public class Result : MonoBehaviour
 
     // other scene
     private Scene _scene;
+    private Scene _sceneDebug;
+
+    [SerializeField] private Transform _cameraObject;
 
     private IEnumerator c;
     private IEnumerator cMove;
@@ -63,7 +68,10 @@ public class Result : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // _scene = SceneManager.GetSceneByName("f");
+        //_cameraObject = FindObjectOfType<Camera>().transform;
+
+        _scene = SceneManager.GetSceneByName("BuildScene");
+        _sceneDebug = SceneManager.GetSceneByName("K0134S)-(I_UI");
 
         saveSystem = GetComponentInChildren<SaveSystem>();
         saveSystem.Load();
@@ -96,7 +104,33 @@ public class Result : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (_scene.IsValid() != false)
+        {
+            foreach (GameObject rootGameObject in _scene.GetRootGameObjects())
+            {
+                Camera camera = rootGameObject.GetComponent<Camera>();
+                if (camera != null)
+                {
+                    _cameraObject.position = camera.transform.position;
+                    _cameraObject.rotation = camera.transform.rotation;
+                    break;
+                }
+            }
+        }
+
+        if (_sceneDebug.IsValid() != false)
+        {
+            foreach (GameObject rootGameObject in _sceneDebug.GetRootGameObjects())
+            {
+                Camera camera = rootGameObject.GetComponent<Camera>();
+                if (camera != null)
+                {
+                    _cameraObject.position = camera.transform.position;
+                    _cameraObject.rotation = camera.transform.rotation;
+                    break;
+                }
+            }
+        }
     }
 
     public void PressDecision()
