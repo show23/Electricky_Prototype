@@ -8,16 +8,13 @@ public class Messagewindow : MonoBehaviour
     public GameObject MessageWindow;
     public TextMeshProUGUI MessageText;
     List<string> Message = new List<string>();
-    public float WindowChangeSec = 1;
+    public float WindowChangeSec = 2;
     bool HideMessageWindow = false;
+    float seconds = 0.0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        //MessageWindow.SetActive(true);
-        //Message.Add("test");
-        //Message.Add("test2");
-        //Message.Add("test3");
         MessageText.text = Message[0];
     }
 
@@ -29,16 +26,35 @@ public class Messagewindow : MonoBehaviour
 
     void UpdateMessage()
     {
-        if (!HideMessageWindow)
+        seconds += Time.deltaTime;
+
+        if(seconds >= WindowChangeSec)
         {
-            //Message.RemoveAt(0);
-            //MessageText.text = Message[0];
+            if (Message.Count > 1)
+            {
+                Message.RemoveAt(0);
+                MessageText.text = Message[0];
+            }
+            
+            seconds = 0;
         }
-        else
+
+        if (HideMessageWindow)
         {
             MessageWindow.SetActive(false);
             clearMessage();
         }
+
+        //if (!HideMessageWindow)
+        //{
+        //    //Message.RemoveAt(0);
+        //    //MessageText.text = Message[0];
+        //}
+        //else
+        //{
+        //    MessageWindow.SetActive(false);
+        //    clearMessage();
+        //}
 
         //if (Message.Count > 1)
         //{
