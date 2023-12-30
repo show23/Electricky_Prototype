@@ -135,7 +135,6 @@ public class PlayerControll_2 : MonoBehaviour
 
     [Space(-15)]
     [Header("プレイヤーのステータス設定")]
-    [Space(5)]
     [SerializeField]
     private PlayerBasicStatus _PlayerBasicStatus;
 
@@ -170,8 +169,38 @@ public class PlayerControll_2 : MonoBehaviour
     }
 
 
-    [Tooltip("ここに 効果音とエフェクトがセットになった\nプレハブを入れてください"), SerializeField]
+    [Header("エフェクト・効果音設定"), SerializeField]
     private SE_VFX_PrefabList SE_VFX_Prefabs;
+
+
+    [System.Serializable]
+    public struct RespawnSettings
+    {
+        public float RespawnTime;
+
+        [HideInInspector]
+        public float RespawnTimer;
+
+        [HideInInspector]
+        public Vector3 SpawnPoint;
+        [HideInInspector]
+        public Quaternion SpawnRotation;
+    }
+
+
+
+    public Vector3 CurrentSpawnPoint
+    {
+        get { return _RespawnSettings.SpawnPoint; }
+        set { _RespawnSettings.SpawnPoint = value; }
+    }
+    
+    public Quaternion CurrentSpawnRotation
+    {
+        get { return _RespawnSettings.SpawnRotation; }
+        set { _RespawnSettings.SpawnRotation = value; }
+    }
+
 
     public float CurrentHp
     {
@@ -204,7 +233,7 @@ public class PlayerControll_2 : MonoBehaviour
             if (_PlayerBasicStatus.HP > _PlayerBasicStatus.maxHP)
                 _PlayerBasicStatus.HP = _PlayerBasicStatus.maxHP;
 
-            if (_PlayerBasicStatus.HP < 0)
+            if (_PlayerBasicStatus.HP <= 0)
             {
                 //ここでゲームオーバー呼んでもいい
 
@@ -215,6 +244,8 @@ public class PlayerControll_2 : MonoBehaviour
 
                 s_Animator.SetBool("Dead", true);
                 _PlayerBasicStatus.HP = 0;
+                _RespawnSettings.RespawnTimer = 0;
+                isDead = true;
             }
         }
     }
@@ -252,26 +283,23 @@ public class PlayerControll_2 : MonoBehaviour
         set { _PlayerBasicStatus.maxEnergy = value; }
     }
 
-    public float CurrentRotationSpeed
-    {
-        get { return _PlayerMoveStatus.MoveInputRotationSpeed; }
-        set { _PlayerMoveStatus.MoveInputRotationSpeed = value; }
-    }
 
 
 
-    [SerializeField]
+    [Header("移動設定"), SerializeField]
     private PlayerMoveStatus _PlayerMoveStatus;
 
     //壁走り関係の数値設定
-    [SerializeField]
+    [Header("壁走り設定"), SerializeField]
     private WallRunStatus _WallRunStatus;
 
-    [SerializeField]
+    [Header("回避設定"), SerializeField]
     private DodgeStatus _DodgeStatus;
-    [SerializeField]
+    [Header("ジャスト回避設定"), SerializeField]
     private JustDodgeSlow _JustDodgeSettings;
 
+    [Header("リスポーン系設定"), SerializeField]
+    private RespawnSettings _RespawnSettings;
     [Space(10)]
 
     [Header("以下 デバッグ用の状況表示 (変更不能)")]
@@ -288,6 +316,8 @@ public class PlayerControll_2 : MonoBehaviour
     public bool noDamage = false;
     public bool isAttack = false;
     public bool isChargeAttack = false;
+
+    public bool isDead = false;
 
 
     //Other Objects & Scripts
@@ -373,7 +403,28 @@ public class PlayerControll_2 : MonoBehaviour
         // マウスカーソルを非表示にし、位置を固定
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+
+
+        transform.position = transform.position;
+        transform.rotation = transform.rotation;
     }
+
+
+    public void StatusReset()
+    {
+        CurrentEnergy = CurrentMaxEnergy;
+        CurrentHp = CurrentMaxHp;
+
+        transform.position = CurrentSpawnPoint;
+        transform.rotation = CurrentSpawnRotation;
+
+
+        isDead = false;
+        s_Animator.SetBool("Dead",false);
+        s_Animator.SetTrigger("Respawn");
+    }
+
 
 
     //とりあえずで処理フローを書いていく
@@ -435,7 +486,6 @@ public class PlayerControll_2 : MonoBehaviour
             MoveValue = MoveInput;
 
             JumpInput = jump.ReadValue<float>() > 0;
-
             AttackInput = attack.ReadValue<float>() > 0;
             DodgeInput = dodge.ReadValue<float>() > 0;
 
@@ -492,6 +542,26 @@ public class PlayerControll_2 : MonoBehaviour
             OldJumpInput = JumpInput;
             OldDodgeInput = DodgeInput;
         }
+
+        if (isDead)
+        {
+            MoveValue = Vector2.zero;
+            MoveInput = Vector2.zero;
+            JumpInput = false;
+            DodgeInput = false;
+            isAttack = false;
+            RunInput = false;
+            jumpInputTrigger = false;
+            dodgeInputTrigger = false;
+
+            _RespawnSettings.RespawnTimer += Time.deltaTime;
+
+            if (_RespawnSettings.RespawnTimer > _RespawnSettings.RespawnTime)
+            {
+                StatusReset();
+            }
+        }
+
 
         //-------------------------------------------------------------------------------
         //壁判定の更新
