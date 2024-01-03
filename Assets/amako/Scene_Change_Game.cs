@@ -24,6 +24,11 @@ public class Scene_Change_Game : MonoBehaviour
     private IEnumerator c;
     private Coroutine _coroutine;
 
+    [SerializeField] private float offsetLeft = 1.3f;
+    [SerializeField] private float offsetForward = 1.8f;
+    [SerializeField] private float angle = 0.3f;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,7 +48,8 @@ public class Scene_Change_Game : MonoBehaviour
         timeUI = FindObjectOfType<Timer_decimal_TMP>().GetComponent<Timer_decimal_TMP>();
         timeUI.StopTime();
         playerInput = FindObjectOfType<PlayerInput>().GetComponent<PlayerInput>();
-        EventObject = FindObjectOfType<EventSystem>().gameObject;
+        if (SceneManager.GetActiveScene().name == "K0134S)-(I_UI")
+            EventObject = FindObjectOfType<EventSystem>().gameObject;
         UiObject = GameObject.Find("UI");
         audioListener = FindObjectOfType<AudioListener>().GetComponent<AudioListener>();
 
@@ -55,19 +61,54 @@ public class Scene_Change_Game : MonoBehaviour
         opc.enabled = false;
         cm.enabled = false;
 
-        Vector3 v3 = tracePosition.position;
+        GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemys)
+        {
+            enemy.SetActive(false);
+        }
+
+        GameObject[] Bullets = GameObject.FindGameObjectsWithTag("Bullet");
+        foreach (GameObject bullet in Bullets)
+        {
+            bullet.SetActive(false);
+        }
+
+        Transform t = new GameObject().transform;
+        t.position = tracePosition.position;
+        t.position += tracePosition.right * -offsetLeft;
+        //t.position = new Vector3(t.position.x, 0f, t.position.z);
+        t.rotation = tracePosition.rotation;
+        t.RotateAround(tracePosition.position, Vector3.up, 30f);
+
+        Vector3 v3 = t.position;
         v3.y += 1f;
-        v3 += (tracePosition.forward * 1.8f);
-        v3 += (tracePosition.right * -0.2f);
+        v3 += (t.forward * offsetForward);
 
         cameraTrans.position = v3;
-        cameraTrans.rotation = tracePosition.rotation;
-        cameraTrans.Rotate(0f, 180f, 0, Space.World);
+        cameraTrans.rotation = t.rotation;
+        cameraTrans.Rotate(0f, 180f - 10f, 0, Space.World);
         cameraTrans.localScale = Vector3.one;
 
+        if(EventObject != null)
         EventObject.SetActive(false);
         audioListener.enabled = false;
         SceneManager.LoadScene("result", LoadSceneMode.Additive);
+
+        for (;;)
+        {
+            yield return null;
+
+            Vector3 p = tracePosition.position;
+            t.RotateAround(p, Vector3.up, -angle);
+
+            Vector3 vR3 = t.position;
+            vR3.y += 1f;
+            vR3 += (t.forward * offsetForward);
+
+            cameraTrans.position = vR3;
+            cameraTrans.rotation = t.rotation;
+            cameraTrans.Rotate(0f, 180f - 10f, 0, Space.World);
+        }
     }
 
     // Update is called once per frame
