@@ -20,7 +20,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &4400342892260024
 Transform:
@@ -56,7 +56,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
+  m_StaticShadowCaster: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -67,12 +67,12 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: 5188c7492ef51d143a7128aa9700788a, type: 2}
   - {fileID: 2100000, guid: 1a0dec1fa084e1b4abd7c6cf33e568ff, type: 2}
-  - {fileID: 2100000, guid: 26df91506bf83b343b8083c5322323ae, type: 2}
+  - {fileID: 2100000, guid: 7cb32f0bc847113499c7ae5be09fdd6c, type: 2}
   - {fileID: 2100000, guid: e495abf6588a1b944a3620fd1fee2b07, type: 2}
   - {fileID: 2100000, guid: 5188c7492ef51d143a7128aa9700788a, type: 2}
   - {fileID: 2100000, guid: 1af4b0d855a4f694baba51a55f5c6cc9, type: 2}
   - {fileID: 2100000, guid: 527a2f1bf2a8e6b44a73711edbc69733, type: 2}
-  - {fileID: 2100000, guid: 26df91506bf83b343b8083c5322323ae, type: 2}
+  - {fileID: 2100000, guid: 7cb32f0bc847113499c7ae5be09fdd6c, type: 2}
   - {fileID: 2100000, guid: 5188c7492ef51d143a7128aa9700788a, type: 2}
   - {fileID: 2100000, guid: 527a2f1bf2a8e6b44a73711edbc69733, type: 2}
   - {fileID: 2100000, guid: 3c98c150d6196ef419f666d71cf7d13f, type: 2}

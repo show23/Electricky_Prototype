@@ -60,6 +60,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7635826562936255635, guid: b7ab50b5f502a63499d1dfb91682b391,
         type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: b7ab50b5f502a63499d1dfb91682b391,
+        type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 3954040d6d600fd4399f654748e9ba5c, type: 2}
@@ -67,6 +72,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Aircos 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: b7ab50b5f502a63499d1dfb91682b391,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

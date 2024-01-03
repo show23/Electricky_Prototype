@@ -44,6 +44,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1616836774196423367}
     m_Modifications:
+    - target: {fileID: 1224574634684750, guid: 2224b63330275e5478ef024b2913f937, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1573730805894322, guid: 2224b63330275e5478ef024b2913f937, type: 3}
       propertyPath: m_Name
       value: Street 3 Prefab
@@ -96,6 +100,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23776185747029052, guid: 2224b63330275e5478ef024b2913f937,
+        type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1034619137783221325, guid: 2224b63330275e5478ef024b2913f937, type: 3}
     m_RemovedGameObjects: []
@@ -116,6 +125,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1616836774196423367}
     m_Modifications:
+    - target: {fileID: 1042823340282078, guid: 9cb5b35ecfd548b4d87e1c513764ef5b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1115635006553536, guid: 9cb5b35ecfd548b4d87e1c513764ef5b, type: 3}
       propertyPath: m_Name
       value: Sideway 2 prefab (1)
@@ -172,6 +185,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23034499121570080, guid: 9cb5b35ecfd548b4d87e1c513764ef5b,
+        type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 64167934691835890, guid: 9cb5b35ecfd548b4d87e1c513764ef5b, type: 3}
     m_RemovedGameObjects: []
@@ -195,6 +213,10 @@ PrefabInstance:
     - target: {fileID: 1467453752596212, guid: bb22ea4214c77784c96ecc3cb6bc0608, type: 3}
       propertyPath: m_Name
       value: Street 5 Prefab (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1936361318975402, guid: bb22ea4214c77784c96ecc3cb6bc0608, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4341322971054776, guid: bb22ea4214c77784c96ecc3cb6bc0608, type: 3}
       propertyPath: m_LocalScale.x
@@ -248,6 +270,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23909518845937148, guid: bb22ea4214c77784c96ecc3cb6bc0608,
+        type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8593164892623783414, guid: bb22ea4214c77784c96ecc3cb6bc0608, type: 3}
     m_RemovedGameObjects: []
@@ -268,6 +295,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1616836774196423367}
     m_Modifications:
+    - target: {fileID: 1042823340282078, guid: 9cb5b35ecfd548b4d87e1c513764ef5b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1115635006553536, guid: 9cb5b35ecfd548b4d87e1c513764ef5b, type: 3}
       propertyPath: m_Name
       value: Sideway 2 prefab
@@ -324,6 +355,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23034499121570080, guid: 9cb5b35ecfd548b4d87e1c513764ef5b,
+        type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 64167934691835890, guid: 9cb5b35ecfd548b4d87e1c513764ef5b, type: 3}
     m_RemovedGameObjects: []
@@ -347,6 +383,10 @@ PrefabInstance:
     - target: {fileID: 1467453752596212, guid: bb22ea4214c77784c96ecc3cb6bc0608, type: 3}
       propertyPath: m_Name
       value: Street 5 Prefab (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1936361318975402, guid: bb22ea4214c77784c96ecc3cb6bc0608, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4341322971054776, guid: bb22ea4214c77784c96ecc3cb6bc0608, type: 3}
       propertyPath: m_LocalScale.x
@@ -399,6 +439,11 @@ PrefabInstance:
     - target: {fileID: 4341322971054776, guid: bb22ea4214c77784c96ecc3cb6bc0608, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23909518845937148, guid: bb22ea4214c77784c96ecc3cb6bc0608,
+        type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8593164892623783414, guid: bb22ea4214c77784c96ecc3cb6bc0608, type: 3}
