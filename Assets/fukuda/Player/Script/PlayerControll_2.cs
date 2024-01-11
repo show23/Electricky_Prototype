@@ -83,14 +83,25 @@ public class PlayerControll_2 : MonoBehaviour
         [HideInInspector]
         public MeshTra meshTra;
 
-        //[HideInInspector]
+        [HideInInspector]
         public int EnemyDestroyed;
         public int BoostStartValue;
 
         public float BoostLengthPerKills;
 
-        //[HideInInspector]
+        [HideInInspector]
         public float BoostLength;
+        
+        [HideInInspector]
+        public float DefaultCamFov;
+
+        public float BoostCamFov;
+        public float FovChangeSpeed;
+        
+        [HideInInspector]
+        public float CamFovValue;
+
+
 
         [Tooltip("移動スティック入力のデッドゾーン値")]
         public float UseInputValue;
@@ -1093,7 +1104,32 @@ public class PlayerControll_2 : MonoBehaviour
                     _PlayerMoveStatus.EnemyDestroyed = 0;
                     _PlayerMoveStatus.meshTra.Use = false;
                 }
+
+                if (_PlayerMoveStatus.CamFovValue < 1.0f)
+                {
+                    _PlayerMoveStatus.CamFovValue += _PlayerMoveStatus.FovChangeSpeed;
+                    if (_PlayerMoveStatus.CamFovValue > 1.0f)
+                    {
+                        _PlayerMoveStatus.CamFovValue = 1.0f;
+                    }
+                }
             }
+            else
+            {
+                if (_PlayerMoveStatus.CamFovValue > 0.0f)
+                {
+                    _PlayerMoveStatus.CamFovValue -= _PlayerMoveStatus.FovChangeSpeed;
+                    if (_PlayerMoveStatus.CamFovValue < 0.0f)
+                    {
+                        _PlayerMoveStatus.CamFovValue = 0.0f;
+                    }
+                }
+            }
+
+
+
+
+
         }
 
 
