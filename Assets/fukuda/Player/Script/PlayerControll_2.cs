@@ -32,6 +32,12 @@ public class PlayerControll_2 : MonoBehaviour
         [Tooltip("移動での電力回復割合(速度と掛ける)")]
         public float EnergyAddValue;
 
+        [Tooltip("ダメージを受けた後 次にダメージを受けるまでの猶予時間")]
+        public float DamageTime;
+        [HideInInspector]
+        public float DamageTimer;
+
+
         [HideInInspector]
         public int healTimer;
         [HideInInspector]
@@ -239,6 +245,9 @@ public class PlayerControll_2 : MonoBehaviour
             //ここで回避
             if (_PlayerBasicStatus.HP > value)
             {
+                if (isDamaged)
+                    return;
+                
                 if (noDamage)
                 {
                     //複数攻撃を受けたとしても エネルギーの回復は1度だけ
@@ -255,6 +264,14 @@ public class PlayerControll_2 : MonoBehaviour
                 {
                     if (SE_VFX_Prefabs.Damaged)
                         Instantiate(SE_VFX_Prefabs.Damaged, transform.position, transform.rotation);
+                    isDamaged = true;
+
+                    if (Random.value > 0.5f)
+                        s_Animator.SetTrigger("Damage_01");
+                    else
+                        s_Animator.SetTrigger("Damage_02");
+
+                    _PlayerBasicStatus.DamageTimer = 0.0f;
                 }
             }
 
@@ -358,12 +375,6 @@ public class PlayerControll_2 : MonoBehaviour
 
 
 
-
-
-
-
-
-
     [Header("移動設定"), SerializeField]
     private PlayerMoveStatus _PlayerMoveStatus;
 
@@ -395,6 +406,8 @@ public class PlayerControll_2 : MonoBehaviour
     public bool isAttack = false;
     public bool isChargeAttack = false;
 
+
+    public bool isDamaged = false;
     public bool isDead = false;
 
 
@@ -740,7 +753,7 @@ public class PlayerControll_2 : MonoBehaviour
         //-------------------------------------------------------------------------------
         //プレイヤーの動きをRigidBodyに入力
         //-------------------------------------------------------------------------------
-        if (!isWallRun && !isDodge && !isAttack)
+        if (!isWallRun && !isDodge && !isAttack && !isDamaged)
         {
             float InputSpeed = MoveValue.magnitude;
             float maxSpeed = _PlayerMoveStatus.MaxWalkSpeed;
@@ -795,12 +808,13 @@ public class PlayerControll_2 : MonoBehaviour
                         Vector3.up);
             }
         }
+
+
         //------------------------------------------------------------
         //回避
         //------------------------------------------------------------
         if (!isDodge && dodgeInputTrigger && _DodgeStatus.DodgeCoolTime < _DodgeStatus.DodgeTimer)
         {
-
             float boostMultiPly = 1.0f;
             if (_PlayerMoveStatus.Boost)
             {
@@ -1013,14 +1027,23 @@ public class PlayerControll_2 : MonoBehaviour
             }
         }
 
+        if (isDamaged)
+        {
+            _PlayerBasicStatus.DamageTimer += Time.deltaTime;
+            if (_PlayerBasicStatus.DamageTimer >= _PlayerBasicStatus.DamageTime)
+            {
+                isDamaged = false;
+            }
+        }
+
+
+
         _PlayerBasicStatus.oldHP = CurrentHp;
 
         //-------------------------------------------------------------------------------
         //#プレイヤーの攻撃処理
         //-------------------------------------------------------------------------------
         Attack(AttackInput);
-
-
 
         //-------------------------------------------------------------------------------
         //#アニメーションをアニメーターに登録
