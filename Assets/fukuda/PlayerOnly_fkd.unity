@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 4603.979, g: 2944.7874, b: 2172.3127, a: 1}
+  m_IndirectSpecularColor: {r: 4603.8647, g: 2945.012, b: 2172.93, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -609,6 +609,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2784358484802659577, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2815803179272584444, guid: 0d7ac0720cd25c14280c718cada54ce3,
         type: 3}
       propertyPath: m_Name
@@ -666,13 +671,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
         type: 3}
+      propertyPath: _PlayerMoveStatus.Boost
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
+      propertyPath: _PlayerMoveStatus.useBoost
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
+      propertyPath: _PlayerMoveStatus.doMeshTra
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
       propertyPath: _RespawnSettings.RespawnTime
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
         type: 3}
+      propertyPath: _PlayerMoveStatus.BoostLength
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
       propertyPath: _PlayerMoveStatus.MaxWalkSpeed
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
+      propertyPath: _PlayerMoveStatus.EnemyDestroyed
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

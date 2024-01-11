@@ -281,7 +281,18 @@ public class Player_Slash_2 : MonoBehaviour
         isAttack = true;
         rigidBody.velocity = Vector3.zero;
         Vector3 MoveVel = transform.forward * ComboAttackList[list].addSpeedPower;
-        rigidBody.velocity = MoveVel;
+
+
+        float value = 1.0f;
+        if (playerControll_2)
+        {
+            if (playerControll_2.isBoost)
+            {
+                value = playerControll_2.getBoostValue;
+            }
+        }
+
+        rigidBody.velocity = MoveVel * value;
     }
 
     //攻撃が出るフレーム (アニメーターから呼び出し)
@@ -333,7 +344,6 @@ public class Player_Slash_2 : MonoBehaviour
                     {
                         col.GetComponent<Enemy_Shoot>().CurrentHp -= damage;
                     }
-
 
                     col.GetComponent<Rigidbody>().AddForce(direction * KnockBack, ForceMode.Impulse);
                 }

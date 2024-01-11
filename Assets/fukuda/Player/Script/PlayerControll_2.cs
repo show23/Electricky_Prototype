@@ -32,7 +32,7 @@ public class PlayerControll_2 : MonoBehaviour
         [Tooltip("移動での電力回復割合(速度と掛ける)")]
         public float EnergyAddValue;
 
-        //[HideInInspector]
+        [HideInInspector]
         public int healTimer;
         [HideInInspector]
         public float oldHP;
@@ -61,6 +61,30 @@ public class PlayerControll_2 : MonoBehaviour
         public float SecondJumpMultiplyValue;
         [Tooltip("2段ジャンプ時水平方向パワー(通常ジャンプ力基準)")]
         public float SecondJumpHorizonPowerMultiplyValue;
+
+
+        [Tooltip("2段ジャンプでエネルギーをつかうか")]
+        public bool SecondJumpEnergyUse;
+        [Tooltip("2段ジャンプのエネルギー消費量")]
+        public float SecondJumpEnergyUsage;
+
+
+        public bool useBoost;
+        public bool Boost;
+        public float BoostSpeedValue;
+        public float doMeshTra;
+
+        [HideInInspector]
+        public MeshTra meshTra;
+
+        //[HideInInspector]
+        public int EnemyDestroyed;
+        public int BoostStartValue;
+
+        public float BoostLengthPerKills;
+
+        //[HideInInspector]
+        public float BoostLength;
 
         [Tooltip("移動スティック入力のデッドゾーン値")]
         public float UseInputValue;
@@ -92,6 +116,11 @@ public class PlayerControll_2 : MonoBehaviour
 
         [Tooltip("壁ジャンプ後、次の壁を認識するまでのフレーム数")]
         public int WJtoNextWallTime;
+
+        [Tooltip("壁走りでエネルギーをつかうか\n(trueの時 壁走りでエネルギー回復しなくなる)")]
+        public bool WREnergyUse;
+        [Tooltip("壁走り中のエネルギー消費量(per tick)")]
+        public float WREnergyUsage;
 
         //この下は非表示
         [HideInInspector]
@@ -282,6 +311,55 @@ public class PlayerControll_2 : MonoBehaviour
         get { return _PlayerBasicStatus.maxEnergy; }
         set { _PlayerBasicStatus.maxEnergy = value; }
     }
+    
+
+    public int CurrentDestroyEnemy
+    {
+        get { return _PlayerMoveStatus.EnemyDestroyed; }
+        set {
+
+            if (!_PlayerMoveStatus.Boost)
+            {
+                _PlayerMoveStatus.EnemyDestroyed = value;
+
+                if (_PlayerMoveStatus.useBoost &&
+                _PlayerMoveStatus.BoostStartValue <= _PlayerMoveStatus.EnemyDestroyed)
+                {
+                    _PlayerMoveStatus.Boost = true;
+                    s_Animator.SetBool("Boost", true);
+                    _PlayerMoveStatus.BoostLength = _PlayerMoveStatus.BoostStartValue * _PlayerMoveStatus.BoostLengthPerKills;
+                    _PlayerMoveStatus.EnemyDestroyed = 0;
+                }
+            }
+            else
+            {
+                _PlayerMoveStatus.BoostLength += _PlayerMoveStatus.BoostLengthPerKills;
+                if (_PlayerMoveStatus.BoostLength > _PlayerMoveStatus.BoostLengthPerKills * _PlayerMoveStatus.BoostStartValue)
+                {
+                    _PlayerMoveStatus.BoostLength = _PlayerMoveStatus.BoostLengthPerKills * _PlayerMoveStatus.BoostStartValue;
+                }
+            }
+        }
+    }
+
+
+    public bool isBoost
+    {
+        set { _PlayerMoveStatus.Boost = value; }
+        get { return _PlayerMoveStatus.Boost; }
+    }
+
+    public float getBoostValue
+    {
+        get { return _PlayerMoveStatus.BoostSpeedValue; }
+    }
+
+
+
+
+
+
+
 
 
 
@@ -384,6 +462,8 @@ public class PlayerControll_2 : MonoBehaviour
         playerAttack = GetComponent<Player_Slash>();
         playerAttack2 = GetComponent<Player_Slash_2>();
 
+        _PlayerMoveStatus.meshTra = GetComponent<MeshTra>();
+
         _PlayerBasicStatus.HP = _PlayerBasicStatus.maxHP;
         _PlayerBasicStatus.Energy = _PlayerBasicStatus.maxEnergy;
 
@@ -434,27 +514,28 @@ public class PlayerControll_2 : MonoBehaviour
         //-------------------------------------------------------------------------------
         //#壁の配置を確認し、カメラの位置を調整、壁判定を取る
         //-------------------------------------------------------------------------------
-        float heightOffSet = s_Collider.center.y;
-
-        if (isWallRun)
         {
-            Vector3 vec = PlayerCameraOrigin.transform.localPosition;
-            if (_WallRunStatus.wallStatus == wallSide.Right)
-            {
-                vec = new Vector3(-5, heightOffSet, 0);
-            }
-            if (_WallRunStatus.wallStatus == wallSide.Left)
-            {
-                vec = new Vector3(5, heightOffSet, 0);
-            }
+            float heightOffSet = s_Collider.center.y;
 
-            PlayerCameraOrigin.transform.localPosition = Vector3.Lerp(PlayerCameraOrigin.transform.localPosition, vec, 0.1f);
-        }
-        else
-        {
-            PlayerCameraOrigin.transform.localPosition = new Vector3(0, heightOffSet, 0);
-        }
+            if (isWallRun)
+            {
+                Vector3 vec = PlayerCameraOrigin.transform.localPosition;
+                if (_WallRunStatus.wallStatus == wallSide.Right)
+                {
+                    vec = new Vector3(-5, heightOffSet, 0);
+                }
+                if (_WallRunStatus.wallStatus == wallSide.Left)
+                {
+                    vec = new Vector3(5, heightOffSet, 0);
+                }
 
+                PlayerCameraOrigin.transform.localPosition = Vector3.Lerp(PlayerCameraOrigin.transform.localPosition, vec, 0.1f);
+            }
+            else
+            {
+                PlayerCameraOrigin.transform.localPosition = new Vector3(0, heightOffSet, 0);
+            }
+        }
         //ついでにisGroundの更新
         {
             float raycastDistance = 0.2f;
@@ -473,7 +554,7 @@ public class PlayerControll_2 : MonoBehaviour
 
 
 
-            s_Animator.SetBool("isGround",isGround);
+            s_Animator.SetBool("isGround", isGround);
         }
         //-------------------------------------------------------------------------------
         //プレイヤーの入力値の検知
@@ -596,8 +677,14 @@ public class PlayerControll_2 : MonoBehaviour
 
             transform.position = Vector3.Lerp(transform.position, Vec, 0.1f);
 
+            float boostMultiPly = 1.0f;
+            if (_PlayerMoveStatus.Boost)
+            {
+                boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
+            }
+
             s_Rigidbody.velocity
-                = _WallRunStatus.WallRunVec * _WallRunStatus.wallRunSpeed;
+                = _WallRunStatus.WallRunVec * _WallRunStatus.wallRunSpeed * boostMultiPly;
 
             transform.rotation = Quaternion.LookRotation(_WallRunStatus.WallRunVec, Vector3.up);
 
@@ -660,10 +747,19 @@ public class PlayerControll_2 : MonoBehaviour
 
             if (RunInput)
                 maxSpeed = _PlayerMoveStatus.MaxRunSpeed;
-            
+
             if (!isGround)
                 maxSpeed = _PlayerMoveStatus.MaxAirSpeed;
-            
+
+
+            float boostMultiPly = 1.0f;
+            if (_PlayerMoveStatus.Boost)
+            {
+                boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
+            }
+
+            maxSpeed *= boostMultiPly;
+
             Vector3 MoveVel = moveForward * InputSpeed * maxSpeed;
             MoveVel.y = s_Rigidbody.velocity.y;
             s_Rigidbody.velocity = MoveVel;
@@ -704,12 +800,19 @@ public class PlayerControll_2 : MonoBehaviour
         //------------------------------------------------------------
         if (!isDodge && dodgeInputTrigger && _DodgeStatus.DodgeCoolTime < _DodgeStatus.DodgeTimer)
         {
+
+            float boostMultiPly = 1.0f;
+            if (_PlayerMoveStatus.Boost)
+            {
+                boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
+            }
+
             isDodge = true;
             _DodgeStatus.DodgeTimer = 0;
             _DodgeStatus.isDodgePerfectHappened = false;
             this.CurrentEnergy -= _DodgeStatus.DodgeUseEnergy;
             s_Rigidbody.velocity =
-                transform.forward * _DodgeStatus.DodgeAddPower;
+                transform.forward * _DodgeStatus.DodgeAddPower * boostMultiPly;
         }
 
         if (isDodge || booldebug)
@@ -784,6 +887,13 @@ public class PlayerControll_2 : MonoBehaviour
 
             float InputValue = MoveValue.magnitude;
 
+
+            float boostMultiPly = 1.0f;
+            if (_PlayerMoveStatus.Boost)
+            {
+                boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
+            }
+
             if (!isWallRun)
             {
                 //処理フロー上2段ジャンプの方が先の方がいい
@@ -799,8 +909,14 @@ public class PlayerControll_2 : MonoBehaviour
                         * _PlayerMoveStatus.SecondJumpMultiplyValue
                         + moveForward.normalized * InputValue
                         * _PlayerMoveStatus.JumpHorizonPower
-                        * _PlayerMoveStatus.SecondJumpHorizonPowerMultiplyValue,
+                        * _PlayerMoveStatus.SecondJumpHorizonPowerMultiplyValue
+                        * boostMultiPly,
                         ForceMode.VelocityChange);
+
+                    if (_PlayerMoveStatus.SecondJumpEnergyUse)
+                    {
+                        CurrentEnergy -= _PlayerMoveStatus.SecondJumpEnergyUsage;
+                    }
 
                     if (SE_VFX_Prefabs.Jump)
                         Instantiate(SE_VFX_Prefabs.Jump, transform.position, transform.rotation);
@@ -816,12 +932,15 @@ public class PlayerControll_2 : MonoBehaviour
                     transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
                     s_Rigidbody.AddForce(
                         Vector3.up * _PlayerMoveStatus.JumpPower
-                        + moveForward.normalized * InputValue * _PlayerMoveStatus.JumpHorizonPower,
+                        + moveForward.normalized
+                        * InputValue
+                        * _PlayerMoveStatus.JumpHorizonPower
+                        * boostMultiPly,
                         ForceMode.VelocityChange);
 
                     if (SE_VFX_Prefabs.Jump)
                         Instantiate(SE_VFX_Prefabs.Jump, transform.position, transform.rotation);
-                    
+
                     s_Animator.SetTrigger("Jump");
                 }
             }
@@ -838,12 +957,20 @@ public class PlayerControll_2 : MonoBehaviour
                     transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
                     s_Rigidbody.AddForce(
                         Vector3.up * _PlayerMoveStatus.JumpPower
-                        + moveForward.normalized * InputValue * _WallRunStatus.wallJumpHorizonPower,
+                        + moveForward.normalized
+                        * InputValue
+                        * _WallRunStatus.wallJumpHorizonPower
+                        * boostMultiPly,
                         ForceMode.VelocityChange);
+
+                    if (_PlayerMoveStatus.SecondJumpEnergyUse)
+                    {
+                        CurrentEnergy -= _PlayerMoveStatus.SecondJumpEnergyUsage;
+                    }
 
                     if (SE_VFX_Prefabs.Jump)
                         Instantiate(SE_VFX_Prefabs.Jump, transform.position, transform.rotation);
-                    
+
                     s_Animator.SetTrigger("Jump");
                 }
             }
@@ -855,9 +982,14 @@ public class PlayerControll_2 : MonoBehaviour
 
         //速度計測
         playerSpeed = new Vector2(s_Rigidbody.velocity.x, s_Rigidbody.velocity.z).magnitude;
-        if ((isGround || isWallRun) && !isDodge && !isAttack && MoveValue.magnitude > _PlayerMoveStatus.UseInputValue)
+        if ((isGround || (isWallRun && !_WallRunStatus.WREnergyUse)) && !isDodge && !isAttack && MoveValue.magnitude > _PlayerMoveStatus.UseInputValue)
         {
             CurrentEnergy += playerSpeed * _PlayerBasicStatus.EnergyAddValue;
+        }
+
+        if (isWallRun && _WallRunStatus.WREnergyUse)
+        {
+            CurrentEnergy -= _WallRunStatus.WREnergyUsage;
         }
 
 
@@ -907,8 +1039,40 @@ public class PlayerControll_2 : MonoBehaviour
         bool isRight = false;
         if (_WallRunStatus.wallStatus == wallSide.Right)
             isRight = true;
-        
+
         s_Animator.SetBool("isRight", isRight);
+
+        //?????????????????????????????????????????????????????????
+        //qawsedrftgyhujikolp;@:[
+        //?????????????????????????????????????????????????????????
+
+        if (_PlayerMoveStatus.useBoost)
+        {
+            if (isBoost)
+            {
+                _PlayerMoveStatus.BoostLength -= Time.deltaTime;
+
+                if (playerSpeed > _PlayerMoveStatus.doMeshTra)
+                {
+                    _PlayerMoveStatus.meshTra.Use = true;
+                }
+                else
+                {
+                    _PlayerMoveStatus.meshTra.Use = false;
+                }
+
+
+                if (_PlayerMoveStatus.BoostLength <= 0.0f)
+                {
+                    isBoost = false;
+                    s_Animator.SetBool("Boost",false);
+                    _PlayerMoveStatus.BoostLength = 0.0f;
+                    _PlayerMoveStatus.EnemyDestroyed = 0;
+                    _PlayerMoveStatus.meshTra.Use = false;
+                }
+            }
+        }
+
 
 
         //--------------------------------------------------------------------------------
