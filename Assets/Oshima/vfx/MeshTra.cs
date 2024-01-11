@@ -1,12 +1,27 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MeshTra : MonoBehaviour
 {
-    public float activeTime = 2.0f;
+    private bool isUse = false;
+
+
+
+    public bool Use
+    {
+        get { return isUse; }
+        set { isUse = value; }
+    }
+
+
+
+    //public float activeTime = 2.0f;
     [Header("Mesh Ralated")]
     public float meshRefreshRate = 0.1f;
+
+    private float meshTimer = 0.0f;
+
     public float meshDestroyDelay = 3f;
     public Transform positionToSpawn;
 
@@ -14,44 +29,48 @@ public class MeshTra : MonoBehaviour
     public Material mat;
     private bool isTrailActive;
     private SkinnedMeshRenderer[] skinnedMeshRenderers;
-    // Update is called once per frame
-    void Update()
+
+    private void FixedUpdate()
     {
-
-        if(Input.GetKeyDown(KeyCode.I) && !isTrailActive)
+        if (isUse)
         {
-            isTrailActive = true;
-            StartCoroutine(ActiveteTrail(activeTime));
-        }
-             
-    }
-    IEnumerator ActiveteTrail(float timeActive)
-    {
-        
-        while(timeActive > 0)
-        {
-            timeActive -= meshRefreshRate;
+            meshTimer += Time.deltaTime;
 
-            if (skinnedMeshRenderers == null)
-                skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
-
-            for(int i = 0; i < skinnedMeshRenderers.Length; i++)
+            if (meshTimer >= meshRefreshRate)
             {
-                Debug.Log("aaa");
-                GameObject gObj = new GameObject();
-                gObj.transform.SetPositionAndRotation(positionToSpawn.position, positionToSpawn.rotation);
-               MeshRenderer mr= gObj.AddComponent<MeshRenderer>();
-               MeshFilter mf =  gObj.AddComponent<MeshFilter>();
+                meshTimer -= meshRefreshRate;
 
-                Mesh mesh = new Mesh();
-                skinnedMeshRenderers[i].BakeMesh(mesh);
-                mf.mesh = mesh;
-                mr.material = mat;
+                if (skinnedMeshRenderers == null)
+                    skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
 
-                Destroy(gObj, meshDestroyDelay);
+                for (int i = 0; i < skinnedMeshRenderers.Length; i++)
+                {
+                    GameObject gObj = new GameObject();
+
+                    gObj.transform.position = skinnedMeshRenderers[i].transform.position;
+                    gObj.transform.rotation = skinnedMeshRenderers[i].transform.rotation;
+
+
+                    MeshRenderer mr = gObj.AddComponent<MeshRenderer>();
+                    MeshFilter mf = gObj.AddComponent<MeshFilter>();
+
+                    Mesh mesh = new Mesh();
+                    skinnedMeshRenderers[i].BakeMesh(mesh);
+                    mf.mesh = mesh;
+
+                    mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+
+                    Material[] mats = skinnedMeshRenderers[i].materials;
+                    for (int t = 0; t < skinnedMeshRenderers[i].materials.Length; t++)
+                    {
+                        mats[t] = mat;
+                    }
+                    mr.materials = mats;
+
+                    Destroy(gObj, meshDestroyDelay);
+                }
             }
-            yield return new WaitForSeconds(meshRefreshRate);
         }
-        isTrailActive = false;
     }
 }
