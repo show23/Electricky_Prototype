@@ -1,15 +1,16 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BoardController : MonoBehaviour
 {
-    [SerializeField] float ADJUST_SPEED;    // ŠÅ”Â‚ÌØ‚è‘Ö‚í‚éƒXƒs[ƒh‚ğ’²®‚Å‚«‚é’è”("ADJUST_SPEED >= 1"‚Æ‚·‚é‚±‚Æ)
+    [SerializeField] float ADJUST_SPEED;    // çœ‹æ¿ã®åˆ‡ã‚Šæ›¿ã‚ã‚‹ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚’èª¿æ•´ã§ãã‚‹å®šæ•°("ADJUST_SPEED >= 1"ã¨ã™ã‚‹ã“ã¨)
 
     private Material m_Material;
-    float[] m_KeyOffset = new float[4] { 0.75f, 0.5f, 0.25f, 0.0f };    // ŠeŠÅ”Â‚ª•\¦‚³‚ê‚éoffset.y’l
-    int m_Start = 0;        // 0:m_KeyOffset[0]->m_KeyOffset[1]‚ÖØ‚è‘Ö‚¦, 1:[1]->[2]‚ÖØ‚è‘Ö‚¦, 2:[2]->[3]‚ÖØ‚è‘Ö‚¦, 3:[3]->[0]‚ÖØ‚è‘Ö‚¦
-    bool m_Move = false;    // T:ŠÅ”Â‚ğØ‚è‘Ö‚¦‚Ä‚¢‚éÅ’†, F:ŠÅ”Â‚ª’â~‚µ‚Ä‚¢‚é
+    float[] m_KeyOffset = new float[4] { 0.5f, 0.0f, 0.5f, 0.0f };    // å„çœ‹æ¿ãŒè¡¨ç¤ºã•ã‚Œã‚‹offset.yå€¤
+   // float[] m_KeyOffset = new float[2] {  0.5f,0.0f };
+    int m_Start = 0;        // 0:m_KeyOffset[0]->m_KeyOffset[1]ã¸åˆ‡ã‚Šæ›¿ãˆ, 1:[1]->[2]ã¸åˆ‡ã‚Šæ›¿ãˆ, 2:[2]->[3]ã¸åˆ‡ã‚Šæ›¿ãˆ, 3:[3]->[0]ã¸åˆ‡ã‚Šæ›¿ãˆ
+    bool m_Move = false;    // T:çœ‹æ¿ã‚’åˆ‡ã‚Šæ›¿ãˆã¦ã„ã‚‹æœ€ä¸­, F:çœ‹æ¿ãŒåœæ­¢ã—ã¦ã„ã‚‹
 
     // Use this for initialization
     void Start()
@@ -22,24 +23,24 @@ public class BoardController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !m_Move)
         {
-            m_Move = true;  // offset.y•ÏXŠJn
+            m_Move = true;  // offset.yå¤‰æ›´é–‹å§‹
         }
         if (m_Move)
         {
-            float y = m_Material.mainTextureOffset.y - Time.deltaTime / ADJUST_SPEED;   // ˆÚ“®—ÊZo
+            float y = m_Material.mainTextureOffset.y - Time.deltaTime / ADJUST_SPEED;   // ç§»å‹•é‡ç®—å‡º
             if (y <= m_KeyOffset[m_Start + 1])
             {
                 y = m_KeyOffset[m_Start + 1];
                 m_Start++;
                 if (m_Start >= m_KeyOffset.Length - 1)
                 {
-                    // ÅŒã‚ÌŠÅ”Â‚ª•\¦‚³‚ê‚½‚çA“¯‚¶ƒfƒUƒCƒ“‚Å‚ ‚éæ“ª‚ÌŠÅ”Â‚ÉØ‚è‘Ö‚¦‚é
+                    // æœ€å¾Œã®çœ‹æ¿ãŒè¡¨ç¤ºã•ã‚ŒãŸã‚‰ã€åŒã˜ãƒ‡ã‚¶ã‚¤ãƒ³ã§ã‚ã‚‹å…ˆé ­ã®çœ‹æ¿ã«åˆ‡ã‚Šæ›¿ãˆã‚‹
                     m_Start = 0;
                     y = m_KeyOffset[0];
                 }
                 m_Move = false;
             }
-            m_Material.mainTextureOffset = new Vector2(0, y);   // offset’lXV
+            m_Material.mainTextureOffset = new Vector2(0, y);   // offsetå€¤æ›´æ–°
         }
     }
 }
