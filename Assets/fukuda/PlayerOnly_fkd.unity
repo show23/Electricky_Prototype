@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 4607.896, g: 2946.0725, b: 2170.5276, a: 1}
+  m_IndirectSpecularColor: {r: 4607.896, g: 2946.0803, b: 2170.5276, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -677,7 +677,7 @@ PrefabInstance:
     - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
         type: 3}
       propertyPath: _PlayerMoveStatus.useBoost
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
         type: 3}
@@ -691,13 +691,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
         type: 3}
-      propertyPath: _PlayerBasicStatus.DamageTime
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
-        type: 3}
       propertyPath: _PlayerMoveStatus.BoostLength
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
         type: 3}
@@ -707,7 +702,7 @@ PrefabInstance:
     - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
         type: 3}
       propertyPath: _PlayerMoveStatus.EnemyDestroyed
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
