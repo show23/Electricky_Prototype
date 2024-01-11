@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0056242123, g: 0.0048257858, b: 0.00398944, a: 1}
+  m_IndirectSpecularColor: {r: 0.005638719, g: 0.004838005, b: 0.0039998908, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10778,6 +10778,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9063369585147226277, guid: e443ba65a4be8ef4198780dd0cc8144f,
         type: 3}
+    - target: {fileID: 3280396307207591071, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
+      propertyPath: midAirAttack.minDamage
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3280396307207591071, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
+      propertyPath: midAirAttack.useEnergy
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5630164973215781080, guid: 0d7ac0720cd25c14280c718cada54ce3,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -10897,6 +10907,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _PlayerMoveStatus.MaxRunSpeed
       value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
+        type: 3}
+      propertyPath: _PlayerBasicStatus.HPHealValue
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8758277480444928078, guid: 0d7ac0720cd25c14280c718cada54ce3,
         type: 3}
