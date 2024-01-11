@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Message_3rd : MonoBehaviour
+public class Message_11th : MonoBehaviour
 {
     public GameObject MessageWindowObj;
     List<string> Message = new List<string>();
@@ -15,10 +15,8 @@ public class Message_3rd : MonoBehaviour
 
         MessageWindow = MessageWindowObj.GetComponent<Messagewindow>();
 
-        Message.Add("ってえぇ！？何で2段ジャンプできるんですか！？");
-        Message.Add("…動くことで発電できる洋服のおかげ…？");
-        Message.Add("すごいです！\n" +
-            "そんなすごいアイテムがあるならロボットだって倒せそうですね！");
+        Message.Add("そろそろヘリポートが見えてくるはずです。\n" +
+            "最後まで気を抜かないで！");
 
         MessageWindow.GetList(Message);
     }
