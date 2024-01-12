@@ -155,6 +155,7 @@ public class SaveSystem : MonoBehaviour
             thisData.minute = 
                 dataTime.thisTimeData.minute;
             thisData.seconds = dataTime.thisTimeData.seconds;
+            breakEnemy = dataTime.thisBreak;
         }
         else
         {

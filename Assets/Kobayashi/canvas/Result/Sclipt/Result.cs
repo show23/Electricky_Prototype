@@ -81,10 +81,40 @@ public class Result : MonoBehaviour
         float timedecimal = seconds * 100 - (int)seconds * 100;
 
         int enemyBreak = saveSystem.BreakEnemy;
+        int enemyMax = 0;
+        if (_scene.IsValid() != false)
+        {
+            foreach (var rootGameObject in _scene.GetRootGameObjects())
+            {
+                RectTransform rt = rootGameObject.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    var ddmi = rootGameObject.transform.GetChild(2).gameObject;
+                    enemyMax = ddmi.GetComponent<Timer_decimal_TMP>().GetEnemyMax();
+                    break;
+                }
+            }
+        }
+        if (_sceneDebug.IsValid() != false)
+        {
+            foreach (var rootGameObject in _sceneDebug.GetRootGameObjects())
+            {
+                RectTransform rt = rootGameObject.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    Debug.Log(rt.gameObject.name);
+                    var ddmi = rootGameObject.transform.GetChild(2).gameObject;
+                    Debug.Log(ddmi.gameObject.name);
+                    enemyMax = ddmi.GetComponent<Timer_decimal_TMP>().GetEnemyMax();
+                    Debug.Log(enemyMax);
+                    break;
+                }
+            }
+        }
 
         //_textTime = GetComponentInChildren<TextMeshProUGUI>();
         _textTime.text = minute.ToString("00") + ":" + ((int)seconds).ToString("00") + ":" + ((int)timedecimal).ToString("00");
-        _textEnemyBreak.text = enemyBreak.ToString("0000");
+        _textEnemyBreak.text = enemyBreak.ToString("00") + "/" + enemyMax.ToString("00");
 
         _textYouTime.text = minute.ToString("00") + ":" + ((int)seconds).ToString("00") + ":" + ((int)timedecimal).ToString("00");
 

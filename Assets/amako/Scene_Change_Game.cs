@@ -90,36 +90,36 @@ public class Scene_Change_Game : MonoBehaviour
         v3 += (t.forward * offsetForward);
 
         //--
-        Vector3 diffPos = v3 - cameraPosOrigin;
-        Vector3 diffRot = cameraRot.eulerAngles - t.rotation.eulerAngles;
+        //Vector3 diffPos = v3 - cameraPosOrigin;
+        //Vector3 diffRot = cameraRot.eulerAngles - t.rotation.eulerAngles;
 
-        diffRot = CheckRot(diffRot);
+        //diffRot = CheckRot(diffRot);
 
-        diffRot.y += 180f - 10f;
+        //diffRot.y += 180f - 10f;
 
-        diffRot = CheckRot(diffRot);
+        //diffRot = CheckRot(diffRot);
 
-        Debug.Log(t.rotation.eulerAngles);
-        Debug.Log(diffRot);
+        //Debug.Log(t.rotation.eulerAngles);
+        //Debug.Log(diffRot);
 
-        float timeAdd = 0.0f;
+        //float timeAdd = 0.0f;
 
-        for (;;)
-        {
-            Vector3 deltaPos = diffPos * (Time.deltaTime / _time);
-            Vector3 deltaRot = diffRot * (Time.deltaTime / _time);
+        //for (;;)
+        //{
+        //    Vector3 deltaPos = diffPos * (Time.deltaTime / _time);
+        //    Vector3 deltaRot = diffRot * (Time.deltaTime / _time);
 
-            cameraTrans.position += deltaPos;
-            cameraTrans.Rotate(deltaRot, Space.World);
+        //    cameraTrans.position += deltaPos;
+        //    cameraTrans.Rotate(deltaRot, Space.World);
 
-            timeAdd += Time.deltaTime;
-            if(timeAdd >= _time)
-            {
-                break;
-            }
+        //    timeAdd += Time.deltaTime;
+        //    if(timeAdd >= _time)
+        //    {
+        //        break;
+        //    }
 
-            yield return null;
-        }
+        //    yield return null;
+        //}
         //--
 
         cameraTrans.position = v3;
