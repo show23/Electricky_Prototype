@@ -28,6 +28,8 @@ public class Scene_Change_Game : MonoBehaviour
     [SerializeField] private float offsetForward = 1.8f;
     [SerializeField] private float angle = 0.3f;
 
+    [SerializeField] private float _time = 0.5f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -80,17 +82,58 @@ public class Scene_Change_Game : MonoBehaviour
         t.rotation = tracePosition.rotation;
         t.RotateAround(tracePosition.position, Vector3.up, 30f);
 
+        Vector3 cameraPosOrigin = cameraTrans.position;
+        Quaternion cameraRot = cameraTrans.rotation;
+
         Vector3 v3 = t.position;
         v3.y += 1f;
         v3 += (t.forward * offsetForward);
+
+        //--
+        //Vector3 diffPos = v3 - cameraPosOrigin;
+        //Vector3 diffRot = cameraRot.eulerAngles - t.rotation.eulerAngles;
+
+        //diffRot = CheckRot(diffRot);
+
+        //diffRot.y += 180f - 10f;
+
+        //diffRot = CheckRot(diffRot);
+
+        //Debug.Log(t.rotation.eulerAngles);
+        //Debug.Log(diffRot);
+
+        //float timeAdd = 0.0f;
+
+        //for (;;)
+        //{
+        //    Vector3 deltaPos = diffPos * (Time.deltaTime / _time);
+        //    Vector3 deltaRot = diffRot * (Time.deltaTime / _time);
+
+        //    cameraTrans.position += deltaPos;
+        //    cameraTrans.Rotate(deltaRot, Space.World);
+
+        //    timeAdd += Time.deltaTime;
+        //    if(timeAdd >= _time)
+        //    {
+        //        break;
+        //    }
+
+        //    yield return null;
+        //}
+        //--
 
         cameraTrans.position = v3;
         cameraTrans.rotation = t.rotation;
         cameraTrans.Rotate(0f, 180f - 10f, 0, Space.World);
         cameraTrans.localScale = Vector3.one;
 
-        if(EventObject != null)
-        EventObject.SetActive(false);
+        Debug.Log(cameraTrans.rotation.eulerAngles);
+
+        
+
+
+        if (EventObject != null)
+            EventObject.SetActive(false);
         audioListener.enabled = false;
         SceneManager.LoadScene("result", LoadSceneMode.Additive);
 
@@ -123,5 +166,121 @@ public class Scene_Change_Game : MonoBehaviour
         {
             _coroutine = StartCoroutine(c);
         }
+    }
+
+
+    private Vector3 CheckRot(Vector3 t)
+    {
+        Vector3 vector3 = t;
+        
+        for(;;)
+        {
+            int num = 0;
+
+            if (vector3.x > 360)
+                num = 1;
+            if (vector3.x < -360)
+                num = 2;
+            if (vector3.x > 180)
+                num = 3;
+            if (vector3.x < -180)
+                num = 4;
+
+            switch (num) 
+            {
+                case 1:
+                    vector3.x -= 360f;
+                    break;
+
+                case 2:
+                    vector3.x += 360f;
+                    break;
+
+                case 3:
+                    vector3.x = -360f + vector3.x;
+                    break;
+
+                case 4:
+                    vector3.x = 360f - vector3.x;
+                    break;
+            }
+
+            if(num == 0)
+            { break; }
+        }
+
+        for (;;)
+        {
+            int num = 0;
+
+            if (vector3.y > 360)
+                num = 1;
+            if (vector3.y < -360)
+                num = 2;
+            if (vector3.y > 180)
+                num = 3;
+            if (vector3.y < -180)
+                num = 4;
+
+            switch (num)
+            {
+                case 1:
+                    vector3.y -= 360f;
+                    break;
+
+                case 2:
+                    vector3.y += 360f;
+                    break;
+
+                case 3:
+                    vector3.y = -360f + vector3.y;
+                    break;
+
+                case 4:
+                    vector3.y = 360f - vector3.y;
+                    break;
+            }
+
+            if (num == 0)
+            { break; }
+        }
+
+        for (;;)
+        {
+            int num = 0;
+
+            if (vector3.z > 360)
+                num = 1;
+            if (vector3.z < -360)
+                num = 2;
+            if (vector3.z > 180)
+                num = 3;
+            if (vector3.z < -180)
+                num = 4;
+
+            switch (num)
+            {
+                case 1:
+                    vector3.z -= 360f;
+                    break;
+
+                case 2:
+                    vector3.z += 360f;
+                    break;
+
+                case 3:
+                    vector3.z = -360f + vector3.z;
+                    break;
+
+                case 4:
+                    vector3.z = 360f - vector3.z;
+                    break;
+            }
+
+            if (num == 0)
+            { break; }
+        }
+
+        return vector3;
     }
 }

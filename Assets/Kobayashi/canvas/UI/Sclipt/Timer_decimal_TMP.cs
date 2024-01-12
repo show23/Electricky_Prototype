@@ -27,6 +27,7 @@ public class Timer_decimal_TMP : MonoBehaviour
 	private TextMeshProUGUI timerText;
 
     private int enemyBreak;
+	private int enemyMaxNum;
 
     private bool isStop;
     private IEnumerator s;
@@ -40,6 +41,8 @@ public class Timer_decimal_TMP : MonoBehaviour
         timerText = GetComponentInChildren<TextMeshProUGUI>();
 
 		enemyBreak = 0;
+        GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+		enemyMaxNum = enemys.Length;
 
         isStop = false;
 
@@ -73,6 +76,7 @@ public class Timer_decimal_TMP : MonoBehaviour
 			yield break;
 		}
 
+		Debug.Log(enemyBreak);
         saveSystem.Save(minute, seconds, enemyBreak);
         yield return null;
 
@@ -87,4 +91,9 @@ public class Timer_decimal_TMP : MonoBehaviour
 	{
         enemyBreak += count;
     }
+
+	public int GetEnemyMax()
+	{
+		return enemyMaxNum;
+	}
 }
