@@ -86,11 +86,21 @@ public class Result : MonoBehaviour
         {
             foreach (var rootGameObject in _scene.GetRootGameObjects())
             {
+                var o = rootGameObject.transform.Find("UI/Time").gameObject;
+                if (o != null)
+                {
+                    enemyMax = o.GetComponent<Timer_decimal_TMP>().GetEnemyMax();
+                    break;
+                }
+
                 RectTransform rt = rootGameObject.GetComponent<RectTransform>();
                 if (rt != null)
                 {
+                    Debug.Log(rt.gameObject.name);
                     var ddmi = rootGameObject.transform.GetChild(2).gameObject;
+                    Debug.Log(ddmi.gameObject.name);
                     enemyMax = ddmi.GetComponent<Timer_decimal_TMP>().GetEnemyMax();
+                    Debug.Log(enemyMax);
                     break;
                 }
             }
@@ -138,6 +148,13 @@ public class Result : MonoBehaviour
         {
             foreach (GameObject rootGameObject in _scene.GetRootGameObjects())
             {
+                var d = rootGameObject.transform.Find("Main Camera");
+                if (d != null) 
+                {
+                    _cameraObject.position = d.position;
+                    _cameraObject.rotation = d.rotation;
+                }
+
                 Camera camera = rootGameObject.GetComponent<Camera>();
                 if (camera != null)
                 {
