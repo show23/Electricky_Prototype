@@ -43,6 +43,7 @@ public class Timer_decimal_TMP : MonoBehaviour
 		enemyBreak = 0;
         GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
 		enemyMaxNum = enemys.Length;
+		Debug.Log(enemyMaxNum);
 
         isStop = false;
 
