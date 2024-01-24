@@ -75,22 +75,8 @@ public class PlayerControll_2 : MonoBehaviour
         public float SecondJumpEnergyUsage;
 
 
-        public bool useBoost;
-        public bool Boost;
-        public float BoostSpeedValue;
-        public float doMeshTra;
-
-        [HideInInspector]
-        public MeshTra meshTra;
-
         //[HideInInspector]
         public int EnemyDestroyed;
-        public int BoostStartValue;
-
-        public float BoostLengthPerKills;
-
-        //[HideInInspector]
-        public float BoostLength;
 
         [Tooltip("移動スティック入力のデッドゾーン値")]
         public float UseInputValue;
@@ -336,44 +322,8 @@ public class PlayerControll_2 : MonoBehaviour
     public int CurrentDestroyEnemy
     {
         get { return _PlayerMoveStatus.EnemyDestroyed; }
-        set {
-
-            if (!_PlayerMoveStatus.Boost)
-            {
-                _PlayerMoveStatus.EnemyDestroyed = value;
-
-                if (_PlayerMoveStatus.useBoost &&
-                _PlayerMoveStatus.BoostStartValue <= _PlayerMoveStatus.EnemyDestroyed)
-                {
-                    _PlayerMoveStatus.Boost = true;
-                    s_Animator.SetBool("Boost", true);
-                    _PlayerMoveStatus.BoostLength = _PlayerMoveStatus.BoostStartValue * _PlayerMoveStatus.BoostLengthPerKills;
-                    _PlayerMoveStatus.EnemyDestroyed = 0;
-                }
-            }
-            else
-            {
-                _PlayerMoveStatus.BoostLength += _PlayerMoveStatus.BoostLengthPerKills;
-                if (_PlayerMoveStatus.BoostLength > _PlayerMoveStatus.BoostLengthPerKills * _PlayerMoveStatus.BoostStartValue)
-                {
-                    _PlayerMoveStatus.BoostLength = _PlayerMoveStatus.BoostLengthPerKills * _PlayerMoveStatus.BoostStartValue;
-                }
-            }
-        }
+        set { _PlayerMoveStatus.EnemyDestroyed = value; }
     }
-
-
-    public bool isBoost
-    {
-        set { _PlayerMoveStatus.Boost = value; }
-        get { return _PlayerMoveStatus.Boost; }
-    }
-
-    public float getBoostValue
-    {
-        get { return _PlayerMoveStatus.BoostSpeedValue; }
-    }
-
 
 
 
@@ -478,7 +428,6 @@ public class PlayerControll_2 : MonoBehaviour
         playerAttack = GetComponent<Player_Slash>();
         playerAttack2 = GetComponent<Player_Slash_2>();
 
-        _PlayerMoveStatus.meshTra = GetComponent<MeshTra>();
 
         _PlayerBasicStatus.HP = _PlayerBasicStatus.maxHP;
         _PlayerBasicStatus.Energy = _PlayerBasicStatus.maxEnergy;
@@ -698,9 +647,9 @@ public class PlayerControll_2 : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, Vec, 0.1f);
 
             float boostMultiPly = 1.0f;
-            if (_PlayerMoveStatus.Boost)
+            //if (_PlayerMoveStatus.Boost)
             {
-                boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
+              //  boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
             }
 
             s_Rigidbody.velocity
@@ -773,9 +722,9 @@ public class PlayerControll_2 : MonoBehaviour
 
 
             float boostMultiPly = 1.0f;
-            if (_PlayerMoveStatus.Boost)
+            //if (_PlayerMoveStatus.Boost)
             {
-                boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
+            //    boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
             }
 
             maxSpeed *= boostMultiPly;
@@ -826,9 +775,9 @@ public class PlayerControll_2 : MonoBehaviour
             if (!isDodge && dodgeInputTrigger && _DodgeStatus.DodgeCoolTime < _DodgeStatus.DodgeTimer)
             {
                 float boostMultiPly = 1.0f;
-                if (_PlayerMoveStatus.Boost)
+                //if (_PlayerMoveStatus.Boost)
                 {
-                    boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
+                //    boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
                 }
 
                 isDodge = true;
@@ -914,9 +863,9 @@ public class PlayerControll_2 : MonoBehaviour
 
 
             float boostMultiPly = 1.0f;
-            if (_PlayerMoveStatus.Boost)
+            //if (_PlayerMoveStatus.Boost)
             {
-                boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
+            //    boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
             }
 
             if (!isWallRun)
@@ -1079,7 +1028,7 @@ public class PlayerControll_2 : MonoBehaviour
         //?????????????????????????????????????????????????????????
         //qawsedrftgyhujikolp;@:[
         //?????????????????????????????????????????????????????????
-
+        /*
         if (_PlayerMoveStatus.useBoost)
         {
             if (isBoost)
@@ -1107,7 +1056,7 @@ public class PlayerControll_2 : MonoBehaviour
             }
         }
 
-
+        */
 
         //--------------------------------------------------------------------------------
         //＃UIを更新
