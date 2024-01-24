@@ -24,6 +24,8 @@ public class Player_Slash_2 : MonoBehaviour
     [System.Serializable]
     public struct ChargeAttack
     {
+        public bool canUseChargeAttack;
+
         public float attackRange;
         public float attackAngle;
 
@@ -52,6 +54,8 @@ public class Player_Slash_2 : MonoBehaviour
     [System.Serializable]
     public struct MidAirAttack
     {
+        public bool canUseAirAttack;
+
         public float attackRange;
         public float HitKnockBack;
 
@@ -139,6 +143,7 @@ public class Player_Slash_2 : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+
         isGround = false;
 
         float raycastDistance = 0.05f;
@@ -146,46 +151,48 @@ public class Player_Slash_2 : MonoBehaviour
         if (Physics.Raycast(transform.position + transform.up * 0.01f, Vector3.down, out Hit, raycastDistance))
         {
             isGround = true;
-
-            //空中攻撃発動
-            if (isMidAirAttack)
+            if (midAirAttack.canUseAirAttack)
             {
-                isMidAirAttack = false;
-                isAttack = false;
-
-
-                //ダメージ数値は同じなのにforでやるとコストかかるので
-                //外に出しておく
-                float damage = midAirAttack.damage;
-
-                bool isHit = false;
-                Collider[] hitColliders = Physics.OverlapSphere(transform.position, midAirAttack.attackRange);
-                foreach (Collider col in hitColliders)
+                //空中攻撃発動
+                if (isMidAirAttack)
                 {
-                    if (col.CompareTag(enemyTag))
+                    isMidAirAttack = false;
+                    isAttack = false;
+
+
+                    //ダメージ数値は同じなのにforでやるとコストかかるので
+                    //外に出しておく
+                    float damage = midAirAttack.damage;
+
+                    bool isHit = false;
+                    Collider[] hitColliders = Physics.OverlapSphere(transform.position, midAirAttack.attackRange);
+                    foreach (Collider col in hitColliders)
                     {
-                        Vector3 direction = (col.transform.position - transform.position).normalized;
-                        isHit = true;
-
-                        //ここで敵の体力を減らす処理をする
-                        //ダメージ量はdamageから使ってください
-
-                        if (col.GetComponent<Enemy_Blow>())
+                        if (col.CompareTag(enemyTag))
                         {
-                            col.GetComponent<Enemy_Blow>().CurrentHp -= damage;
+                            Vector3 direction = (col.transform.position - transform.position).normalized;
+                            isHit = true;
+
+                            //ここで敵の体力を減らす処理をする
+                            //ダメージ量はdamageから使ってください
+
+                            if (col.GetComponent<Enemy_Blow>())
+                            {
+                                col.GetComponent<Enemy_Blow>().CurrentHp -= damage;
+                            }
+                            if (col.GetComponent<Enemy_Shoot>())
+                            {
+                                col.GetComponent<Enemy_Shoot>().CurrentHp -= damage;
+                            }
+                            col.GetComponent<Rigidbody>().AddForce(direction * midAirAttack.HitKnockBack, ForceMode.Impulse);
                         }
-                        if (col.GetComponent<Enemy_Shoot>())
-                        {
-                            col.GetComponent<Enemy_Shoot>().CurrentHp -= damage;
-                        }
-                        col.GetComponent<Rigidbody>().AddForce(direction * midAirAttack.HitKnockBack, ForceMode.Impulse);
                     }
-                }
 
-                if (isHit)
-                {
-                    Debug.Log("空中攻撃 Enemyに当たったよ");
-                    StartCoroutine(HitStopCoroutine(midAirAttack.hitStop));
+                    if (isHit)
+                    {
+                        Debug.Log("空中攻撃 Enemyに当たったよ");
+                        StartCoroutine(HitStopCoroutine(midAirAttack.hitStop));
+                    }
                 }
             }
         }
@@ -240,34 +247,37 @@ public class Player_Slash_2 : MonoBehaviour
         //空中攻撃の処理
         //------------------------------------------------------------------
 
-        if (!isGround && !isAttack)
+        if (midAirAttack.canUseAirAttack)
         {
-            if (inputAttackTrigger)
+            if (!isGround && !isAttack)
             {
-                rigidBody.velocity = Vector3.zero;
-                rigidBody.AddForce(Vector3.down * midAirAttack.DownPower, ForceMode.VelocityChange);
-                isMidAirAttack = true;
-                isAttack = true;
-
-
-                //エネルギー関連の更新
-                float energyValue = 0;
-                if (playerControll)
+                if (inputAttackTrigger)
                 {
-                    energyValue = playerControll.CurrentEnergy / midAirAttack.useEnergy;
-                    energyValue = Mathf.Clamp(energyValue, 0, 1);
-                    playerControll.CurrentEnergy -= midAirAttack.useEnergy;
+                    rigidBody.velocity = Vector3.zero;
+                    rigidBody.AddForce(Vector3.down * midAirAttack.DownPower, ForceMode.VelocityChange);
+                    isMidAirAttack = true;
+                    isAttack = true;
+
+
+                    //エネルギー関連の更新
+                    float energyValue = 0;
+                    if (playerControll)
+                    {
+                        energyValue = playerControll.CurrentEnergy / midAirAttack.useEnergy;
+                        energyValue = Mathf.Clamp(energyValue, 0, 1);
+                        playerControll.CurrentEnergy -= midAirAttack.useEnergy;
+                    }
+                    if (playerControll_2)
+                    {
+                        energyValue = playerControll_2.CurrentEnergy / midAirAttack.useEnergy;
+                        energyValue = Mathf.Clamp(energyValue, 0, 1);
+                        playerControll_2.CurrentEnergy -= midAirAttack.useEnergy;
+                    }
+
+
+
+                    midAirAttack.damage = Mathf.Lerp(midAirAttack.minDamage, midAirAttack.maxDamage, energyValue);
                 }
-                if (playerControll_2)
-                {
-                    energyValue = playerControll_2.CurrentEnergy / midAirAttack.useEnergy;
-                    energyValue = Mathf.Clamp(energyValue, 0, 1);
-                    playerControll_2.CurrentEnergy -= midAirAttack.useEnergy;
-                }
-
-
-
-                midAirAttack.damage = Mathf.Lerp(midAirAttack.minDamage, midAirAttack.maxDamage, energyValue);
             }
         }
 

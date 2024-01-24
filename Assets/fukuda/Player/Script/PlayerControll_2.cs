@@ -146,6 +146,9 @@ public class PlayerControll_2 : MonoBehaviour
     [System.Serializable]
     public struct DodgeStatus
     {
+        [Tooltip("回避の実装有無")]
+        public bool canUseDodge;
+
         [Tooltip("回避クールタイム")]
         public int DodgeCoolTime;
         [Tooltip("回避終了時間")]
@@ -581,7 +584,11 @@ public class PlayerControll_2 : MonoBehaviour
 
             JumpInput = jump.ReadValue<float>() > 0;
             AttackInput = attack.ReadValue<float>() > 0;
-            DodgeInput = dodge.ReadValue<float>() > 0;
+
+            if (_DodgeStatus.canUseDodge)
+                DodgeInput = dodge.ReadValue<float>() > 0;
+            else
+                DodgeInput = false;
 
             if (isGround)
                 RunInput = run.ReadValue<float>() > 0;
@@ -813,86 +820,90 @@ public class PlayerControll_2 : MonoBehaviour
         //------------------------------------------------------------
         //回避
         //------------------------------------------------------------
-        if (!isDodge && dodgeInputTrigger && _DodgeStatus.DodgeCoolTime < _DodgeStatus.DodgeTimer)
+
+        if (_DodgeStatus.canUseDodge)
         {
-            float boostMultiPly = 1.0f;
-            if (_PlayerMoveStatus.Boost)
+            if (!isDodge && dodgeInputTrigger && _DodgeStatus.DodgeCoolTime < _DodgeStatus.DodgeTimer)
             {
-                boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
+                float boostMultiPly = 1.0f;
+                if (_PlayerMoveStatus.Boost)
+                {
+                    boostMultiPly = _PlayerMoveStatus.BoostSpeedValue;
+                }
+
+                isDodge = true;
+                _DodgeStatus.DodgeTimer = 0;
+                _DodgeStatus.isDodgePerfectHappened = false;
+                this.CurrentEnergy -= _DodgeStatus.DodgeUseEnergy;
+                s_Rigidbody.velocity =
+                    transform.forward * _DodgeStatus.DodgeAddPower * boostMultiPly;
             }
 
-            isDodge = true;
-            _DodgeStatus.DodgeTimer = 0;
-            _DodgeStatus.isDodgePerfectHappened = false;
-            this.CurrentEnergy -= _DodgeStatus.DodgeUseEnergy;
-            s_Rigidbody.velocity =
-                transform.forward * _DodgeStatus.DodgeAddPower * boostMultiPly;
-        }
-
-        if (isDodge || booldebug)
-        {
-            if (_DodgeStatus.DodgeMutekiStart == _DodgeStatus.DodgeTimer)
-                noDamage = true;
-
-            if (_DodgeStatus.DodgeMutekiStart + _DodgeStatus.DodgeMutekiLength == _DodgeStatus.DodgeTimer)
-                noDamage = false;
-
-            if (_DodgeStatus.DodgeEndTime == _DodgeStatus.DodgeTimer)
-                isDodge = false;
-
-
-            //---------------------------------------------------------------------------------
-            //スローモーション
-            //---------------------------------------------------------------------------------
-
-            if ((_DodgeStatus.isDodgePerfectHappened && !_JustDodgeSettings.isDodgeSlow) || booldebug)
+            if (isDodge || booldebug)
             {
-                _JustDodgeSettings.isDodgeSlow = true;
-                _JustDodgeSettings.slowTimer = 0;
-                booldebug = false;
-            }
-        }
+                if (_DodgeStatus.DodgeMutekiStart == _DodgeStatus.DodgeTimer)
+                    noDamage = true;
+
+                if (_DodgeStatus.DodgeMutekiStart + _DodgeStatus.DodgeMutekiLength == _DodgeStatus.DodgeTimer)
+                    noDamage = false;
+
+                if (_DodgeStatus.DodgeEndTime == _DodgeStatus.DodgeTimer)
+                    isDodge = false;
 
 
-        if (_JustDodgeSettings.isDodgeSlow)
-        {
-            float value = 0;
+                //---------------------------------------------------------------------------------
+                //スローモーション
+                //---------------------------------------------------------------------------------
 
-            float timeval = _JustDodgeSettings.slowTimer / _JustDodgeSettings.slowFrame;
-            if (timeval <= 0.5f)
-            {
-                value = Mathf.Lerp(
-                    _JustDodgeSettings.slowSpeed,
-                    _JustDodgeSettings.cullentSpeed,
-                    Mathf.Clamp(timeval * 2, 0, 1)
-                    );
-            }
-            else
-            {
-                value = Mathf.Lerp(
-                    _JustDodgeSettings.slowSpeed,
-                    _JustDodgeSettings.cullentSpeed,
-                    Mathf.Clamp((timeval - 0.5f) * 2, 1, 0)
-                    );
+                if ((_DodgeStatus.isDodgePerfectHappened && !_JustDodgeSettings.isDodgeSlow) || booldebug)
+                {
+                    _JustDodgeSettings.isDodgeSlow = true;
+                    _JustDodgeSettings.slowTimer = 0;
+                    booldebug = false;
+                }
             }
 
-            Time.timeScale = value;
 
-            Debug.Log("time = " + value + ": timer = " + _JustDodgeSettings.slowTimer);
-
-            if (_JustDodgeSettings.slowTimer > _JustDodgeSettings.slowFrame)
+            if (_JustDodgeSettings.isDodgeSlow)
             {
-                Time.timeScale = _JustDodgeSettings.cullentSpeed;
-                _JustDodgeSettings.isDodgeSlow = false;
+                float value = 0;
+
+                float timeval = _JustDodgeSettings.slowTimer / _JustDodgeSettings.slowFrame;
+                if (timeval <= 0.5f)
+                {
+                    value = Mathf.Lerp(
+                        _JustDodgeSettings.slowSpeed,
+                        _JustDodgeSettings.cullentSpeed,
+                        Mathf.Clamp(timeval * 2, 0, 1)
+                        );
+                }
+                else
+                {
+                    value = Mathf.Lerp(
+                        _JustDodgeSettings.slowSpeed,
+                        _JustDodgeSettings.cullentSpeed,
+                        Mathf.Clamp((timeval - 0.5f) * 2, 1, 0)
+                        );
+                }
+
+                Time.timeScale = value;
+
+                Debug.Log("time = " + value + ": timer = " + _JustDodgeSettings.slowTimer);
+
+                if (_JustDodgeSettings.slowTimer > _JustDodgeSettings.slowFrame)
+                {
+                    Time.timeScale = _JustDodgeSettings.cullentSpeed;
+                    _JustDodgeSettings.isDodgeSlow = false;
+                }
+                else
+                    _JustDodgeSettings.slowTimer++;
             }
-            else
-                _JustDodgeSettings.slowTimer++;
-        }
 
 
-        if (_DodgeStatus.DodgeTimer < _DodgeStatus.DodgeCoolTime + 1)
-        {
-            _DodgeStatus.DodgeTimer++;
+            if (_DodgeStatus.DodgeTimer < _DodgeStatus.DodgeCoolTime + 1)
+            {
+                _DodgeStatus.DodgeTimer++;
+            }
         }
         //------------------------------------------------------------
         //ジャンプ
