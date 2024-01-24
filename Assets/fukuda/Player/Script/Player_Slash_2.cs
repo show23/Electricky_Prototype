@@ -294,11 +294,11 @@ public class Player_Slash_2 : MonoBehaviour
 
 
         float value = 1.0f;
-        if (playerControll_2)
+        //if (playerControll_2)
         {
-            if (playerControll_2.isBoost)
+          //  if (playerControll_2.isBoost)
             {
-                value = playerControll_2.getBoostValue;
+            //    value = playerControll_2.getBoostValue;
             }
         }
 

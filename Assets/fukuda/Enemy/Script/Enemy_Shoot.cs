@@ -66,6 +66,8 @@ public class Enemy_Shoot : MonoBehaviour
             {
                 //エネミー死亡
                 HP = 0;
+                if (!isDestroyed)
+                    UpdatePlayerDestroyCount();
                 isDestroyed = true;
             }
         }
@@ -216,6 +218,14 @@ public class Enemy_Shoot : MonoBehaviour
                 Instantiate(SE_VFX_Prefabs.Destroyed, transform.position, transform.rotation);
         }
         oldDestroy = true;
+    }
+
+
+
+    private void UpdatePlayerDestroyCount()
+    {
+        PlayerControll_2 pControll = FindObjectOfType<PlayerControll_2>();
+        pControll.CurrentDestroyEnemy += 1;
     }
 
     void PatrolUpdate()
