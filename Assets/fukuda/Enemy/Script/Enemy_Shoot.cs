@@ -152,7 +152,7 @@ public class Enemy_Shoot : MonoBehaviour
     public EnemyState currentState = EnemyState.Patrol;
     private Rigidbody rigidbody;
 
-    private Timer_decimal_TMP tdt;
+
 
 
 
@@ -166,7 +166,6 @@ public class Enemy_Shoot : MonoBehaviour
         _animator = GetComponent<Animator>();
         oldPos = transform.position;
 
-        tdt = FindObjectOfType<Timer_decimal_TMP>().GetComponent<Timer_decimal_TMP>();
     }
     void FixedUpdate()
     {
@@ -213,7 +212,6 @@ public class Enemy_Shoot : MonoBehaviour
             _animator.SetInteger("DeathPattern", Random.Range(0, 2));
             Destroy(this.gameObject, DeleteTime);
 
-            tdt.AddBreakEnemyCount(1);
             if (SE_VFX_Prefabs.Destroyed)
                 Instantiate(SE_VFX_Prefabs.Destroyed, transform.position, transform.rotation);
         }

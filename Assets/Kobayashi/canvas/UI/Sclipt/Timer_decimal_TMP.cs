@@ -77,7 +77,9 @@ public class Timer_decimal_TMP : MonoBehaviour
 			yield break;
 		}
 
-		Debug.Log(enemyBreak);
+		enemyBreak = FindObjectOfType<PlayerControll_2>().CurrentDestroyEnemy;
+
+        Debug.Log(enemyBreak);
         saveSystem.Save(minute, seconds, enemyBreak);
         yield return null;
 

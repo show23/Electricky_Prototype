@@ -187,8 +187,6 @@ public class Enemy_Blow : MonoBehaviour
 
     private Rigidbody rigidbody;
 
-    private Timer_decimal_TMP tdt;
-
     [System.Obsolete]
     private void Start()
     {
@@ -201,7 +199,6 @@ public class Enemy_Blow : MonoBehaviour
     
         HP = maxHP;
 
-        tdt = FindObjectOfType<Timer_decimal_TMP>().GetComponent<Timer_decimal_TMP>();
     }
     void FixedUpdate()
     {
@@ -252,7 +249,6 @@ public class Enemy_Blow : MonoBehaviour
             _animator.SetInteger("DeathPattern", Random.Range(0, 2));
             Destroy(this.gameObject, DeleteTime);
 
-            tdt.AddBreakEnemyCount(1);
             if (SE_VFX_Prefabs.Destroyed)
                 Instantiate(SE_VFX_Prefabs.Destroyed, transform.position, transform.rotation);
         }

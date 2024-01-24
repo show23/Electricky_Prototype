@@ -31,6 +31,8 @@ public class Result : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI _textYouTime;
 
+    [SerializeField] private TextMeshProUGUI _textYouBreakRank;
+
     private SaveSystem saveSystem;
 
     private enum State
@@ -125,6 +127,7 @@ public class Result : MonoBehaviour
         //_textTime = GetComponentInChildren<TextMeshProUGUI>();
         _textTime.text = minute.ToString("00") + ":" + ((int)seconds).ToString("00") + ":" + ((int)timedecimal).ToString("00");
         _textEnemyBreak.text = enemyBreak.ToString("00") + "/" + enemyMax.ToString("00");
+        SetBreakRank(enemyBreak, enemyMax);
 
         _textYouTime.text = minute.ToString("00") + ":" + ((int)seconds).ToString("00") + ":" + ((int)timedecimal).ToString("00");
 
@@ -209,6 +212,33 @@ public class Result : MonoBehaviour
             c = SceneOutRankPos();
             _coroutine = StartCoroutine(c);
         }
+    }
+
+
+    private void SetBreakRank(int enemyBreak, int enemyMax)
+    {
+        float percent = (float)enemyBreak / (float)enemyMax;
+        if(percent > 1f)
+        {
+            _textYouBreakRank.text = "S";
+            _textYouBreakRank.color = Color.yellow;
+        }
+        else if(percent > 0.8f) 
+        {
+            _textYouBreakRank.text = "A";
+            _textYouBreakRank.color = Color.red;
+        }
+        else if (percent > 0.5f)
+        {
+            _textYouBreakRank.text = "B";
+            _textYouBreakRank.color = Color.blue;
+        }
+        else
+        {
+            _textYouBreakRank.text = "C";
+            _textYouBreakRank.color = Color.gray;
+        }
+        
     }
 
     // 0
