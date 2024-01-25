@@ -451,8 +451,8 @@ public class PlayerControll_2 : MonoBehaviour
 
 
 
-        transform.position = transform.position;
-        transform.rotation = transform.rotation;
+        _RespawnSettings.SpawnPoint = transform.position;
+        _RespawnSettings.SpawnRotation = transform.rotation;
     }
 
 

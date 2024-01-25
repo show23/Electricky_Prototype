@@ -10604,6 +10604,7 @@ MonoBehaviour:
     addSpeedPower: 5
     hitStop: 1
   chargeAttack:
+    canUseChargeAttack: 0
     attackRange: 0
     attackAngle: 0
     HitKnockBack: 0
@@ -10617,6 +10618,7 @@ MonoBehaviour:
     RotationSpeedValue: 0
     currentRotationSpeed: 0
   midAirAttack:
+    canUseAirAttack: 0
     attackRange: 1
     HitKnockBack: 10
     maxDamage: 70
@@ -10674,15 +10676,7 @@ MonoBehaviour:
     SecondJumpHorizonPowerMultiplyValue: 0.8
     SecondJumpEnergyUse: 0
     SecondJumpEnergyUsage: 20
-    useBoost: 0
-    Boost: 0
-    BoostSpeedValue: 1.3
-    doMeshTra: 10
-    meshTra: {fileID: 0}
     EnemyDestroyed: 0
-    BoostStartValue: 3
-    BoostLengthPerKills: 7.5
-    BoostLength: 0
     UseInputValue: 0.1
   _WallRunStatus:
     wallLayers:
@@ -10702,6 +10696,7 @@ MonoBehaviour:
     WallDistance: 0
     WallRunTimer: 0
   _DodgeStatus:
+    canUseDodge: 0
     DodgeCoolTime: 60
     DodgeEndTime: 30
     DodgeMutekiLength: 10
@@ -10863,7 +10858,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2815803179272584444}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a6ee5227c2d78494fb8c7092bf3a8ec1, type: 3}
   m_Name: 
