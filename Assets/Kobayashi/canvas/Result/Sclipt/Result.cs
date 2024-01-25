@@ -73,7 +73,7 @@ public class Result : MonoBehaviour
         //_cameraObject = FindObjectOfType<Camera>().transform;
 
         _scene = SceneManager.GetSceneByName("BuildScene");
-        _sceneDebug = SceneManager.GetSceneByName("K0134S)-(I_UI");
+        //_sceneDebug = SceneManager.GetSceneByName("K0134S)-(I_UI");
 
         saveSystem = GetComponentInChildren<SaveSystem>();
         saveSystem.Load();
@@ -84,29 +84,35 @@ public class Result : MonoBehaviour
 
         int enemyBreak = saveSystem.BreakEnemy;
         int enemyMax = 19;
-        //if (_scene.IsValid() != false)
-        //{
-        //    foreach (var rootGameObject in _scene.GetRootGameObjects())
-        //    {
-        //        var o = rootGameObject.transform.Find("UI/Time").gameObject;
-        //        if (o != null)
-        //        {
-        //            enemyMax = o.GetComponent<Timer_decimal_TMP>().GetEnemyMax();
-        //            break;
-        //        }
+        if (_scene.IsValid() != false)
+        {
+            foreach (var rootGameObject in _scene.GetRootGameObjects())
+            {
+                //var o = rootGameObject.transform.Find("UI/Time").gameObject;
+                //if (o != null)
+                //{
+                //    enemyMax = o.GetComponent<Timer_decimal_TMP>().GetEnemyMax();
+                //    break;
+                //}
 
-        //        RectTransform rt = rootGameObject.GetComponent<RectTransform>();
-        //        if (rt != null)
-        //        {
-        //            Debug.Log(rt.gameObject.name);
-        //            var ddmi = rootGameObject.transform.GetChild(2).gameObject;
-        //            Debug.Log(ddmi.gameObject.name);
-        //            enemyMax = ddmi.GetComponent<Timer_decimal_TMP>().GetEnemyMax();
-        //            Debug.Log(enemyMax);
-        //            break;
-        //        }
-        //    }
-        //}
+                //RectTransform rt = rootGameObject.GetComponent<RectTransform>();
+                //if (rt != null)
+                //{
+                //    Debug.Log(rt.gameObject.name);
+                //    var ddmi = rootGameObject.transform.GetChild(2).gameObject;
+                //    Debug.Log(ddmi.gameObject.name);
+                //    enemyMax = ddmi.GetComponent<Timer_decimal_TMP>().GetEnemyMax();
+                //    Debug.Log(enemyMax);
+                //    break;
+                //}
+
+                Timer_decimal_TMP TDT = rootGameObject.GetComponentInChildren<Timer_decimal_TMP>();
+                if(TDT != null)
+                {
+                    enemyMax = TDT.GetEnemyMax();
+                }
+            }
+        }
         //if (_sceneDebug.IsValid() != false)
         //{
         //    foreach (var rootGameObject in _sceneDebug.GetRootGameObjects())
