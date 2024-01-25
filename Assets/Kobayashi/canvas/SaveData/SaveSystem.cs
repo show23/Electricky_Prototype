@@ -138,12 +138,12 @@ public class SaveSystem : MonoBehaviour
 
         string json = JsonUtility.ToJson(dataTime);
 
-        File.WriteAllText(Application.persistentDataPath + "/" + folderName + ".json", json);
+        File.WriteAllText(Application.dataPath + "/" + folderName + ".json", json);
     }
 
     public void Load()
     {
-        string path = Application.persistentDataPath + "/" + folderName + ".json";
+        string path = Application.dataPath + "/" + folderName + ".json";
 
         if (File.Exists(path))
         {
