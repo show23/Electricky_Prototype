@@ -218,17 +218,17 @@ public class Result : MonoBehaviour
     private void SetBreakRank(int enemyBreak, int enemyMax)
     {
         float percent = (float)enemyBreak / (float)enemyMax;
-        if(percent > 1f)
+        if(percent >= 1f)
         {
             _textYouBreakRank.text = "S";
             _textYouBreakRank.color = Color.yellow;
         }
-        else if(percent > 0.8f) 
+        else if(percent >= 0.8f) 
         {
             _textYouBreakRank.text = "A";
             _textYouBreakRank.color = Color.red;
         }
-        else if (percent > 0.5f)
+        else if (percent >= 0.5f)
         {
             _textYouBreakRank.text = "B";
             _textYouBreakRank.color = Color.blue;
